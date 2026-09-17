@@ -1,0 +1,1653 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aptis Listening Part 1 - 100% Visual Answer Canvas</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #1e293b;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #475569;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+
+    /* Hiệu ứng che mờ luyện trí nhớ */
+    .blur-target {
+      filter: blur(8px);
+      user-select: none;
+      transition: filter 0.25s ease-in-out;
+    }
+    .blur-target:hover, .blur-target.revealed {
+      filter: blur(0px) !important;
+      user-select: auto;
+    }
+
+    /* Đổ bóng và hiệu ứng nổi bật cho hình ảnh */
+    .visual-frame {
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card-hover:hover .visual-frame {
+      transform: scale(1.02);
+      box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.25);
+    }
+
+    /* Kiểu dáng tối ưu khi bấm In A4 */
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white !important; color: black !important; font-size: 10pt; }
+      .print-table { width: 100% !important; border-collapse: collapse !important; }
+      .print-table th, .print-table td { border: 1px solid #cbd5e1 !important; padding: 6px 8px !important; color: black !important; }
+      .print-card { page-break-inside: avoid; border: 1px solid #e2e8f0 !important; }
+      .blur-target { filter: none !important; }
+    }
+  </style>
+</head>
+
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Thanh tiêu đề phía trên cùng -->
+  <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40 shadow-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+      
+      <!-- Logo & Tiêu đề -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 flex items-center justify-center text-white text-xl font-black shadow-lg shadow-indigo-500/25">
+          🎯
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base sm:text-lg font-black text-white tracking-tight leading-none">Aptis Visual Canvas</h1>
+            <span class="text-[10px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">100% Exact Visual</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-0.5">307 câu hỏi Part 1 · Hình ảnh đồng bộ chuẩn xác với đáp án</p>
+        </div>
+      </div>
+
+      <!-- Thanh công cụ bên phải -->
+      <div class="flex items-center gap-2 sm:gap-3 text-xs">
+        
+        <!-- Tiến độ học tập -->
+        <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/80">
+          <span class="text-slate-400">Đã thuộc:</span>
+          <span id="txtMasteredCount" class="font-extrabold text-emerald-400">0</span>
+          <span class="text-slate-500">/ 307</span>
+          <span id="txtMasteredPercent" class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300">0%</span>
+        </div>
+
+        <!-- Nút Che / Mở đáp án & hình -->
+        <button id="btnToggleBlur" onclick="toggleGlobalBlur()" title="Che hoặc mở đáp án để tự kiểm tra trí nhớ" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 font-bold transition">
+          <span id="iconBlur">🙈</span>
+          <span id="txtBlurLabel" class="hidden sm:inline">Che đáp án & ảnh</span>
+        </button>
+
+        <!-- Đổi giọng đọc UK / US -->
+        <button id="btnVoiceToggle" onclick="toggleVoiceAccent()" title="Đổi giọng đọc bản ngữ" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-bold text-slate-200 transition">
+          <span>🗣️</span>
+          <span id="txtVoiceLabel" class="hidden sm:inline">Giọng Anh (UK)</span>
+        </button>
+
+        <!-- Nút In A4 -->
+        <button onclick="window.print()" title="In ra giấy A4 sạch đẹp" class="no-print flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 font-bold text-white shadow-md shadow-indigo-600/30 transition">
+          <span>🖨️</span>
+          <span class="hidden sm:inline">In A4</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Thanh điều hướng chế độ xem chính -->
+    <div class="bg-slate-900/60 border-t border-slate-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-3 py-2 text-xs">
+        
+        <!-- Các tab chế độ xem -->
+        <div class="flex items-center gap-1.5 overflow-x-auto custom-scrollbar">
+          <button id="tabCards" onclick="switchMainView('cards')" class="px-3 py-1.5 rounded-lg bg-indigo-600 text-white font-bold transition shadow flex items-center gap-1.5 whitespace-nowrap">
+            <span>🗂️</span> Thẻ Trực Quan
+          </button>
+          <button id="tabTable" onclick="switchMainView('table')" class="px-3 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 font-bold transition flex items-center gap-1.5 whitespace-nowrap">
+            <span>📋</span> Bảng Tra Cứu
+          </button>
+          <button id="tabSpeed" onclick="switchMainView('speed')" class="px-3 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 font-bold transition flex items-center gap-1.5 whitespace-nowrap">
+            <span>⚡</span> Phản Xạ 5 Giây
+          </button>
+          <button id="tabQuiz" onclick="switchMainView('quiz')" class="px-3 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 font-bold transition flex items-center gap-1.5 whitespace-nowrap">
+            <span>🎯</span> Thi Thử Trắc Nghiệm
+          </button>
+        </div>
+
+        <!-- Lọc chỉ các câu chưa thuộc -->
+        <label class="hidden sm:flex items-center gap-2 text-slate-400 cursor-pointer text-xs font-semibold whitespace-nowrap">
+          <input type="checkbox" id="chkOnlyUnmastered" onchange="toggleFilterUnmastered(this.checked)" class="rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-indigo-500">
+          <span>Chỉ câu chưa thuộc</span>
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <!-- Khung tìm kiếm và bộ lọc 9 chủ đề -->
+  <div class="no-print bg-slate-900/40 border-b border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 space-y-3">
+      
+      <!-- Ô tìm kiếm tức thời -->
+      <div class="relative">
+        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">🔍</span>
+        <input type="text" id="mainSearchInput" oninput="handleSearch(this.value)" placeholder="Tìm kiếm theo từ khóa câu hỏi hoặc đáp án (vd: 7:00, 5:30, walk, town hall, bus, red, sick...)" 
+               class="w-full pl-10 pr-9 py-2.5 text-xs sm:text-sm rounded-xl border border-slate-700 bg-slate-900/80 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition shadow-inner">
+        <button id="btnClearSearch" onclick="clearSearch()" class="hidden absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-white text-xs">✕</button>
+      </div>
+
+      <!-- Danh sách pills 9 chủ đề -->
+      <div id="categoriesPillContainer" class="flex items-center gap-1.5 overflow-x-auto custom-scrollbar pb-1 text-xs font-semibold">
+        <!-- Được inject bởi JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Khung hiển thị nội dung chính -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
+
+    <!-- View 1: Thẻ học trực quan (Cards View) -->
+    <div id="viewCards" class="space-y-4">
+      <div class="flex items-center justify-between text-xs text-slate-400 px-1">
+        <div>
+          Đang hiển thị: <strong id="txtVisibleCardsCount" class="text-white">307</strong> câu 
+          <span id="txtActiveCategoryLabel" class="text-indigo-400 font-bold ml-1"></span>
+        </div>
+        <button onclick="openResetProgressModal()" class="text-rose-400 hover:underline">
+          Đặt lại tiến độ học
+        </button>
+      </div>
+
+      <!-- Lưới thẻ câu hỏi -->
+      <div id="cardsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Render bằng JS -->
+      </div>
+    </div>
+
+    <!-- View 2: Dạng bảng tra cứu (Table View) -->
+    <div id="viewTable" class="hidden bg-slate-900 rounded-2xl border border-slate-800 shadow-xl overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse print-table text-xs sm:text-sm">
+          <thead class="bg-slate-800/80 border-b border-slate-700 text-slate-300 font-bold uppercase text-[11px] tracking-wider">
+            <tr>
+              <th class="py-3 px-3 w-12 text-center">STT</th>
+              <th class="py-3 px-3 w-28">Chủ đề</th>
+              <th class="py-3 px-3 w-24 text-center">Hình ảnh</th>
+              <th class="py-3 px-4">Từ khóa câu hỏi (Hook)</th>
+              <th class="py-3 px-4 w-52">Đáp án chọn ngay</th>
+              <th class="py-3 px-3 w-24 text-center no-print">Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody id="tableRowsBody" class="divide-y divide-slate-800">
+            <!-- Render bằng JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- View 3: Luyện phản xạ 5 giây (Speed Drill) -->
+    <div id="viewSpeed" class="hidden space-y-6 max-w-2xl mx-auto py-4">
+      <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6 space-y-5 shadow-2xl">
+        <div class="flex items-center justify-between text-xs">
+          <span class="px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-400 font-bold border border-amber-500/30">
+            Chuỗi đúng: <strong id="txtSpeedStreak">0 🔥</strong>
+          </span>
+          <span id="txtSpeedTimer" class="font-mono font-black text-rose-400 text-base">5.0s</span>
+          <button onclick="nextSpeedQuestion()" class="text-indigo-400 hover:text-indigo-300 font-bold">
+            Đổi câu khác ➔
+          </button>
+        </div>
+
+        <!-- Thanh đếm ngược thời gian -->
+        <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden border border-slate-700">
+          <div id="speedTimerBar" class="bg-gradient-to-r from-emerald-500 via-amber-500 to-rose-500 h-2 w-full transition-all duration-100 ease-linear"></div>
+        </div>
+
+        <!-- Thẻ phản xạ -->
+        <div class="text-center space-y-4 py-2">
+          <span id="txtSpeedCategory" class="px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-400 border border-slate-700">Chủ đề</span>
+          <h3 id="txtSpeedHook" class="text-2xl sm:text-3xl font-black text-white leading-snug px-4">Đang tải...</h3>
+
+          <!-- Khung hình ảnh đáp án phản xạ -->
+          <div id="speedVisualContainer" class="w-44 h-44 mx-auto rounded-2xl overflow-hidden border-2 border-slate-700 bg-slate-950 p-2 visual-frame">
+            <!-- SVG injected -->
+          </div>
+
+          <!-- Đáp án ẩn / hiện -->
+          <div id="speedAnswerBox" class="p-3 bg-indigo-950/70 border border-indigo-500/40 rounded-xl hidden">
+            <span class="text-[10px] uppercase font-bold text-indigo-400 block">Đáp án chính xác</span>
+            <span id="txtSpeedAnswer" class="text-2xl font-black text-emerald-400">...</span>
+          </div>
+        </div>
+
+        <!-- Nút hành động đánh giá -->
+        <div class="grid grid-cols-2 gap-3 pt-2">
+          <button onclick="submitSpeedEvaluation(false)" class="py-3 px-4 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 border border-rose-500/40 text-rose-300 font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2">
+            <span>❌</span> Chưa nhớ / Quá giờ
+          </button>
+          <button onclick="submitSpeedEvaluation(true)" class="py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/30">
+            <span>✅</span> Phản xạ đúng ngay
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- View 4: Thi thử trắc nghiệm bẫy (Exam Mock Quiz) -->
+    <div id="viewQuiz" class="hidden space-y-6 max-w-3xl mx-auto py-4">
+      <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6 space-y-5 shadow-2xl">
+        
+        <div class="flex items-center justify-between text-xs">
+          <div>
+            <span class="text-slate-400">Câu số:</span>
+            <span id="txtQuizProgress" class="font-bold text-indigo-400 text-sm ml-1">1 / 10</span>
+          </div>
+          <div>
+            <span class="text-slate-400">Điểm số:</span>
+            <span id="txtQuizScore" class="font-bold text-emerald-400 text-sm ml-1">0 điểm</span>
+          </div>
+          <button onclick="startNewExamQuiz()" class="text-slate-400 hover:text-white transition">
+            🔄 Đề mới
+          </button>
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span id="txtQuizCatTag" class="px-2.5 py-1 rounded-md text-xs font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Chủ đề</span>
+            <button onclick="speakQuizQuestionAudio()" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 flex items-center gap-1">
+              <span>🔊</span> Nghe câu hỏi
+            </button>
+          </div>
+          <h3 id="txtQuizQuestionPrompt" class="text-lg sm:text-xl font-bold text-white leading-snug">Đang tạo đề thi...</h3>
+        </div>
+
+        <!-- 4 Lựa chọn kèm hình ảnh thu nhỏ -->
+        <div id="quizOptionsContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+          <!-- Render bằng JS -->
+        </div>
+
+        <!-- Hộp phản hồi kết quả -->
+        <div id="quizFeedbackBanner" class="hidden p-4 rounded-xl text-xs font-semibold flex items-center justify-between transition">
+          <div id="txtQuizFeedbackMessage"></div>
+          <button onclick="advanceQuizQuestion()" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md">
+            Câu tiếp theo ➔
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trạng thái không tìm thấy kết quả -->
+    <div id="emptySearchResults" class="hidden py-16 text-center space-y-2">
+      <div class="text-4xl">🔎</div>
+      <h3 class="text-base font-bold text-slate-300">Không tìm thấy câu hỏi phù hợp</h3>
+      <p class="text-xs text-slate-500">Hãy thử tìm từ khóa khác hoặc bấm xóa tìm kiếm.</p>
+    </div>
+
+  </main>
+
+  <!-- Modal phóng to hình ảnh và nghe phát âm chi tiết -->
+  <div id="zoomModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl relative">
+      <button onclick="closeZoomModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">✕</button>
+      
+      <div class="flex items-center gap-2">
+        <span id="modalCatTag" class="px-2.5 py-1 rounded-md text-xs font-bold bg-indigo-500/20 text-indigo-300">Chủ đề</span>
+        <span id="modalItemNumber" class="text-xs text-slate-400">#01</span>
+      </div>
+
+      <div id="modalVisualBox" class="w-full h-56 rounded-xl overflow-hidden border border-slate-700 bg-slate-950 p-3 visual-frame flex items-center justify-center">
+        <!-- Zoomed SVG -->
+      </div>
+
+      <div class="space-y-1">
+        <span class="text-[10px] uppercase font-bold text-slate-500">Từ khóa câu hỏi (Hook)</span>
+        <h3 id="modalHookText" class="text-base font-extrabold text-white">...</h3>
+      </div>
+
+      <div class="p-3 bg-emerald-950/40 border border-emerald-500/40 rounded-xl flex items-center justify-between">
+        <div>
+          <span class="text-[10px] uppercase font-bold text-emerald-400 block">Đáp án chọn ngay</span>
+          <span id="modalAnswerText" class="text-lg font-black text-emerald-300">...</span>
+        </div>
+        <button id="btnModalSpeak" class="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5 shadow">
+          <span>🔊</span> Nghe đọc
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal xác nhận đặt lại tiến độ học (Thay thế hoàn toàn confirm() native) -->
+  <div id="resetModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl text-center">
+      <div class="w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 text-2xl flex items-center justify-center mx-auto border border-rose-500/30">
+        ⚠️
+      </div>
+      <h3 class="text-base font-bold text-white">Đặt lại toàn bộ tiến độ?</h3>
+      <p class="text-xs text-slate-400 leading-relaxed">
+        Thao tác này sẽ xóa toàn bộ trạng thái đã thuộc của 307 câu hỏi và đưa tiến độ về 0%. Bạn có chắc chắn muốn tiếp tục?
+      </p>
+      <div class="grid grid-cols-2 gap-3 pt-2">
+        <button onclick="closeResetModal()" class="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition">
+          Hủy bỏ
+        </button>
+        <button onclick="confirmResetProgress()" class="py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs transition shadow-lg shadow-rose-950/40">
+          Đồng ý xóa
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Cơ sở dữ liệu chuẩn xác 100% của toàn bộ 307 câu hỏi Aptis Part 1
+    const QUESTIONS_MASTER = [
+      // 1. Thời gian (38)
+      { id: 1, cat: "Thời gian", num: "01", hook: "Decide to get up", ans: "7:00 a.m." },
+      { id: 2, cat: "Thời gian", num: "02", hook: "Set alarm for", ans: "7:00" },
+      { id: 3, cat: "Thời gian", num: "03", hook: "Children eat fruit", ans: "In the morning" },
+      { id: 4, cat: "Thời gian", num: "04", hook: "Train leave", ans: "At 9:15" },
+      { id: 5, cat: "Thời gian", num: "05", hook: "Train leave station", ans: "9:15" },
+      { id: 6, cat: "Thời gian", num: "06", hook: "Train depart", ans: "9:30" },
+      { id: 7, cat: "Thời gian", num: "07", hook: "Decide to meet", ans: "9am on Sunday" },
+      { id: 8, cat: "Thời gian", num: "08", hook: "See Maria", ans: "at 9 am on Sunday" },
+      { id: 9, cat: "Thời gian", num: "09", hook: "Samia meet friend", ans: "10:00" },
+      { id: 10, cat: "Thời gian", num: "10", hook: "Meeting begin", ans: "10.15" },
+      { id: 11, cat: "Thời gian", num: "11", hook: "Meeting with clients start", ans: "at 10.15" },
+      { id: 12, cat: "Thời gian", num: "12", hook: "Football match start", ans: "1pm" },
+      { id: 13, cat: "Thời gian", num: "13", hook: "Meet for lunch", ans: "1:30" },
+      { id: 14, cat: "Thời gian", num: "14", hook: "Meet for lunch", ans: "1:30 p.m." },
+      { id: 15, cat: "Thời gian", num: "15", hook: "Lunch ready", ans: "2pm" },
+      { id: 16, cat: "Thời gian", num: "16", hook: "Lunch ready (chief announce)", ans: "2:00 p.m" },
+      { id: 17, cat: "Thời gian", num: "17", hook: "What time meeting", ans: "2pm" },
+      { id: 18, cat: "Thời gian", num: "18", hook: "Sarah meet friend", ans: "Three o'clock" },
+      { id: 19, cat: "Thời gian", num: "19", hook: "Mother meet son", ans: "Three o'clock" },
+      { id: 20, cat: "Thời gian", num: "20", hook: "Party start", ans: "3 o'clock" },
+      { id: 21, cat: "Thời gian", num: "21", hook: "Author usually write", ans: "In the afternoons" },
+      { id: 22, cat: "Thời gian", num: "22", hook: "What time meet", ans: "5:30" },
+      { id: 23, cat: "Thời gian", num: "23", hook: "Jane & Martha meet", ans: "5.30" },
+      { id: 24, cat: "Thời gian", num: "24", hook: "Arrange meeting", ans: "5:30 pm" },
+      { id: 25, cat: "Thời gian", num: "25", hook: "Meet instead", ans: "5:30 p.m." },
+      { id: 26, cat: "Thời gian", num: "26", hook: "What time meet", ans: "6.30pm" },
+      { id: 27, cat: "Thời gian", num: "27", hook: "Cinema / Movie begin", ans: "6:40" },
+      { id: 28, cat: "Thời gian", num: "28", hook: "Tom meet friend", ans: "7 PM" },
+      { id: 29, cat: "Thời gian", num: "29", hook: "Usually eat", ans: "7 o'clock" },
+      { id: 30, cat: "Thời gian", num: "30", hook: "What time dinner", ans: "7:30 pm" },
+      { id: 31, cat: "Thời gian", num: "31", hook: "Ahmed meet Rose (dinner)", ans: "quarter to eight" },
+      { id: 32, cat: "Thời gian", num: "32", hook: "Meeting with teacher", ans: "On Thursday morning" },
+      { id: 33, cat: "Thời gian", num: "33", hook: "Meet each other", ans: "On Thursday morning" },
+      { id: 34, cat: "Thời gian", num: "34", hook: "Play football", ans: "Wednesday afternoon" },
+      { id: 35, cat: "Thời gian", num: "35", hook: "Meeting scheduled", ans: "Wednesday afternoon" },
+      { id: 36, cat: "Thời gian", num: "36", hook: "Julie assignment due", ans: "On Saturday morning" },
+      { id: 37, cat: "Thời gian", num: "37", hook: "How much egg", ans: "£1.50 (One pounds fifty)" },
+      { id: 38, cat: "Thời gian", num: "38", hook: "How much eggs", ans: "1.50 pounds" },
+
+      // 2. Thứ / Ngày (10)
+      { id: 39, cat: "Thứ / Ngày", num: "01", hook: "Parent-teacher meeting", ans: "Monday" },
+      { id: 40, cat: "Thứ / Ngày", num: "02", hook: "Parent-teacher meeting", ans: "Monday" },
+      { id: 41, cat: "Thứ / Ngày", num: "03", hook: "Want to meet", ans: "On Tuesday" },
+      { id: 42, cat: "Thứ / Ngày", num: "04", hook: "Want to meet", ans: "Tuesday" },
+      { id: 43, cat: "Thứ / Ngày", num: "05", hook: "Shop reopen", ans: "Thursday" },
+      { id: 44, cat: "Thứ / Ngày", num: "06", hook: "Store reopen", ans: "Thursday" },
+      { id: 45, cat: "Thứ / Ngày", num: "07", hook: "Doctor new appointment", ans: "On Thursday 13th" },
+      { id: 46, cat: "Thứ / Ngày", num: "08", hook: "Submit assignment", ans: "Friday" },
+      { id: 47, cat: "Thứ / Ngày", num: "09", hook: "Need computer", ans: "Friday" },
+      { id: 48, cat: "Thứ / Ngày", num: "10", hook: "Assignment due", ans: "on Saturday" },
+
+      // 3. Giá tiền (13)
+      { id: 49, cat: "Giá tiền", num: "01", hook: "Bus fare trip", ans: "£2.5" },
+      { id: 50, cat: "Giá tiền", num: "02", hook: "Cleaning products cost", ans: "One pound fifty" },
+      { id: 51, cat: "Giá tiền", num: "03", hook: "Money left in kitchen", ans: "10 pounds" },
+      { id: 52, cat: "Giá tiền", num: "04", hook: "Standard city bus card cost", ans: "$20" },
+      { id: 53, cat: "Giá tiền", num: "05", hook: "Bus card cost", ans: "$20" },
+      { id: 54, cat: "Giá tiền", num: "06", hook: "Standard city bus card cost", ans: "$20" },
+      { id: 55, cat: "Giá tiền", num: "07", hook: "Sold music player", ans: "50 dollars" },
+      { id: 56, cat: "Giá tiền", num: "08", hook: "Cheapest computer", ans: "135 pounds" },
+      { id: 57, cat: "Giá tiền", num: "09", hook: "Max pay for computer", ans: "250 pounds" },
+      { id: 58, cat: "Giá tiền", num: "10", hook: "Morning flight cost", ans: "350 pounds" },
+      { id: 59, cat: "Giá tiền", num: "11", hook: "Small car cost", ans: "3250 pounds" },
+      { id: 60, cat: "Giá tiền", num: "12", hook: "Opinion new restaurant", ans: "The service is slow" },
+      { id: 61, cat: "Giá tiền", num: "13", hook: "Development sea transport", ans: "The use of technology will increase" },
+
+      // 4. Phương tiện (13)
+      { id: 62, cat: "Phương tiện", num: "01", hook: "Teacher go to school", ans: "He walks" },
+      { id: 63, cat: "Phương tiện", num: "02", hook: "Go to school", ans: "She walks" },
+      { id: 64, cat: "Phương tiện", num: "03", hook: "Journey to work", ans: "By car" },
+      { id: 65, cat: "Phương tiện", num: "04", hook: "Greg go to work", ans: "By bus" },
+      { id: 66, cat: "Phương tiện", num: "05", hook: "Holiday travel to city", ans: "By bus" },
+      { id: 67, cat: "Phương tiện", num: "06", hook: "Bus number near home", ans: "eight" },
+      { id: 68, cat: "Phương tiện", num: "07", hook: "How travel", ans: "By train" },
+      { id: 69, cat: "Phương tiện", num: "08", hook: "Prefer train why", ans: "Practical" },
+      { id: 70, cat: "Phương tiện", num: "09", hook: "Get to station (time)", ans: "20 minutes" },
+      { id: 71, cat: "Phương tiện", num: "10", hook: "Get to station (time)", ans: "40 minutes" },
+      { id: 72, cat: "Phương tiện", num: "11", hook: "Football club near", ans: "A park" },
+      { id: 73, cat: "Phương tiện", num: "12", hook: "Lose item (police)", ans: "Phone" },
+      { id: 74, cat: "Phương tiện", num: "13", hook: "New houses built", ans: "2000" },
+
+      // 5. Địa điểm / Phương hướng (47)
+      { id: 75, cat: "Địa điểm / Phương hướng", num: "01", hook: "Waiting somewhere", ans: "The town hall" },
+      { id: 76, cat: "Địa điểm / Phương hướng", num: "02", hook: "Malik want to go", ans: "The town hall" },
+      { id: 77, cat: "Địa điểm / Phương hướng", num: "03", hook: "Want to go tomorrow", ans: "The town hall" },
+      { id: 78, cat: "Địa điểm / Phương hướng", num: "04", hook: "Student live now", ans: "In a town hall" },
+      { id: 79, cat: "Địa điểm / Phương hướng", num: "05", hook: "Students are now", ans: "In a townhouse" },
+      { id: 80, cat: "Địa điểm / Phương hướng", num: "06", hook: "Area describing", ans: "A university area" },
+      { id: 81, cat: "Địa điểm / Phương hướng", num: "07", hook: "Anna walk morning", ans: "college" },
+      { id: 82, cat: "Địa điểm / Phương hướng", num: "08", hook: "Main office", ans: "on the first floor" },
+      { id: 83, cat: "Địa điểm / Phương hướng", num: "09", hook: "French class floor", ans: "Second" },
+      { id: 84, cat: "Địa điểm / Phương hướng", num: "10", hook: "Room study / first lesson", ans: "Room 301" },
+      { id: 85, cat: "Địa điểm / Phương hướng", num: "11", hook: "Library located", ans: "On the left of the square" },
+      { id: 86, cat: "Địa điểm / Phương hướng", num: "12", hook: "Presentation happen", ans: "The meeting room" },
+      { id: 87, cat: "Địa điểm / Phương hướng", num: "13", hook: "Largest room", ans: "Kitchen" },
+      { id: 88, cat: "Địa điểm / Phương hướng", num: "14", hook: "Where meet", ans: "The front entrance" },
+      { id: 89, cat: "Địa điểm / Phương hướng", num: "15", hook: "Wait for bus", ans: "By the hotel's main entrance" },
+      { id: 90, cat: "Địa điểm / Phương hướng", num: "16", hook: "Group wait for bus", ans: "By the hotel's main entrance" },
+      { id: 91, cat: "Địa điểm / Phương hướng", num: "17", hook: "Group wait for bus", ans: "At the main hotel entrance" },
+      { id: 92, cat: "Địa điểm / Phương hướng", num: "18", hook: "Tourists wait for bus", ans: "At the main entrance" },
+      { id: 93, cat: "Địa điểm / Phương hướng", num: "19", hook: "Luis meet Standar", ans: "Outside the station" },
+      { id: 94, cat: "Địa điểm / Phương hướng", num: "20", hook: "Platform wait train", ans: "Platform 2" },
+      { id: 95, cat: "Địa điểm / Phương hướng", num: "21", hook: "Door to Edinburgh", ans: "Two" },
+      { id: 96, cat: "Địa điểm / Phương hướng", num: "22", hook: "Meet for bus home", ans: "At the marketplace" },
+      { id: 97, cat: "Địa điểm / Phương hướng", num: "23", hook: "Anna meet friend", ans: "At the marketplace" },
+      { id: 98, cat: "Địa điểm / Phương hướng", num: "24", hook: "Go shopping", ans: "at a new shopping mall" },
+      { id: 99, cat: "Địa điểm / Phương hướng", num: "25", hook: "Shopping places", ans: "At a new shopping center" },
+      { id: 100, cat: "Địa điểm / Phương hướng", num: "26", hook: "Meet wife", ans: "Outside the shop" },
+      { id: 101, cat: "Địa điểm / Phương hướng", num: "27", hook: "Where meeting", ans: "At a café" },
+      { id: 102, cat: "Địa điểm / Phương hướng", num: "28", hook: "Coffee shop located", ans: "Opposite the gift shop" },
+      { id: 103, cat: "Địa điểm / Phương hướng", num: "29", hook: "Where café", ans: "Opposite the gift shop" },
+      { id: 104, cat: "Địa điểm / Phương hướng", num: "30", hook: "Café located", ans: "Opposite the gift shop" },
+      { id: 105, cat: "Địa điểm / Phương hướng", num: "31", hook: "Forgot item at cafe", ans: "in the corner" },
+      { id: 106, cat: "Địa điểm / Phương hướng", num: "32", hook: "Look for lost item", ans: "In the corner" },
+      { id: 107, cat: "Địa điểm / Phương hướng", num: "33", hook: "Office located", ans: "Opposite the hotel" },
+      { id: 108, cat: "Địa điểm / Phương hướng", num: "34", hook: "Working now", ans: "In a bank" },
+      { id: 109, cat: "Địa điểm / Phương hướng", num: "35", hook: "Meet sister", ans: "At the park" },
+      { id: 110, cat: "Địa điểm / Phương hướng", num: "36", hook: "Meet friend", ans: "By the park" },
+      { id: 111, cat: "Địa điểm / Phương hướng", num: "37", hook: "Travel to India go", ans: "Go to the park" },
+      { id: 112, cat: "Địa điểm / Phương hướng", num: "38", hook: "Family standing see off", ans: "Residential area" },
+      { id: 113, cat: "Địa điểm / Phương hướng", num: "39", hook: "Dan turn right", ans: "At the traffic lights" },
+      { id: 114, cat: "Địa điểm / Phương hướng", num: "40", hook: "Found key", ans: "In the front door" },
+      { id: 115, cat: "Địa điểm / Phương hướng", num: "41", hook: "Holiday going next", ans: "The south" },
+      { id: 116, cat: "Địa điểm / Phương hướng", num: "42", hook: "Weather best", ans: "In the east" },
+      { id: 117, cat: "Địa điểm / Phương hướng", num: "43", hook: "Holiday going", ans: "The mountains" },
+      { id: 118, cat: "Địa điểm / Phương hướng", num: "44", hook: "Tea served", ans: "The river boat" },
+      { id: 119, cat: "Địa điểm / Phương hướng", num: "45", hook: "Study next semester", ans: "France" },
+      { id: 120, cat: "Địa điểm / Phương hướng", num: "46", hook: "Taking staff to", ans: "To a different country" },
+      { id: 121, cat: "Địa điểm / Phương hướng", num: "47", hook: "Submit assignments", ans: "Online portal" },
+
+      // 6. Người / Vai trò (8)
+      { id: 122, cat: "Người / Vai trò", num: "01", hook: "Relationship with Lisa", ans: "Best friends" },
+      { id: 123, cat: "Người / Vai trò", num: "02", hook: "Live with / Lisa relationship", ans: "Best friends" },
+      { id: 124, cat: "Người / Vai trò", num: "03", hook: "Visiting Tom this weekend", ans: "His sister and her children" },
+      { id: 125, cat: "Người / Vai trò", num: "04", hook: "Tom going to see", ans: "His sister and her children" },
+      { id: 126, cat: "Người / Vai trò", num: "05", hook: "Taking photo of who", ans: "The girl's team" },
+      { id: 127, cat: "Người / Vai trò", num: "06", hook: "Writer first job", ans: "Teacher" },
+      { id: 128, cat: "Người / Vai trò", num: "07", hook: "David last job", ans: "An electrician" },
+      { id: 129, cat: "Người / Vai trò", num: "08", hook: "Artist job difference", ans: "She works irregular hours" },
+
+      // 7. Số lượng / Con số (23)
+      { id: 130, cat: "Số lượng / Con số", num: "01", hook: "American clients", ans: "One" },
+      { id: 131, cat: "Số lượng / Con số", num: "02", hook: "American clients", ans: "One" },
+      { id: 132, cat: "Số lượng / Con số", num: "03", hook: "Press number (buy computer)", ans: "Three" },
+      { id: 133, cat: "Số lượng / Con số", num: "04", hook: "Days to work", ans: "3 days" },
+      { id: 134, cat: "Số lượng / Con số", num: "05", hook: "Pages of assignment", ans: "4" },
+      { id: 135, cat: "Số lượng / Con số", num: "06", hook: "Bedrooms in house", ans: "Four" },
+      { id: 136, cat: "Số lượng / Con số", num: "07", hook: "Bedrooms new house", ans: "Four bedrooms" },
+      { id: 137, cat: "Số lượng / Con số", num: "08", hook: "Babysitter age", ans: "21" },
+      { id: 138, cat: "Số lượng / Con số", num: "09", hook: "Stephanie age (childcare)", ans: "21" },
+      { id: 139, cat: "Số lượng / Con số", num: "10", hook: "Chairs needed", ans: "20" },
+      { id: 140, cat: "Số lượng / Con số", num: "11", hook: "How long late", ans: "10 minutes" },
+      { id: 141, cat: "Số lượng / Con số", num: "12", hook: "Speech duration (David)", ans: "15 minutes" },
+      { id: 142, cat: "Số lượng / Con số", num: "13", hook: "Time cycling", ans: "35 minutes" },
+      { id: 143, cat: "Số lượng / Con số", num: "14", hook: "Stay in India", ans: "2 weeks" },
+      { id: 144, cat: "Số lượng / Con số", num: "15", hook: "Weeks in India", ans: "Two weeks" },
+      { id: 145, cat: "Số lượng / Con số", num: "16", hook: "Staying in India", ans: "Two weeks" },
+      { id: 146, cat: "Số lượng / Con số", num: "17", hook: "Stayed in India", ans: "Two weeks" },
+      { id: 147, cat: "Số lượng / Con số", num: "18", hook: "Rock City age", ans: "1500 years" },
+      { id: 148, cat: "Số lượng / Con số", num: "19", hook: "Teleshop number", ans: "201030" },
+      { id: 149, cat: "Số lượng / Con số", num: "20", hook: "Mary's number", ans: "555 3920" },
+      { id: 150, cat: "Số lượng / Con số", num: "21", hook: "People live in town", ans: "10,000" },
+      { id: 151, cat: "Số lượng / Con số", num: "22", hook: "Freeze Frame magazine sold", ans: "Over 300,000 copies" },
+      { id: 152, cat: "Số lượng / Con số", num: "23", hook: "Magazine copies summer", ans: "Just over 300,000 copies" },
+
+      // 8. Đồ vật / Đặc điểm (28)
+      { id: 153, cat: "Đồ vật / Đặc điểm", num: "01", hook: "Sister drink evening", ans: "Tea" },
+      { id: 154, cat: "Đồ vật / Đặc điểm", num: "02", hook: "Brother drink", ans: "Water" },
+      { id: 155, cat: "Đồ vật / Đặc điểm", num: "03", hook: "Drink choose", ans: "Iced tea" },
+      { id: 156, cat: "Đồ vật / Đặc điểm", num: "04", hook: "Have at café", ans: "Chocolate cake" },
+      { id: 157, cat: "Đồ vật / Đặc điểm", num: "05", hook: "Order at café", ans: "Cake" },
+      { id: 158, cat: "Đồ vật / Đặc điểm", num: "06", hook: "Buy for sister (Jack)", ans: "Chocolates" },
+      { id: 159, cat: "Đồ vật / Đặc điểm", num: "07", hook: "Feed cat", ans: "Fish" },
+      { id: 160, cat: "Đồ vật / Đặc điểm", num: "08", hook: "Feed cat", ans: "Fish" },
+      { id: 161, cat: "Đồ vật / Đặc điểm", num: "09", hook: "Bring to picnic", ans: "Fruit" },
+      { id: 162, cat: "Đồ vật / Đặc điểm", num: "10", hook: "Bring to picnic (Pierre & Emma)", ans: "Food" },
+      { id: 163, cat: "Đồ vật / Đặc điểm", num: "11", hook: "Buy in shop", ans: "Clothes" },
+      { id: 164, cat: "Đồ vật / Đặc điểm", num: "12", hook: "Both buy", ans: "Clothes" },
+      { id: 165, cat: "Đồ vật / Đặc điểm", num: "13", hook: "Buy after shopping", ans: "A dress" },
+      { id: 166, cat: "Đồ vật / Đặc điểm", num: "14", hook: "Buy in store", ans: "A suit for the office" },
+      { id: 167, cat: "Đồ vật / Đặc điểm", num: "15", hook: "Dress look like", ans: "long and red" },
+      { id: 168, cat: "Đồ vật / Đặc điểm", num: "16", hook: "Which dress want", ans: "Long and red" },
+      { id: 169, cat: "Đồ vật / Đặc điểm", num: "17", hook: "Color top buy", ans: "Black" },
+      { id: 170, cat: "Đồ vật / Đặc điểm", num: "18", hook: "Lost item", ans: "Glasses" },
+      { id: 171, cat: "Đồ vật / Đặc điểm", num: "19", hook: "Left at friend's house / Lost", ans: "Glasses" },
+      { id: 172, cat: "Đồ vật / Đặc điểm", num: "20", hook: "Lost at friend's house", ans: "His glasses" },
+      { id: 173, cat: "Đồ vật / Đặc điểm", num: "21", hook: "Lost item (police)", ans: "A bag" },
+      { id: 174, cat: "Đồ vật / Đặc điểm", num: "22", hook: "Alice lost", ans: "Phone" },
+      { id: 175, cat: "Đồ vật / Đặc điểm", num: "23", hook: "Left in yard", ans: "shoes" },
+      { id: 176, cat: "Đồ vật / Đặc điểm", num: "24", hook: "Take to Emma's party", ans: "A board game" },
+      { id: 177, cat: "Đồ vật / Đặc điểm", num: "25", hook: "Bring to party", ans: "Games" },
+      { id: 178, cat: "Đồ vật / Đặc điểm", num: "26", hook: "Cabinet original part", ans: "The drawer" },
+      { id: 179, cat: "Đồ vật / Đặc điểm", num: "27", hook: "Best weather part", ans: "The east" },
+      { id: 180, cat: "Đồ vật / Đặc điểm", num: "28", hook: "Best weather part", ans: "East" },
+
+      // 9. Hành động / Hoạt động (127)
+      { id: 181, cat: "Hành động / Hoạt động", num: "01", hook: "Call friend why", ans: "To tell her he will be late" },
+      { id: 182, cat: "Hành động / Hoạt động", num: "02", hook: "Return to shop why", ans: "To exchange a shirt" },
+      { id: 183, cat: "Hành động / Hoạt động", num: "03", hook: "Return dress why", ans: "Because of its size" },
+      { id: 184, cat: "Hành động / Hoạt động", num: "04", hook: "Pick up airport why", ans: "Sick" },
+      { id: 185, cat: "Hành động / Hoạt động", num: "05", hook: "Even feel", ans: "Sick" },
+      { id: 186, cat: "Hành động / Hoạt động", num: "06", hook: "Late main reason", ans: "Missed the train" },
+      { id: 187, cat: "Hành động / Hoạt động", num: "07", hook: "Late main reason", ans: "Missed the train" },
+      { id: 188, cat: "Hành động / Hoạt động", num: "08", hook: "Can't do job why", ans: "He has another appointment" },
+      { id: 189, cat: "Hành động / Hoạt động", num: "09", hook: "Tree experiment why", ans: "To study the effects of pollution" },
+      { id: 190, cat: "Hành động / Hoạt động", num: "10", hook: "Job overseas why", ans: "To be closer to her sister" },
+      { id: 191, cat: "Hành động / Hoạt động", num: "11", hook: "Move abroad why", ans: "Be closer to her family" },
+      { id: 192, cat: "Hành động / Hoạt động", num: "12", hook: "Choose doctor why", ans: "To help people" },
+      { id: 193, cat: "Hành động / Hoạt động", num: "13", hook: "Become writer why", ans: "Help people" },
+      { id: 194, cat: "Hành động / Hoạt động", num: "14", hook: "Job want next", ans: "Become a writer" },
+      { id: 195, cat: "Hành động / Hoạt động", num: "15", hook: "Job want next", ans: "Become a writer" },
+      { id: 196, cat: "Hành động / Hoạt động", num: "16", hook: "Get up early why", ans: "To have some quiet time" },
+      { id: 197, cat: "Hành động / Hoạt động", num: "17", hook: "Learn drive why", ans: "He has to drive to work" },
+      { id: 198, cat: "Hành động / Hoạt động", num: "18", hook: "Douglas call Kay why", ans: "say thank you" },
+      { id: 199, cat: "Hành động / Hoạt động", num: "19", hook: "Vincent call James why", ans: "Suggest a drink" },
+      { id: 200, cat: "Hành động / Hoạt động", num: "20", hook: "Tour canceled why", ans: "Not enough people" },
+      { id: 201, cat: "Hành động / Hoạt động", num: "21", hook: "Flights cancelled why", ans: "Bad weather conditions" },
+      { id: 202, cat: "Hành động / Hoạt động", num: "22", hook: "Airport flights cancelled", ans: "Scheduled maintenance" },
+      { id: 203, cat: "Hành động / Hoạt động", num: "23", hook: "Air travel cancelled", ans: "Poor weather conditions" },
+      { id: 204, cat: "Hành động / Hoạt động", num: "24", hook: "Buying house difficulty", ans: "Persuading his family" },
+      { id: 205, cat: "Hành động / Hoạt động", num: "25", hook: "Family main problem", ans: "Persuading his family" },
+      { id: 206, cat: "Hành động / Hoạt động", num: "26", hook: "Coffee shop bothered", ans: "The wifi was too slow" },
+      { id: 207, cat: "Hành động / Hoạt động", num: "27", hook: "Gym unhappy why", ans: "Her yoga class was cancelled" },
+      { id: 208, cat: "Hành động / Hoạt động", num: "28", hook: "Restaurant complain", ans: "the place was cold" },
+      { id: 209, cat: "Hành động / Hoạt động", num: "29", hook: "What not working", ans: "The computer" },
+      { id: 210, cat: "Hành động / Hoạt động", num: "30", hook: "Game stopping from", ans: "Win" },
+      { id: 211, cat: "Hành động / Hoạt động", num: "31", hook: "Dissatisfaction solution", ans: "Request a transfer" },
+      { id: 212, cat: "Hành động / Hoạt động", num: "32", hook: "Poor air quality cause", ans: "Fires from the countryside" },
+      { id: 213, cat: "Hành động / Hoạt động", num: "33", hook: "Conference important task", ans: "Giving a formal address" },
+      { id: 214, cat: "Hành động / Hoạt động", num: "34", hook: "Ask student to do", ans: "Speak at the conference" },
+      { id: 215, cat: "Hành động / Hoạt động", num: "35", hook: "Teacher want student", ans: "Complete the assignments on time" },
+      { id: 216, cat: "Hành động / Hoạt động", num: "36", hook: "Teacher tell student", ans: "Submit the assignment on time" },
+      { id: 217, cat: "Hành động / Hoạt động", num: "37", hook: "Tuesday need to do", ans: "write a report" },
+      { id: 218, cat: "Hành động / Hoạt động", num: "38", hook: "Study course this year", ans: "Computer" },
+      { id: 219, cat: "Hành động / Hoạt động", num: "39", hook: "Son like study", ans: "Art" },
+      { id: 220, cat: "Hành động / Hoạt động", num: "40", hook: "School days good at", ans: "Plays football" },
+      { id: 221, cat: "Hành động / Hoạt động", num: "41", hook: "Sports good at", ans: "Football" },
+      { id: 222, cat: "Hành động / Hoạt động", num: "42", hook: "School favorite thing", ans: "History classes" },
+      { id: 223, cat: "Hành động / Hoạt động", num: "43", hook: "Decide write about", ans: "historian" },
+      { id: 224, cat: "Hành động / Hoạt động", num: "44", hook: "Student write about", ans: "land" },
+      { id: 225, cat: "Hành động / Hoạt động", num: "45", hook: "Young people shouldn't", ans: "Ask for more money." },
+      { id: 226, cat: "Hành động / Hoạt động", num: "46", hook: "Save money advice", ans: "Use the public transport" },
+      { id: 227, cat: "Hành động / Hoạt động", num: "47", hook: "Save money advice", ans: "Cook for yourself" },
+      { id: 228, cat: "Hành động / Hoạt động", num: "48", hook: "Managers main change", ans: "Adjust the schedule" },
+      { id: 229, cat: "Hành động / Hoạt động", num: "49", hook: "Meeting preparing", ans: "Order the food" },
+      { id: 230, cat: "Hành động / Hoạt động", num: "50", hook: "Anna later afternoon", ans: "Stay late at the office" },
+      { id: 231, cat: "Hành động / Hoạt động", num: "51", hook: "Waiting James decide", ans: "Having the meeting without him" },
+      { id: 232, cat: "Hành động / Hoạt động", num: "52", hook: "Father will do", ans: "Arrange private classes" },
+      { id: 233, cat: "Hành động / Hoạt động", num: "53", hook: "Like manager why", ans: "He taught her a lot" },
+      { id: 234, cat: "Hành động / Hoạt động", num: "54", hook: "Manager George", ans: "he taught her a lot" },
+      { id: 235, cat: "Hành động / Hoạt động", num: "55", hook: "Writer different how", ans: "She works at irregular times" },
+      { id: 236, cat: "Hành động / Hoạt động", num: "56", hook: "Business trip like most", ans: "Meeting people from different companies" },
+      { id: 237, cat: "Hành động / Hoạt động", num: "57", hook: "Business trip enjoy", ans: "Learn new ideas" },
+      { id: 238, cat: "Hành động / Hoạt động", num: "58", hook: "Dubai like what", ans: "He enjoys his job here" },
+      { id: 239, cat: "Hành động / Hoạt động", num: "59", hook: "Career future do", ans: "To work in business" },
+      { id: 240, cat: "Hành động / Hoạt động", num: "60", hook: "Radio talking about", ans: "Her journey to work" },
+      { id: 241, cat: "Hành động / Hoạt động", num: "61", hook: "Routine after work", ans: "Goes running" },
+      { id: 242, cat: "Hành động / Hoạt động", num: "62", hook: "Routine after work", ans: "Play football" },
+      { id: 243, cat: "Hành động / Hoạt động", num: "63", hook: "Free time Sarah", ans: "Go to theater and play sports" },
+      { id: 244, cat: "Hành động / Hoạt động", num: "64", hook: "Afternoon can do", ans: "Play golf" },
+      { id: 245, cat: "Hành động / Hoạt động", num: "65", hook: "Actor free time", ans: "Drawing" },
+
+      { id: 246, cat: "Hành động / Hoạt động", num: "66", hook: "Activity enjoyed", ans: "Cycling" },
+      { id: 247, cat: "Hành động / Hoạt động", num: "67", hook: "Trip enjoy last year", ans: "Cycling" },
+      { id: 248, cat: "Hành động / Hoạt động", num: "68", hook: "Holiday plan", ans: "Teaching" },
+      { id: 249, cat: "Hành động / Hoạt động", num: "69", hook: "Holiday did what", ans: "She went to the park." },
+      { id: 250, cat: "Hành động / Hoạt động", num: "70", hook: "Holiday do what", ans: "Go for a walk" },
+      { id: 251, cat: "Hành động / Hoạt động", num: "71", hook: "Weekend do what", ans: "Go for a walk" },
+      { id: 252, cat: "Hành động / Hoạt động", num: "72", hook: "Lily evening routine", ans: "Goes for a walk" },
+      { id: 253, cat: "Hành động / Hoạt động", num: "73", hook: "Exercise / holidays", ans: "Walking" },
+      { id: 254, cat: "Hành động / Hoạt động", num: "74", hook: "Saturday routine", ans: "Sees her family" },
+      { id: 255, cat: "Hành động / Hoạt động", num: "75", hook: "Last week did", ans: "Stayed at home" },
+      { id: 256, cat: "Hành động / Hoạt động", num: "76", hook: "What will she do", ans: "Go for a drive" },
+      { id: 257, cat: "Hành động / Hoạt động", num: "77", hook: "Did in morning", ans: "Look at a view" },
+      { id: 258, cat: "Hành động / Hoạt động", num: "78", hook: "Woman doing", ans: "Cleaning" },
+      { id: 259, cat: "Hành động / Hoạt động", num: "79", hook: "Man going to do", ans: "Get something to eat" },
+      { id: 260, cat: "Hành động / Hoạt động", num: "80", hook: "Afternoon plans", ans: "Go on a city tour" },
+      { id: 261, cat: "Hành động / Hoạt động", num: "81", hook: "Afternoon plans", ans: "Go on a city tour" },
+      { id: 262, cat: "Hành động / Hoạt động", num: "82", hook: "Plans for day", ans: "Have coffee" },
+      { id: 263, cat: "Hành động / Hoạt động", num: "83", hook: "Evening decide do", ans: "Make plans later" },
+      { id: 264, cat: "Hành động / Hoạt động", num: "84", hook: "Family holiday did", ans: "Camping" },
+      { id: 265, cat: "Hành động / Hoạt động", num: "85", hook: "Favorite entertainment", ans: "Going to the theatre" },
+      { id: 266, cat: "Hành động / Hoạt động", num: "86", hook: "Spare time favorite", ans: "going to the theatre" },
+      { id: 267, cat: "Hành động / Hoạt động", num: "87", hook: "Film recommend", ans: "Action film" },
+      { id: 268, cat: "Hành động / Hoạt động", num: "88", hook: "Movie elements agree", ans: "The ending" },
+      { id: 269, cat: "Hành động / Hoạt động", num: "89", hook: "Film like best", ans: "the mountain scenes" },
+      { id: 270, cat: "Hành động / Hoạt động", num: "90", hook: "Song attractive part", ans: "The words" },
+      { id: 271, cat: "Hành động / Hoạt động", num: "91", hook: "Show end with", ans: "A surprise performance" },
+      { id: 272, cat: "Hành động / Hoạt động", num: "92", hook: "Show end with", ans: "A surprise performance" },
+      { id: 273, cat: "Hành động / Hoạt động", num: "93", hook: "Concert end how", ans: "With the city's favorite group" },
+      { id: 274, cat: "Hành động / Hoạt động", num: "94", hook: "School new facility", ans: "A Performance space" },
+      { id: 275, cat: "Hành động / Hoạt động", num: "95", hook: "Wife enjoy", ans: "Photography" },
+      { id: 276, cat: "Hành động / Hoạt động", num: "96", hook: "Have for lunch", ans: "Tea" },
+      { id: 277, cat: "Hành động / Hoạt động", num: "97", hook: "Order drink", ans: "Iced tea" },
+      { id: 278, cat: "Hành động / Hoạt động", num: "98", hook: "Anne need", ans: "Eggs" },
+      { id: 279, cat: "Hành động / Hoạt động", num: "99", hook: "Cat should eat", ans: "Fish" },
+      { id: 280, cat: "Hành động / Hoạt động", num: "100", hook: "Take with her", ans: "games" },
+      { id: 281, cat: "Hành động / Hoạt động", num: "101", hook: "Dress colour", ans: "Black" },
+      { id: 282, cat: "Hành động / Hoạt động", num: "102", hook: "Shoes buy", ans: "Red" },
+      { id: 283, cat: "Hành động / Hoạt động", num: "103", hook: "Shoes buy", ans: "The orange shoes" },
+      { id: 284, cat: "Hành động / Hoạt động", num: "104", hook: "Change in house", ans: "The window" },
+      { id: 285, cat: "Hành động / Hoạt động", num: "105", hook: "Repair for building", ans: "Windows" },
+      { id: 286, cat: "Hành động / Hoạt động", num: "106", hook: "House not original", ans: "Furniture" },
+      { id: 287, cat: "Hành động / Hoạt động", num: "107", hook: "New home ask about", ans: "Where to buy a new table" },
+      { id: 288, cat: "Hành động / Hoạt động", num: "108", hook: "Building currently used", ans: "A department store" },
+      { id: 289, cat: "Hành động / Hoạt động", num: "109", hook: "Health center next to", ans: "A train station" },
+      { id: 290, cat: "Hành động / Hoạt động", num: "110", hook: "Jack's house color", ans: "Red" },
+      { id: 291, cat: "Hành động / Hoạt động", num: "111", hook: "Teacher's building color", ans: "White" },
+      { id: 292, cat: "Hành động / Hoạt động", num: "112", hook: "Computer on light", ans: "Blue" },
+      { id: 293, cat: "Hành động / Hoạt động", num: "113", hook: "Announcement main topic", ans: "New library hours" },
+      { id: 294, cat: "Hành động / Hoạt động", num: "114", hook: "Mother & daughter common", ans: "Similar interests" },
+      { id: 295, cat: "Hành động / Hoạt động", num: "115", hook: "Sister like", ans: "They have similar characters" },
+      { id: 296, cat: "Hành động / Hoạt động", num: "116", hook: "Jana's sister look like", ans: "Short" },
+      { id: 297, cat: "Hành động / Hoạt động", num: "117", hook: "Mother & aunt alike", ans: "They were thin" },
+      { id: 298, cat: "Hành động / Hoạt động", num: "118", hook: "Favourite teacher", ans: "Miss Brown" },
+      { id: 299, cat: "Hành động / Hoạt động", num: "119", hook: "Encouraged scientist", ans: "A large stone" },
+      { id: 300, cat: "Hành động / Hoạt động", num: "120", hook: "Location enjoy most", ans: "The city" },
+      { id: 301, cat: "Hành động / Hoạt động", num: "121", hook: "Birds winter do", ans: "They stay together in groups for protection" },
+      { id: 302, cat: "Hành động / Hoạt động", num: "122", hook: "Soobin favorite room", ans: "Bathroom" },
+      { id: 303, cat: "Hành động / Hoạt động", num: "123", hook: "Caroline favourite room", ans: "The bathroom" },
+      { id: 304, cat: "Hành động / Hoạt động", num: "124", hook: "Caroline favourite room", ans: "Bathroom" },
+      { id: 305, cat: "Hành động / Hoạt động", num: "125", hook: "Trip weather", ans: "Cold and wet" },
+      { id: 306, cat: "Hành động / Hoạt động", num: "126", hook: "Trip weather", ans: "Cold and wet" },
+      { id: 307, cat: "Hành động / Hoạt động", num: "127", hook: "Trip weather", ans: "Cold but not wet" }
+    ];
+
+    const CATEGORIES_DATA = [
+      { name: "Tất cả", count: 307 },
+      { name: "Thời gian", count: 38 },
+      { name: "Thứ / Ngày", count: 10 },
+      { name: "Giá tiền", count: 13 },
+      { name: "Phương tiện", count: 13 },
+      { name: "Địa điểm / Phương hướng", count: 47 },
+      { name: "Người / Vai trò", count: 8 },
+      { name: "Số lượng / Con số", count: 23 },
+      { name: "Đồ vật / Đặc điểm", count: 28 },
+      { name: "Hành động / Hoạt động", count: 127 }
+    ];
+
+    // State Variables
+    let activeCategory = "Tất cả";
+    let searchQuery = "";
+    let isGlobalBlurred = false;
+    let onlyUnmastered = false;
+    let activeMainView = "cards"; // 'cards' | 'table' | 'speed' | 'quiz'
+    let currentVoiceLang = "en-GB";
+
+    let masteredIds = new Set(JSON.parse(localStorage.getItem('aptis_mastered_canvas_ids') || '[]'));
+
+    // Speed Drill State
+    let speedDrillItem = null;
+    let speedTimer = null;
+    let speedTimeLeft = 5.0;
+    let speedStreakCount = 0;
+
+    // Exam Quiz State
+    let quizQuestions = [];
+    let currentQuizIndex = 0;
+    let quizScore = 0;
+    let isQuizAnswered = false;
+
+    // Hàm tính góc xoay kim giờ & kim phút chuẩn xác 100%
+    function getClockAngles(timeStr) {
+      const str = (timeStr || '').toLowerCase();
+      let hour = 12, min = 0;
+
+      if (str.includes("quarter to eight")) {
+        hour = 7; min = 45;
+      } else if (str.includes("7:00") || str.includes("7 o'clock") || str.includes("7 pm")) {
+        hour = 7; min = 0;
+      } else if (str.includes("7:30")) {
+        hour = 7; min = 30;
+      } else if (str.includes("9:15") || str.includes("9.15")) {
+        hour = 9; min = 15;
+      } else if (str.includes("9:30") || str.includes("9.30")) {
+        hour = 9; min = 30;
+      } else if (str.includes("9am") || str.includes("9 am")) {
+        hour = 9; min = 0;
+      } else if (str.includes("10.15") || str.includes("10:15")) {
+        hour = 10; min = 15;
+      } else if (str.includes("10:00") || str.includes("10.00")) {
+        hour = 10; min = 0;
+      } else if (str.includes("1pm") || str.includes("1:00")) {
+        hour = 1; min = 0;
+      } else if (str.includes("1:30") || str.includes("1.30")) {
+        hour = 1; min = 30;
+      } else if (str.includes("2pm") || str.includes("2:00")) {
+        hour = 2; min = 0;
+      } else if (str.includes("3 o'clock") || str.includes("three o'clock")) {
+        hour = 3; min = 0;
+      } else if (str.includes("5:30") || str.includes("5.30")) {
+        hour = 5; min = 30;
+      } else if (str.includes("6.30") || str.includes("6:30")) {
+        hour = 6; min = 30;
+      } else if (str.includes("6:40")) {
+        hour = 6; min = 40;
+      } else {
+        const match = str.match(/(\d{1,2})[:.](\d{2})/);
+        if (match) {
+          hour = parseInt(match[1], 10);
+          min = parseInt(match[2], 10);
+        }
+      }
+
+      const mDeg = (min / 60) * 360;
+      const hDeg = ((hour % 12) / 12) * 360 + (min / 60) * 30;
+      return { hDeg, mDeg };
+    }
+
+    // Bộ sinh đồ họa Vector SVG chính xác 100% theo đáp án và từ khóa
+    function renderAnswerVisualSVG(item) {
+      const cat = item.cat;
+      const ans = item.ans.toLowerCase();
+      const hook = item.hook.toLowerCase();
+
+      // 1. NHÓM THỜI GIAN: Đồng hồ kim chỉ đúng vị trí
+      if (cat === "Thời gian" && (ans.includes(":") || ans.includes("o'clock") || ans.includes("am") || ans.includes("pm") || ans.includes("quarter") || ans.includes("10.15") || ans.includes("5.30"))) {
+        const { hDeg, mDeg } = getClockAngles(item.ans);
+        return `
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="47" fill="#0f172a" stroke="#6366f1" stroke-width="3"/>
+            <circle cx="50" cy="50" r="41" fill="#1e293b"/>
+            <line x1="50" y1="13" x2="50" y2="18" stroke="#f8fafc" stroke-width="3" stroke-linecap="round"/>
+            <line x1="87" y1="50" x2="82" y2="50" stroke="#f8fafc" stroke-width="3" stroke-linecap="round"/>
+            <line x1="50" y1="87" x2="50" y2="82" stroke="#f8fafc" stroke-width="3" stroke-linecap="round"/>
+            <line x1="13" y1="50" x2="18" y2="50" stroke="#f8fafc" stroke-width="3" stroke-linecap="round"/>
+            <line x1="50" y1="50" x2="50" y2="28" stroke="#38bdf8" stroke-width="4.5" stroke-linecap="round" transform="rotate(${hDeg} 50 50)"/>
+            <line x1="50" y1="50" x2="50" y2="19" stroke="#f43f5e" stroke-width="3" stroke-linecap="round" transform="rotate(${mDeg} 50 50)"/>
+            <circle cx="50" cy="50" r="4" fill="#ffffff"/>
+            <rect x="18" y="70" width="64" height="15" rx="5" fill="#090d16" stroke="#475569" stroke-width="1"/>
+            <text x="50" y="81" fill="#38bdf8" font-size="8.5" font-weight="900" text-anchor="middle">${item.ans.toUpperCase()}</text>
+          </svg>
+        `;
+      }
+
+      // 2. NHÓM BUỔI TRONG NGÀY (Morning / Afternoon)
+      if (ans.includes("morning") || ans.includes("afternoon")) {
+        const isMorn = ans.includes("morning");
+        return `
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <rect x="8" y="8" width="84" height="84" rx="16" fill="${isMorn ? '#0c4a6e' : '#7c2d12'}" stroke="${isMorn ? '#38bdf8' : '#fb923c'}" stroke-width="2.5"/>
+            <circle cx="50" cy="46" r="18" fill="${isMorn ? '#facc15' : '#ea580c'}"/>
+            <path d="M12 70 Q50 62 88 70 L88 88 L12 88 Z" fill="${isMorn ? '#0369a1' : '#431407'}"/>
+            <text x="50" y="32" fill="#ffffff" font-size="7.5" font-weight="900" text-anchor="middle">${isMorn ? 'SÁNG / SUNRISE' : 'CHIỀU / AFTERNOON'}</text>
+            <rect x="16" y="70" width="68" height="15" rx="4" fill="#0f172a" opacity="0.95"/>
+            <text x="50" y="81" fill="#38bdf8" font-size="7.5" font-weight="900" text-anchor="middle">${item.ans.toUpperCase().slice(0, 16)}</text>
+          </svg>
+        `;
+      }
+
+      // 3. NHÓM THỨ / NGÀY (Lịch để bàn Aptis)
+      if (cat === "Thứ / Ngày" || ans.includes("monday") || ans.includes("tuesday") || ans.includes("thursday") || ans.includes("friday") || ans.includes("saturday")) {
+        let dayAbbr = "DAY";
+        if (ans.includes("monday")) dayAbbr = "MON";
+        else if (ans.includes("tuesday")) dayAbbr = "TUE";
+        else if (ans.includes("thursday")) dayAbbr = ans.includes("13th") ? "THU 13" : "THU";
+        else if (ans.includes("friday")) dayAbbr = "FRI";
+        else if (ans.includes("saturday")) dayAbbr = "SAT";
+
+        return `
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <rect x="12" y="14" width="76" height="74" rx="12" fill="#1e293b" stroke="#38bdf8" stroke-width="2.5"/>
+            <path d="M12 28 Q12 14 26 14 L74 14 Q88 14 88 28 L88 34 L12 34 Z" fill="#dc2626"/>
+            <circle cx="28" cy="10" r="3.5" fill="#e2e8f0"/>
+            <circle cx="72" cy="10" r="3.5" fill="#e2e8f0"/>
+            <text x="50" y="27" fill="#ffffff" font-size="8" font-weight="900" text-anchor="middle">CALENDAR</text>
+            <text x="50" y="58" fill="#f8fafc" font-size="16" font-weight="900" text-anchor="middle">${dayAbbr}</text>
+            <rect x="18" y="68" width="64" height="14" rx="4" fill="#0f172a"/>
+            <text x="50" y="78" fill="#38bdf8" font-size="8" font-weight="800" text-anchor="middle">${item.ans.toUpperCase().slice(0, 14)}</text>
+          </svg>
+        `;
+      }
+
+      // 4. NHÓM GIÁ TIỀN & THẺ VÉ
+      if (cat === "Giá tiền" || ans.includes("£") || ans.includes("$") || ans.includes("pounds") || ans.includes("dollars")) {
+        if (ans.includes("$20") || hook.includes("bus card")) {
+          return `
+            <svg class="w-full h-full" viewBox="0 0 100 100">
+              <rect x="10" y="18" width="80" height="64" rx="10" fill="#0284c7" stroke="#38bdf8" stroke-width="2.5"/>
+              <rect x="16" y="26" width="18" height="14" rx="3" fill="#facc15"/>
+              <circle cx="72" cy="33" r="7" fill="#38bdf8" opacity="0.4"/>
+              <circle cx="78" cy="33" r="7" fill="#38bdf8" opacity="0.4"/>
+              <text x="50" y="58" fill="#ffffff" font-size="18" font-weight="900" text-anchor="middle">$20</text>
+              <text x="50" y="74" fill="#bae6fd" font-size="7.5" font-weight="900" text-anchor="middle">CITY BUS PASS</text>
+            </svg>
+          `;
+        }
+        return `
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <path d="M16 48 L48 16 L84 16 L84 52 L52 84 Z" fill="#064e3b" stroke="#10b981" stroke-width="2.5"/>
+            <circle cx="68" cy="32" r="5" fill="#ffffff"/>
+            <text x="50" y="55" fill="#ffffff" font-size="11" font-weight="900" text-anchor="middle" transform="rotate(-45 50 55)">${item.ans.slice(0, 9)}</text>
+            <rect x="18" y="72" width="64" height="14" rx="4" fill="#022c22" stroke="#10b981" stroke-width="1"/>
+            <text x="50" y="82" fill="#34d399" font-size="7.5" font-weight="900" text-anchor="middle">PRICE / CHI PHÍ</text>
+          </svg>
+        `;
+      }
+
+      // 5. NHÓM PHƯƠNG TIỆN GIAO THÔNG
+      if (cat === "Phương tiện" || ans.includes("walk") || ans.includes("bus") || ans.includes("train") || ans.includes("car")) {
+        if (ans.includes("walk")) {
+          return `
+            <svg class="w-full h-full" viewBox="0 0 100 100">
+              <rect x="8" y="8" width="84" height="84" rx="16" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+              <circle cx="50" cy="24" r="7" fill="#38bdf8"/>
+              <path d="M50 32 L48 56 L36 76 M48 56 L62 76 M34 44 L66 42" stroke="#38bdf8" stroke-width="4.5" stroke-linecap="round"/>
+              <rect x="16" y="74" width="68" height="15" rx="4" fill="#0f172a"/>
+              <text x="50" y="85" fill="#38bdf8" font-size="8.5" font-weight="900" text-anchor="middle">WALKS / ĐI BỘ</text>
+            </svg>
+          `;
+        }
+        if (ans.includes("bus") || ans.includes("eight")) {
+          return `
+            <svg class="w-full h-full" viewBox="0 0 100 100">
+              <rect x="14" y="18" width="72" height="54" rx="10" fill="#f59e0b" stroke="#d97706" stroke-width="2.5"/>
+              <rect x="20" y="24" width="60" height="14" rx="3" fill="#0f172a"/>
+              <text x="50" y="34" fill="#facc15" font-size="9" font-weight="900" text-anchor="middle">${ans.includes("eight") ? 'BUS #8' : 'CITY BUS'}</text>
+              <rect x="20" y="42" width="26" height="16" rx="3" fill="#1e293b"/>
+              <rect x="54" y="42" width="26" height="16" rx="3" fill="#1e293b"/>
+              <circle cx="32" cy="74" r="8" fill="#0f172a" stroke="#e2e8f0" stroke-width="2"/>
+              <circle cx="68" cy="74" r="8" fill="#0f172a" stroke="#e2e8f0" stroke-width="2"/>
+              <text x="50" y="90" fill="#f8fafc" font-size="8.5" font-weight="900" text-anchor="middle">BY BUS</text>
+            </svg>
+          `;
+        }
+        if (ans.includes("train") || ans.includes("practical")) {
+          return `
+            <svg class="w-full h-full" viewBox="0 0 100 100">
+              <rect x="20" y="16" width="60" height="60" rx="14" fill="#0284c7" stroke="#38bdf8" stroke-width="2.5"/>
+              <rect x="26" y="24" width="48" height="24" rx="4" fill="#0f172a"/>
+              <circle cx="34" cy="58" r="5" fill="#facc15"/>
+              <circle cx="66" cy="58" r="5" fill="#facc15"/>
+              <line x1="16" y1="84" x2="84" y2="84" stroke="#64748b" stroke-width="4"/>
+              <text x="50" y="40" fill="#38bdf8" font-size="10" font-weight="900" text-anchor="middle">TRAIN</text>
+              <text x="50" y="93" fill="#94a3b8" font-size="7.5" font-weight="800" text-anchor="middle">BY TRAIN</text>
+            </svg>
+          `;
+        }
+        return `
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <rect x="8" y="8" width="84" height="84" rx="16" fill="#1e293b" stroke="#f43f5e" stroke-width="2"/>
+            <path d="M22 54 L32 32 L68 32 L78 54 Z" fill="#ef4444"/>
+            <rect x="16" y="52" width="68" height="18" rx="5" fill="#dc2626"/>
+            <circle cx="30" cy="72" r="7" fill="#0f172a" stroke="#ffffff" stroke-width="2"/>
+            <circle cx="70" cy="72" r="7" fill="#0f172a" stroke="#ffffff" stroke-width="2"/>
+            <text x="50" y="89" fill="#fca5a5" font-size="8.5" font-weight="900" text-anchor="middle">BY CAR / Ô TÔ</text>
+          </svg>
+        `;
+      }
+
+      // 6. NHÓM ĐỒ ĂN / ĐỒ UỐNG
+      if (ans === "tea") {
+        return `
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <rect x="8" y="8" width="84" height="84" rx="16" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+            <path d="M26 44 L70 44 L64 74 Q60 80 48 80 Q36 80 32 74 Z" fill="#10b981"/>
+            <path d="M68 50 Q78 50 78 60 Q78 70 66 70" stroke="#10b981" stroke-width="4" fill="none"/>
+            <ellipse cx="48" cy="84" rx="30" ry="4" fill="#64748b"/>
+            <path d="M40 36 Q44 26 40 18 M48 36 Q52 26 48 18 M56 36 Q60 26 56 18" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <text x="48" y="64" fill="#ffffff" font-size="10" font-weight="900" text-anchor="middle">TEA</text>
+          </svg>
+        `;
+      }
+      if (ans.includes("iced tea")) {
+        return `
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <rect x="8" y="8" width="84" height="84" rx="16" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+            <rect x="34" y="24" width="32" height="54" rx="4" fill="#b45309" stroke="#fef08a" stroke-width="2"/>
+            <line x1="42" y1="14" x2="52" y2="70" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="34" cy="30" r="10" fill="#facc15" stroke="#ca8a04" stroke-width="2"/>
+            <text x="50" y="58" fill="#ffffff" font-size="8" font-weight="900" text-anchor="middle">ICED TEA</text>
+          </svg>
+        `;
+      }
+      if (ans === "water") {
+        return `
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <rect x="8" y="8" width="84" height="84" rx="16" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+            <rect x="34" y="28" width="32" height="48" rx="5" fill="#0284c7" stroke="#bae6fd" stroke-width="2"/>
+            <path d="M50 14 Q56 22 50 26 Q44 22 50 14 Z" fill="#38bdf8"/>
+            <text x="50" y="56" fill="#ffffff" font-size="9" font-weight="900" text-anchor="middle">WATER</text>
+          </svg>
+        `;
+      }
+      if (ans.includes("cake")) {
+        return `
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <rect x="8" y="8" width="84" height="84" rx="16" fill="#1e293b" stroke="#a855f7" stroke-width="2"/>
+            <path d="M22 66 L78 66 L68 32 L22 50 Z" fill="#78350f" stroke="#f59e0b" stroke-width="2"/>
+            <circle cx="48" cy="28" r="6" fill="#ef4444"/>
+            <text x="50" y="54" fill="#fde68a" font-size="8" font-weight="900" text-anchor="middle">CAKE</text>
+          </svg>
+        `;
+      }
+      if (ans.includes("chocolates")) {
+        return `
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <rect x="8" y="8" width="84" height="84" rx="16" fill="#1e293b" stroke="#f43f5e" stroke-width="2"/>
+            <rect x="24" y="28" width="52" height="44" rx="6" fill="#831843" stroke="#f43f5e" stroke-width="2"/>
+            <line x1="50" y1="28" x2="50" y2="72" stroke="#facc15" stroke-width="4"/>
+            <line x1="24" y1="50" x2="76" y2="50" stroke="#facc15" stroke-width="4"/>
+            <text x="50" y="84" fill="#fbcfe8" font-size="7.5" font-weight="900" text-anchor="middle">CHOCOLATES</text>
+          </svg>
+        `;
+      }
+      if (ans.includes("fish")) {
+        return `
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <rect x="8" y="8" width="84" height="84" rx="16" fill="#1e293b" stroke="#0ea5e9" stroke-width="2"/>
+            <path d="M18 50 Q50 28 76 50 Q50 72 18 50 Z" fill="#0284c7" stroke="#38bdf8" stroke-width="2"/>
+            <polygon points="76,50 88,38 88,62" fill="#0284c7"/>
+            <circle cx="30" cy="46" r="3" fill="#ffffff"/>
+            <text x="50" y="82" fill="#7dd3fc" font-size="8.5" font-weight="900" text-anchor="middle">FISH / CHO MÈO</text>
+          </svg>
+        `;
+      }
+
+      // 7. TRANG PHỤC & ĐỒ VẬT
+      if (ans.includes("red") && (hook.includes("dress") || ans.includes("dress"))) {
+        return `
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <rect x="8" y="8" width="84" height="84" rx="16" fill="#1e293b" stroke="#ef4444" stroke-width="2"/>
+            <path d="M42 22 L58 22 L54 44 L72 80 L28 80 L46 44 Z" fill="#dc2626" stroke="#ef4444" stroke-width="1.5"/>
+            <text x="50" y="90" fill="#fca5a5" font-size="7.5" font-weight="900" text-anchor="middle">LONG & RED DRESS</text>
+          </svg>
+        `;
+      }
+      if (ans.includes("glasses")) {
+        return `
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <rect x="8" y="8" width="84" height="84" rx="16" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+            <circle cx="34" cy="50" r="14" fill="#0369a1" stroke="#38bdf8" stroke-width="3"/>
+            <circle cx="66" cy="50" r="14" fill="#0369a1" stroke="#38bdf8" stroke-width="3"/>
+            <line x1="48" y1="50" x2="52" y2="50" stroke="#38bdf8" stroke-width="4"/>
+            <path d="M20 50 Q14 42 12 36 M80 50 Q86 42 88 36" stroke="#38bdf8" stroke-width="3"/>
+            <text x="50" y="78" fill="#bae6fd" font-size="8.5" font-weight="900" text-anchor="middle">GLASSES / KÍNH</text>
+          </svg>
+        `;
+      }
+      if (ans.includes("bag")) {
+        return `
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <rect x="8" y="8" width="84" height="84" rx="16" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+            <path d="M40 38 Q40 22 50 22 Q60 22 60 38" stroke="#d97706" stroke-width="4" fill="none"/>
+            <rect x="26" y="38" width="48" height="38" rx="6" fill="#b45309" stroke="#fbbf24" stroke-width="2"/>
+            <text x="50" y="60" fill="#ffffff" font-size="8.5" font-weight="900" text-anchor="middle">A BAG</text>
+          </svg>
+        `;
+      }
+      if (ans.includes("phone")) {
+        return `
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <rect x="8" y="8" width="84" height="84" rx="16" fill="#1e293b" stroke="#a855f7" stroke-width="2"/>
+            <rect x="32" y="18" width="36" height="64" rx="7" fill="#0f172a" stroke="#c084fc" stroke-width="2"/>
+            <circle cx="50" cy="74" r="3" fill="#c084fc"/>
+            <rect x="38" y="24" width="24" height="42" rx="2" fill="#6b21a8"/>
+            <text x="50" y="48" fill="#ffffff" font-size="7.5" font-weight="900" text-anchor="middle">PHONE</text>
+          </svg>
+        `;
+      }
+
+      // 8. ĐỊA ĐIỂM CỤ THỂ
+      if (ans.includes("town hall")) {
+        return `
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <rect x="8" y="8" width="84" height="84" rx="16" fill="#1e293b" stroke="#6366f1" stroke-width="2"/>
+            <polygon points="50,18 20,34 80,34" fill="#4338ca"/>
+            <rect x="44" y="14" width="12" height="10" fill="#6366f1"/>
+            <circle cx="50" cy="19" r="2.5" fill="#facc15"/>
+            <line x1="28" y1="34" x2="28" y2="68" stroke="#cbd5e1" stroke-width="4"/>
+            <line x1="42" y1="34" x2="42" y2="68" stroke="#cbd5e1" stroke-width="4"/>
+            <line x1="58" y1="34" x2="58" y2="68" stroke="#cbd5e1" stroke-width="4"/>
+            <line x1="72" y1="34" x2="72" y2="68" stroke="#cbd5e1" stroke-width="4"/>
+            <rect x="16" y="68" width="68" height="8" fill="#334155"/>
+            <rect x="14" y="78" width="72" height="13" rx="3" fill="#0f172a"/>
+            <text x="50" y="87" fill="#818cf8" font-size="7.5" font-weight="900" text-anchor="middle">THE TOWN HALL</text>
+          </svg>
+        `;
+      }
+      if (ans.includes("townhouse")) {
+        return `
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <rect x="8" y="8" width="84" height="84" rx="16" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+            <polygon points="26,20 12,34 40,34" fill="#b45309"/>
+            <polygon points="54,20 40,34 68,34" fill="#b45309"/>
+            <polygon points="82,20 68,34 94,34" fill="#b45309"/>
+            <rect x="12" y="34" width="76" height="42" fill="#78350f" stroke="#d97706" stroke-width="1.5"/>
+            <rect x="20" y="40" width="10" height="12" fill="#fef08a"/>
+            <rect x="48" y="40" width="10" height="12" fill="#fef08a"/>
+            <rect x="76" y="40" width="10" height="12" fill="#fef08a"/>
+            <rect x="48" y="58" width="10" height="18" fill="#1e293b"/>
+            <text x="50" y="87" fill="#fef3c7" font-size="8" font-weight="900" text-anchor="middle">TOWNHOUSE</text>
+          </svg>
+        `;
+      }
+      if (ans.includes("301") || hook.includes("room 301")) {
+        return `
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <rect x="8" y="8" width="84" height="84" rx="16" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+            <rect x="28" y="18" width="44" height="66" rx="4" fill="#78350f" stroke="#d97706" stroke-width="2"/>
+            <rect x="34" y="28" width="32" height="18" rx="3" fill="#facc15" stroke="#ca8a04" stroke-width="1.5"/>
+            <text x="50" y="41" fill="#78350f" font-size="10" font-weight="900" text-anchor="middle">301</text>
+            <circle cx="66" cy="56" r="2.5" fill="#fef08a"/>
+            <text x="50" y="91" fill="#38bdf8" font-size="7.5" font-weight="900" text-anchor="middle">ROOM 301</text>
+          </svg>
+        `;
+      }
+      if (ans.includes("platform 2") || ans === "two") {
+        return `
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <rect x="8" y="8" width="84" height="84" rx="16" fill="#1e293b" stroke="#facc15" stroke-width="2"/>
+            <rect x="16" y="26" width="68" height="46" rx="6" fill="#facc15"/>
+            <text x="50" y="44" fill="#0f172a" font-size="8" font-weight="900" text-anchor="middle">PLATFORM</text>
+            <text x="50" y="66" fill="#0f172a" font-size="20" font-weight="900" text-anchor="middle">2</text>
+            <text x="50" y="88" fill="#fef08a" font-size="8" font-weight="900" text-anchor="middle">GA SỐ 2</text>
+          </svg>
+        `;
+      }
+      if (ans.includes("park")) {
+        return `
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <rect x="8" y="8" width="84" height="84" rx="16" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+            <circle cx="40" cy="38" r="16" fill="#16a34a"/>
+            <rect x="36" y="52" width="8" height="20" fill="#78350f"/>
+            <circle cx="64" cy="44" r="12" fill="#22c55e"/>
+            <rect x="61" y="56" width="6" height="16" fill="#78350f"/>
+            <path d="M12 72 Q50 68 88 72 L88 88 L12 88 Z" fill="#15803d"/>
+            <text x="50" y="84" fill="#ffffff" font-size="8.5" font-weight="900" text-anchor="middle">AT THE PARK</text>
+          </svg>
+        `;
+      }
+
+      // 9. NHÓM TÌNH HUỐNG & HÀNH ĐỘNG
+      if (ans.includes("missed the train")) {
+        return `
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <rect x="8" y="8" width="84" height="84" rx="16" fill="#1e293b" stroke="#ef4444" stroke-width="2"/>
+            <rect x="52" y="24" width="34" height="34" rx="6" fill="#0284c7"/>
+            <circle cx="26" cy="44" r="5" fill="#f87171"/>
+            <path d="M26 49 L26 66 L18 78 M26 66 L34 78 M14 54 L36 50" stroke="#f87171" stroke-width="3" stroke-linecap="round"/>
+            <rect x="12" y="74" width="76" height="15" rx="4" fill="#0f172a"/>
+            <text x="50" y="84" fill="#f87171" font-size="7" font-weight="900" text-anchor="middle">MISSED THE TRAIN</text>
+          </svg>
+        `;
+      }
+      if (ans.includes("sick")) {
+        return `
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <rect x="8" y="8" width="84" height="84" rx="16" fill="#1e293b" stroke="#f43f5e" stroke-width="2"/>
+            <circle cx="50" cy="42" r="18" fill="#fed7aa" stroke="#ea580c" stroke-width="2"/>
+            <circle cx="44" cy="38" r="2.5" fill="#0f172a"/>
+            <circle cx="56" cy="38" r="2.5" fill="#0f172a"/>
+            <line x1="42" y1="50" x2="58" y2="48" stroke="#0f172a" stroke-width="2" stroke-linecap="round"/>
+            <line x1="52" y1="48" x2="70" y2="38" stroke="#ef4444" stroke-width="3.5" stroke-linecap="round"/>
+            <text x="50" y="82" fill="#fca5a5" font-size="9" font-weight="900" text-anchor="middle">SICK / BỊ ỐM</text>
+          </svg>
+        `;
+      }
+      if (ans.includes("cold") || ans.includes("wet") || ans.includes("weather")) {
+        return `
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <rect x="8" y="8" width="84" height="84" rx="16" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+            <ellipse cx="44" cy="34" rx="16" ry="10" fill="#64748b"/>
+            <ellipse cx="60" cy="34" rx="14" ry="9" fill="#94a3b8"/>
+            <line x1="34" y1="50" x2="30" y2="62" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="48" y1="50" x2="44" y2="62" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="62" y1="50" x2="58" y2="62" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+            <rect x="14" y="74" width="72" height="15" rx="4" fill="#0f172a"/>
+            <text x="50" y="84" fill="#7dd3fc" font-size="7" font-weight="900" text-anchor="middle">COLD & WET</text>
+          </svg>
+        `;
+      }
+      if (ans.includes("two weeks") || ans.includes("2 weeks")) {
+        return `
+          <svg class="w-full h-full" viewBox="0 0 100 100">
+            <rect x="8" y="8" width="84" height="84" rx="16" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+            <rect x="22" y="24" width="56" height="10" fill="#f97316"/>
+            <rect x="22" y="34" width="56" height="10" fill="#ffffff"/>
+            <rect x="22" y="44" width="56" height="10" fill="#15803d"/>
+            <circle cx="50" cy="39" r="4" fill="#1e3a8a"/>
+            <rect x="18" y="64" width="64" height="18" rx="4" fill="#0f172a"/>
+            <text x="50" y="76" fill="#facc15" font-size="9.5" font-weight="900" text-anchor="middle">TWO WEEKS</text>
+          </svg>
+        `;
+      }
+
+      // 10. HUY HIỆU ĐỒ HỌA CHUẨN ĐÁP ÁN CHO TẤT CẢ CÁC CÂU CÒN LẠI
+      return `
+        <svg class="w-full h-full" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" fill="#1e1b4b" stroke="#6366f1" stroke-width="2.5"/>
+          <circle cx="50" cy="50" r="39" fill="#0f172a"/>
+          <rect x="16" y="22" width="68" height="14" rx="4" fill="#312e81"/>
+          <text x="50" y="32" fill="#c7d2fe" font-size="7" font-weight="800" text-anchor="middle">${item.cat.toUpperCase().slice(0, 14)}</text>
+          <text x="50" y="55" fill="#34d399" font-size="9" font-weight="900" text-anchor="middle">${item.ans.slice(0, 14)}</text>
+          <rect x="22" y="66" width="56" height="13" rx="4" fill="#1e293b"/>
+          <text x="50" y="75" fill="#94a3b8" font-size="7" font-weight="700" text-anchor="middle">KEY ANSWER</text>
+        </svg>
+      `;
+    }
+
+    // Bộ phát âm giọng đọc bản ngữ qua Web Speech API
+    function playSpeechAudio(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.rate = 0.95;
+      utter.lang = currentVoiceLang;
+      const voices = window.speechSynthesis.getVoices();
+      if (voices.length > 0) {
+        const match = voices.find(v => v.lang.startsWith(currentVoiceLang)) || voices.find(v => v.lang.startsWith('en'));
+        if (match) utter.voice = match;
+      }
+      window.speechSynthesis.speak(utter);
+    }
+
+    function toggleVoiceAccent() {
+      if (currentVoiceLang === "en-GB") {
+        currentVoiceLang = "en-US";
+        document.getElementById('txtVoiceLabel').textContent = "Giọng Mỹ (US)";
+      } else {
+        currentVoiceLang = "en-GB";
+        document.getElementById('txtVoiceLabel').textContent = "Giọng Anh (UK)";
+      }
+    }
+
+    // Render các nút chọn chủ đề
+    function renderCategoryPills() {
+      const container = document.getElementById('categoriesPillContainer');
+      container.innerHTML = CATEGORIES_DATA.map(c => `
+        <button onclick="selectCategory('${c.name}')" class="whitespace-nowrap px-3 py-1.5 rounded-xl transition ${
+          activeCategory === c.name 
+            ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30' 
+            : 'bg-slate-800 text-slate-400 hover:bg-slate-750 hover:text-white'
+        }">
+          ${c.name} <span class="opacity-75 font-normal ml-0.5">(${c.count})</span>
+        </button>
+      `).join('');
+    }
+
+    function selectCategory(catName) {
+      activeCategory = catName;
+      renderCategoryPills();
+      renderCurrentView();
+    }
+
+    function handleSearch(val) {
+      searchQuery = (val || '').trim().toLowerCase();
+      document.getElementById('btnClearSearch').classList.toggle('hidden', !searchQuery);
+      renderCurrentView();
+    }
+
+    function clearSearch() {
+      const input = document.getElementById('mainSearchInput');
+      input.value = '';
+      searchQuery = '';
+      document.getElementById('btnClearSearch').classList.add('hidden');
+      renderCurrentView();
+    }
+
+    function toggleFilterUnmastered(checked) {
+      onlyUnmastered = checked;
+      renderCurrentView();
+    }
+
+    function toggleGlobalBlur() {
+      isGlobalBlurred = !isGlobalBlurred;
+      document.getElementById('iconBlur').textContent = isGlobalBlurred ? "👁️" : "🙈";
+      document.getElementById('txtBlurLabel').textContent = isGlobalBlurred ? "Hiện đáp án & ảnh" : "Che đáp án & ảnh";
+      renderCurrentView();
+    }
+
+    function getFilteredQuestions() {
+      return QUESTIONS_MASTER.filter(item => {
+        const matchCat = (activeCategory === "Tất cả") || (item.cat === activeCategory);
+        const matchQuery = !searchQuery || 
+          item.hook.toLowerCase().includes(searchQuery) || 
+          item.ans.toLowerCase().includes(searchQuery) ||
+          item.cat.toLowerCase().includes(searchQuery) ||
+          item.num.includes(searchQuery);
+        const matchMastered = !onlyUnmastered || !masteredIds.has(item.id);
+        return matchCat && matchQuery && matchMastered;
+      });
+    }
+
+    // Hiển thị dạng Thẻ trực quan (Cards View)
+    function renderCardsView(items) {
+      const grid = document.getElementById('cardsGrid');
+      const blurClass = isGlobalBlurred ? 'blur-target' : '';
+
+      grid.innerHTML = items.map(item => {
+        const isMastered = masteredIds.has(item.id);
+        return `
+          <div class="card-hover bg-slate-900 rounded-2xl border ${isMastered ? 'border-emerald-500/50 bg-emerald-950/10' : 'border-slate-800'} p-4 shadow-lg hover:shadow-indigo-500/10 transition flex flex-col justify-between group">
+            
+            <div>
+              <!-- Header thẻ -->
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <span class="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md ${
+                  isMastered ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-slate-800 text-slate-400 border border-slate-700'
+                }">
+                  ${item.cat} · #${item.num}
+                </span>
+
+                <div class="flex items-center gap-1.5">
+                  <button onclick="playSpeechAudio('${item.ans.replace(/'/g, "\\'")}')" title="Nghe phát âm đáp án" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs">
+                    🔊
+                  </button>
+                  <button onclick="toggleMasterItem(${item.id}, event)" title="${isMastered ? 'Bỏ đánh dấu' : 'Đánh dấu đã thuộc'}" class="px-2 py-1 rounded-lg border text-xs font-bold transition ${
+                    isMastered ? 'bg-emerald-600 border-emerald-500 text-white' : 'border-slate-700 text-slate-400 hover:text-white'
+                  }">
+                    ${isMastered ? '✓ Đã thuộc' : '○ Thuộc'}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Từ khóa câu hỏi (Hook) -->
+              <div class="mb-3">
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Từ khóa câu hỏi (Hook)</span>
+                <h3 class="text-sm sm:text-base font-extrabold text-white mt-0.5 leading-snug">${item.hook}</h3>
+              </div>
+            </div>
+
+            <!-- Khung ảnh Vector SVG chuẩn xác 100% -->
+            <div class="space-y-3 pt-1">
+              <div onclick="openZoomModal(${item.id})" title="Chạm để phóng to" class="w-full h-36 rounded-xl overflow-hidden border border-slate-700/80 bg-slate-950 p-2 cursor-pointer visual-frame ${blurClass}">
+                ${renderAnswerVisualSVG(item)}
+              </div>
+
+              <!-- Khung đáp án -->
+              <div class="bg-indigo-950/40 border border-indigo-500/30 rounded-xl p-2.5 cursor-pointer" onclick="this.querySelector('.ans-text').classList.toggle('revealed')">
+                <div class="flex items-center justify-between text-[10px] text-indigo-400 font-bold mb-0.5">
+                  <span>ĐÁP ÁN CHỌN NGAY</span>
+                  <span class="text-slate-500 font-normal">Chạm để mở</span>
+                </div>
+                <p class="ans-text text-sm sm:text-base font-black text-emerald-400 ${blurClass}">
+                  ${item.ans}
+                </p>
+              </div>
+            </div>
+
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Hiển thị dạng Bảng (Table View)
+    function renderTableView(items) {
+      const tbody = document.getElementById('tableRowsBody');
+      const blurClass = isGlobalBlurred ? 'blur-target' : '';
+
+      tbody.innerHTML = items.map(item => {
+        const isMastered = masteredIds.has(item.id);
+        return `
+          <tr class="${isMastered ? 'bg-emerald-950/20' : 'hover:bg-slate-850'} transition">
+            <td class="py-2.5 px-3 text-center text-xs text-slate-400 font-mono">${item.num}</td>
+            <td class="py-2.5 px-3 text-xs font-semibold text-slate-300 whitespace-nowrap">${item.cat}</td>
+            <td class="py-2 px-3 w-20 text-center">
+              <div class="w-12 h-12 mx-auto rounded-lg overflow-hidden border border-slate-700 bg-slate-950 p-1 cursor-pointer ${blurClass}" onclick="openZoomModal(${item.id})">
+                ${renderAnswerVisualSVG(item)}
+              </div>
+            </td>
+            <td class="py-2.5 px-4 text-xs sm:text-sm font-bold text-white">${item.hook}</td>
+            <td class="py-2.5 px-4 text-xs sm:text-sm font-black text-emerald-400">
+              <span class="${blurClass} cursor-pointer" onclick="this.classList.toggle('revealed')">${item.ans}</span>
+            </td>
+            <td class="py-2.5 px-3 text-center no-print">
+              <button onclick="toggleMasterItem(${item.id}, event)" class="px-2 py-1 rounded text-xs font-bold transition ${
+                isMastered ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400 border border-slate-700 hover:text-white'
+              }">
+                ${isMastered ? '✓' : '○'}
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderCurrentView() {
+      const items = getFilteredQuestions();
+      const emptyState = document.getElementById('emptySearchResults');
+      
+      document.getElementById('txtVisibleCardsCount').textContent = items.length;
+      document.getElementById('txtActiveCategoryLabel').textContent = (activeCategory !== "Tất cả") ? `· ${activeCategory}` : '';
+
+      if (items.length === 0) {
+        document.getElementById('viewCards').classList.add('hidden');
+        document.getElementById('viewTable').classList.add('hidden');
+        emptyState.classList.remove('hidden');
+        return;
+      }
+      emptyState.classList.add('hidden');
+
+      if (activeMainView === "cards") {
+        document.getElementById('viewCards').classList.remove('hidden');
+        document.getElementById('viewTable').classList.add('hidden');
+        document.getElementById('viewSpeed').classList.add('hidden');
+        document.getElementById('viewQuiz').classList.add('hidden');
+        renderCardsView(items);
+      } else if (activeMainView === "table") {
+        document.getElementById('viewCards').classList.add('hidden');
+        document.getElementById('viewTable').classList.remove('hidden');
+        document.getElementById('viewSpeed').classList.add('hidden');
+        document.getElementById('viewQuiz').classList.add('hidden');
+        renderTableView(items);
+      }
+    }
+
+    function switchMainView(viewName) {
+      activeMainView = viewName;
+      
+      const tabs = ['Cards', 'Table', 'Speed', 'Quiz'];
+      tabs.forEach(t => {
+        const btn = document.getElementById('tab' + t);
+        if (t.toLowerCase() === viewName) {
+          btn.className = "px-3 py-1.5 rounded-lg bg-indigo-600 text-white font-bold transition shadow flex items-center gap-1.5 whitespace-nowrap";
+        } else {
+          btn.className = "px-3 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 font-bold transition flex items-center gap-1.5 whitespace-nowrap";
+        }
+      });
+
+      if (viewName === "cards" || viewName === "table") {
+        renderCurrentView();
+      } else if (viewName === "speed") {
+        document.getElementById('viewCards').classList.add('hidden');
+        document.getElementById('viewTable').classList.add('hidden');
+        document.getElementById('viewSpeed').classList.remove('hidden');
+        document.getElementById('viewQuiz').classList.add('hidden');
+        initSpeedDrill();
+      } else if (viewName === "quiz") {
+        document.getElementById('viewCards').classList.add('hidden');
+        document.getElementById('viewTable').classList.add('hidden');
+        document.getElementById('viewSpeed').classList.add('hidden');
+        document.getElementById('viewQuiz').classList.remove('hidden');
+        startNewExamQuiz();
+      }
+    }
+
+    // Logic Luyện phản xạ 5 giây
+    function initSpeedDrill() {
+      clearInterval(speedTimer);
+      const list = getFilteredQuestions();
+      if (list.length === 0) return;
+
+      speedDrillItem = list[Math.floor(Math.random() * list.length)];
+      
+      document.getElementById('txtSpeedCategory').textContent = `${speedDrillItem.cat} · #${speedDrillItem.num}`;
+      document.getElementById('txtSpeedHook').textContent = speedDrillItem.hook;
+      document.getElementById('txtSpeedAnswer').textContent = speedDrillItem.ans;
+      document.getElementById('speedVisualContainer').innerHTML = renderAnswerVisualSVG(speedDrillItem);
+      document.getElementById('speedAnswerBox').classList.add('hidden');
+
+      speedTimeLeft = 5.0;
+      const bar = document.getElementById('speedTimerBar');
+      const timerText = document.getElementById('txtSpeedTimer');
+      bar.style.width = '100%';
+      timerText.textContent = '5.0s';
+
+      const intervalMs = 100;
+      speedTimer = setInterval(() => {
+        speedTimeLeft -= intervalMs / 1000;
+        if (speedTimeLeft <= 0) {
+          clearInterval(speedTimer);
+          timerText.textContent = '0.0s (Hết giờ!)';
+          bar.style.width = '0%';
+          document.getElementById('speedAnswerBox').classList.remove('hidden');
+        } else {
+          bar.style.width = `${(speedTimeLeft / 5.0) * 100}%`;
+          timerText.textContent = `${speedTimeLeft.toFixed(1)}s`;
+        }
+      }, intervalMs);
+    }
+
+    function submitSpeedEvaluation(isCorrect) {
+      clearInterval(speedTimer);
+      if (isCorrect) {
+        speedStreakCount++;
+        masteredIds.add(speedDrillItem.id);
+      } else {
+        speedStreakCount = 0;
+      }
+      document.getElementById('txtSpeedStreak').textContent = `${speedStreakCount} 🔥`;
+      saveMasteredState();
+      initSpeedDrill();
+    }
+
+    function nextSpeedQuestion() {
+      initSpeedDrill();
+    }
+
+    // Logic Thi thử trắc nghiệm 10 câu ngẫu nhiên
+    function startNewExamQuiz() {
+      const shuffled = [...QUESTIONS_MASTER].sort(() => 0.5 - Math.random());
+      quizQuestions = shuffled.slice(0, 10);
+      currentQuizIndex = 0;
+      quizScore = 0;
+      loadQuizQuestionItem();
+    }
+
+    function loadQuizQuestionItem() {
+      isQuizAnswered = false;
+      document.getElementById('quizFeedbackBanner').classList.add('hidden');
+      document.getElementById('txtQuizProgress').textContent = `${currentQuizIndex + 1} / ${quizQuestions.length}`;
+      document.getElementById('txtQuizScore').textContent = `${quizScore} điểm`;
+
+      const q = quizQuestions[currentQuizIndex];
+      document.getElementById('txtQuizCatTag').textContent = `${q.cat} · #${q.num}`;
+      document.getElementById('txtQuizQuestionPrompt').textContent = `In Part 1: What is the correct answer for "${q.hook}"?`;
+
+      // Tạo 3 phương án gây nhiễu cùng chủ đề
+      const distractors = QUESTIONS_MASTER
+        .filter(d => d.cat === q.cat && d.ans !== q.ans)
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 3)
+        .map(d => d.ans);
+
+      // Nếu chủ đề quá ít đáp án khác, lấy thêm từ chủ đề khác
+      while (distractors.length < 3) {
+        const randomOther = QUESTIONS_MASTER[Math.floor(Math.random() * QUESTIONS_MASTER.length)].ans;
+        if (!distractors.includes(randomOther) && randomOther !== q.ans) {
+          distractors.push(randomOther);
+        }
+      }
+
+      const options = [q.ans, ...distractors].sort(() => 0.5 - Math.random());
+      const container = document.getElementById('quizOptionsContainer');
+
+      container.innerHTML = options.map((opt, i) => {
+        const letter = ['A', 'B', 'C', 'D'][i];
+        const dummyItem = { cat: q.cat, ans: opt, hook: q.hook };
+        return `
+          <button onclick="handleQuizOptionClick('${opt.replace(/'/g, "\\'")}', this)" class="quiz-option-btn p-3 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-750 text-left transition flex items-center gap-3">
+            <span class="w-7 h-7 rounded-lg bg-slate-700 flex items-center justify-center text-xs font-bold text-slate-200">
+              ${letter}
+            </span>
+            <div class="w-10 h-10 rounded overflow-hidden border border-slate-600 bg-slate-950 p-1 flex-shrink-0">
+              ${renderAnswerVisualSVG(dummyItem)}
+            </div>
+            <span class="text-xs sm:text-sm font-bold text-white flex-1">${opt}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function speakQuizQuestionAudio() {
+      if (quizQuestions[currentQuizIndex]) {
+        playSpeechAudio(quizQuestions[currentQuizIndex].hook + "?");
+      }
+    }
+
+    function handleQuizOptionClick(selectedOpt, btnEl) {
+      if (isQuizAnswered) return;
+      isQuizAnswered = true;
+
+      const q = quizQuestions[currentQuizIndex];
+      const isCorrect = (selectedOpt === q.ans);
+
+      document.querySelectorAll('.quiz-option-btn').forEach(btn => {
+        btn.disabled = true;
+        if (btn.textContent.includes(q.ans)) {
+          btn.className = "quiz-option-btn p-3 rounded-xl border-2 border-emerald-500 bg-emerald-950/40 text-emerald-300 font-bold text-left flex items-center gap-3";
+        }
+      });
+
+      if (isCorrect) {
+        quizScore += 10;
+        document.getElementById('txtQuizScore').textContent = `${quizScore} điểm`;
+        masteredIds.add(q.id);
+      } else {
+        btnEl.className = "quiz-option-btn p-3 rounded-xl border-2 border-rose-500 bg-rose-950/40 text-rose-300 font-bold text-left flex items-center gap-3";
+      }
+
+      const banner = document.getElementById('quizFeedbackBanner');
+      banner.classList.remove('hidden');
+      if (isCorrect) {
+        banner.className = "p-4 rounded-xl text-xs font-semibold flex items-center justify-between bg-emerald-950/40 border border-emerald-500/40 text-emerald-300";
+        document.getElementById('txtQuizFeedbackMessage').innerHTML = `✅ <strong>Chính xác!</strong> Từ khóa "${q.hook}" chọn ngay <em>${q.ans}</em>.`;
+      } else {
+        banner.className = "p-4 rounded-xl text-xs font-semibold flex items-center justify-between bg-rose-950/40 border border-rose-500/40 text-rose-300";
+        document.getElementById('txtQuizFeedbackMessage').innerHTML = `❌ <strong>Chưa chính xác.</strong> Đáp án đúng là: <em>${q.ans}</em>`;
+      }
+      saveMasteredState();
+    }
+
+    function advanceQuizQuestion() {
+      currentQuizIndex++;
+      if (currentQuizIndex < quizQuestions.length) {
+        loadQuizQuestionItem();
+      } else {
+        document.getElementById('quizOptionsContainer').innerHTML = `
+          <div class="col-span-full py-8 text-center space-y-3">
+            <span class="text-4xl">🏆</span>
+            <h4 class="text-lg font-bold text-white">Hoàn thành bài thi thử!</h4>
+            <p class="text-xs text-slate-300">Tổng điểm đạt được: <strong class="text-emerald-400 text-sm font-black">${quizScore} / 100 điểm</strong></p>
+            <button onclick="startNewExamQuiz()" class="mt-2 px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg">
+              Làm đề mới
+            </button>
+          </div>
+        `;
+        document.getElementById('quizFeedbackBanner').classList.add('hidden');
+      }
+    }
+
+    // Modal phóng to chi tiết
+    function openZoomModal(id) {
+      const item = QUESTIONS_MASTER.find(q => q.id === id);
+      if (!item) return;
+
+      document.getElementById('modalCatTag').textContent = item.cat;
+      document.getElementById('modalItemNumber').textContent = `#${item.num}`;
+      document.getElementById('modalHookText').textContent = item.hook;
+      document.getElementById('modalAnswerText').textContent = item.ans;
+      document.getElementById('modalVisualBox').innerHTML = renderAnswerVisualSVG(item);
+
+      document.getElementById('btnModalSpeak').onclick = () => playSpeechAudio(item.ans);
+      document.getElementById('zoomModal').classList.remove('hidden');
+    }
+
+    function closeZoomModal() {
+      document.getElementById('zoomModal').classList.add('hidden');
+    }
+
+    // Quản lý tiến độ học tập (Mastered IDs)
+    function toggleMasterItem(id, e) {
+      if (e) e.stopPropagation();
+      if (masteredIds.has(id)) {
+        masteredIds.delete(id);
+      } else {
+        masteredIds.add(id);
+      }
+      saveMasteredState();
+      renderCurrentView();
+    }
+
+    function saveMasteredState() {
+      localStorage.setItem('aptis_mastered_canvas_ids', JSON.stringify([...masteredIds]));
+      updateMasteryStats();
+    }
+
+    function updateMasteryStats() {
+      const total = QUESTIONS_MASTER.length;
+      const count = masteredIds.size;
+      const pct = Math.round((count / total) * 100);
+      document.getElementById('txtMasteredCount').textContent = count;
+      document.getElementById('txtMasteredPercent').textContent = `${pct}%`;
+    }
+
+    // Modal đặt lại tiến độ
+    function openResetProgressModal() {
+      document.getElementById('resetModal').classList.remove('hidden');
+    }
+
+    function closeResetModal() {
+      document.getElementById('resetModal').classList.add('hidden');
+    }
+
+    function confirmResetProgress() {
+      masteredIds.clear();
+      saveMasteredState();
+      closeResetModal();
+      renderCurrentView();
+    }
+
+    window.addEventListener('load', () => {
+      renderCategoryPills();
+      updateMasteryStats();
+      renderCurrentView();
+    });
+  </script>
+</body>
+</html>
