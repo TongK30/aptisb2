@@ -2,158 +2,262 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aptis Listening Part 1 - Trọn Bộ 307 Câu Hỏi & Đáp Án</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Aptis Listening Master Lab - Responsive & Scrollable</title>
 <style>
   :root {
     --primary: #2563eb; --primary-dark: #1d4ed8; --success: #16a34a; --danger: #dc2626;
     --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --muted: #64748b; --border: #e2e8f0;
+    --part3-color: #7c3aed; --part3-bg: #f5f3ff;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-  body { background: var(--bg); color: var(--text); padding-bottom: 60px; }
-  header { background: #0f172a; color: white; padding: 1.2rem 1rem; position: sticky; top: 0; z-index: 50; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-  .header-inner { max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
-  .logo { font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-  .stats-bar { display: flex; gap: 10px; font-size: 0.85rem; }
-  .stat-pill { background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 999px; }
-  .nav-tabs { max-width: 1100px; margin: 15px auto 0; padding: 0 1rem; display: flex; gap: 8px; overflow-x: auto; }
-  .nav-btn { background: #e2e8f0; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; color: var(--muted); transition: 0.2s; white-space: nowrap; }
-  .nav-btn.active { background: var(--primary); color: white; }
-  .container { max-width: 1100px; margin: 15px auto; padding: 0 1rem; }
-  .toolbar { background: var(--card); padding: 12px; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 15px; }
-  .search-input { flex: 1; min-width: 220px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.95rem; }
-  .btn-action { background: var(--primary); color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
-  .btn-action:hover { background: var(--primary-dark); }
+  body { background: var(--bg); color: var(--text); padding-bottom: 60px; -webkit-tap-highlight-color: transparent; }
+
+  /* Custom Smooth Scrollbar */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+  /* Header */
+  header { background: #0f172a; color: white; padding: 0.85rem 1rem; position: sticky; top: 0; z-index: 50; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+  .header-inner { max-width: 1150px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
+  .logo { font-size: 1.1rem; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .main-part-switch { display: flex; background: rgba(255,255,255,0.1); padding: 3px; border-radius: 10px; gap: 4px; }
+  .part-tab-btn { background: none; border: none; color: #cbd5e1; padding: 6px 12px; border-radius: 7px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s; white-space: nowrap; }
+  .part-tab-btn.active { background: var(--primary); color: white; }
+  .part-tab-btn.active.part3 { background: var(--part3-color); color: white; }
+  
+  /* Sub Navigation */
+  .sub-nav { max-width: 1150px; margin: 12px auto 0; padding: 0 1rem; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+  .sub-nav::-webkit-scrollbar { display: none; }
+  .sub-btn { background: #e2e8f0; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; color: var(--muted); transition: 0.2s; white-space: nowrap; font-size: 0.85rem; }
+  .sub-btn.active { background: var(--primary); color: white; }
+  .sub-btn.active.part3-sub { background: var(--part3-color); color: white; }
+
+  .container { max-width: 1150px; margin: 12px auto; padding: 0 1rem; }
+  
+  /* Toolbar */
+  .toolbar { background: var(--card); padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .search-input { flex: 1; min-width: 200px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.9rem; }
+  .btn-group-tools { display: flex; gap: 6px; flex-wrap: wrap; }
+  .btn-action { background: var(--primary); color: white; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
+  .btn-action.p3 { background: var(--part3-color); }
   .btn-secondary { background: #f1f5f9; color: var(--text); border: 1px solid var(--border); }
-  .category-filter { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 15px; }
-  .cat-chip { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--card); font-size: 0.8rem; cursor: pointer; white-space: nowrap; }
+  
+  /* Filter Chips */
+  .category-filter { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 12px; scrollbar-width: none; }
+  .category-filter::-webkit-scrollbar { display: none; }
+  .cat-chip { padding: 5px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--card); font-size: 0.78rem; cursor: pointer; white-space: nowrap; }
   .cat-chip.active { background: var(--primary); color: white; border-color: var(--primary); font-weight: 600; }
-  .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; position: relative; transition: transform 0.15s, box-shadow 0.15s; }
-  .card:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.06); }
-  .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; font-size: 0.75rem; color: var(--muted); }
-  .card-q { font-size: 0.9rem; font-weight: 600; color: #1e293b; margin-bottom: 8px; line-height: 1.35; }
-  .card-hook { background: #eff6ff; color: var(--primary); padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; margin-bottom: 10px; display: inline-block; }
-  .card-ans { background: #f8fafc; border: 1px dashed var(--border); padding: 10px; border-radius: 6px; font-weight: 700; color: var(--success); font-size: 1rem; cursor: pointer; text-align: center; user-select: none; }
+  .cat-chip.active.p3 { background: var(--part3-color); border-color: var(--part3-color); }
+
+  /* Responsive Grid Cards with Scroll for Question */
+  .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 12px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; height: 230px; position: relative; }
+  .card:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.05); }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; font-size: 0.72rem; color: var(--muted); }
+  
+  /* Scrollable Question Box */
+  .card-q-scrollbox { max-height: 72px; overflow-y: auto; padding-right: 4px; margin-bottom: 6px; }
+  .card-q { font-size: 0.88rem; font-weight: 600; color: #1e293b; line-height: 1.35; }
+  .card-hook { background: #eff6ff; color: var(--primary); padding: 3px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; margin-bottom: 6px; display: inline-block; white-space: nowrap; text-overflow: ellipsis; max-width: 100%; overflow: hidden; }
+  
+  .card-ans { background: #f8fafc; border: 1px dashed var(--border); padding: 8px; border-radius: 6px; font-weight: 700; color: var(--success); font-size: 0.9rem; cursor: pointer; text-align: center; user-select: none; max-height: 50px; overflow-y: auto; }
   .card-ans.hidden { background: #f1f5f9; color: transparent; border-style: solid; }
-  .card-ans.hidden::after { content: " chạm để xem đáp án"; color: var(--muted); font-weight: normal; font-size: 0.8rem; }
-  .card-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 8px; border-top: 1px solid #f1f5f9; }
-  .learned-btn { border: 1px solid var(--border); background: white; border-radius: 6px; padding: 4px 8px; font-size: 0.75rem; cursor: pointer; }
-  .learned-btn.is-learned { background: #dcfce7; color: var(--success); border-color: #86efac; font-weight: bold; }
-  .audio-btn { background: none; border: none; cursor: pointer; font-size: 1rem; }
-  /* Quiz Mode */
-  .quiz-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; max-width: 680px; margin: 20px auto; box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
-  .quiz-q { font-size: 1.05rem; font-weight: 700; margin-bottom: 15px; color: #1e293b; line-height: 1.4; }
-  .quiz-opt { display: block; width: 100%; text-align: left; padding: 12px 14px; margin-bottom: 8px; border: 1px solid var(--border); border-radius: 8px; background: #fff; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: 0.15s; }
+  .card-ans.hidden::after { content: "Chạm để xem đáp án"; color: var(--muted); font-weight: normal; font-size: 0.75rem; }
+  
+  /* Part 3 Specific Cards */
+  .prompt-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 14px; }
+  .prompt-head { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 10px; flex-wrap: wrap; gap: 6px; }
+  .prompt-badge { background: var(--part3-bg); color: var(--part3-color); font-weight: 800; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; }
+  .prompt-topic { font-weight: 700; font-size: 0.95rem; color: #1e293b; }
+  
+  /* Scrollable Transcript */
+  .transcript-box { background: #f8fafc; border-left: 3px solid var(--part3-color); padding: 10px 12px; border-radius: 4px; font-size: 0.85rem; line-height: 1.55; color: #334155; margin: 10px 0; max-height: 140px; overflow-y: auto; }
+  
+  /* Subquestions Group */
+  .sub-q-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-top: 8px; }
+  .sub-q-box { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; justify-content: space-between; min-height: 180px; }
+  .sub-q-title-scrollbox { max-height: 52px; overflow-y: auto; padding-right: 2px; margin-bottom: 6px; }
+  .sub-q-title { font-size: 0.85rem; font-weight: 700; color: #0f172a; line-height: 1.3; }
+  .opt-list { list-style: none; margin-bottom: 8px; font-size: 0.8rem; max-height: 90px; overflow-y: auto; }
+  .opt-item { padding: 3px 5px; border-radius: 4px; margin-bottom: 3px; color: #475569; }
+  .opt-item.is-correct-key { background: #dcfce7; color: #166534; font-weight: 700; border: 1px solid #86efac; }
+  
+  /* Quiz Box with Scrollable Question Area */
+  .quiz-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; max-width: 680px; margin: 15px auto; box-shadow: 0 4px 16px rgba(0,0,0,0.05); }
+  .quiz-q-scrollbox { max-height: 130px; overflow-y: auto; padding-right: 6px; margin-bottom: 12px; }
+  .quiz-q { font-size: 1rem; font-weight: 700; color: #1e293b; line-height: 1.4; }
+  .quiz-opt { display: block; width: 100%; text-align: left; padding: 10px 12px; margin-bottom: 7px; border: 1px solid var(--border); border-radius: 6px; background: #fff; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: 0.15s; }
   .quiz-opt:hover { background: #f8fafc; border-color: var(--primary); }
   .quiz-opt.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: var(--success); }
   .quiz-opt.wrong { background: #fee2e2 !important; border-color: var(--danger) !important; color: var(--danger); }
-  /* Section Separator */
-  .section-title { font-size: 1.15rem; font-weight: 800; color: #1e293b; margin: 25px 0 12px; padding-bottom: 6px; border-bottom: 2px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-  .badge-count { background: var(--primary); color: white; font-size: 0.75rem; padding: 3px 8px; border-radius: 999px; }
+  
+  .audio-btn { background: none; border: none; cursor: pointer; font-size: 0.95rem; }
   .hidden-view { display: none !important; }
+
+  /* Mobile Responsive */
+  @media (max-width: 640px) {
+    .grid-cards { grid-template-columns: 1fr; }
+    .card { height: auto; min-height: 200px; }
+    .sub-q-group { grid-template-columns: 1fr; }
+    .sub-q-box { min-height: auto; }
+    .toolbar { flex-direction: column; align-items: stretch; }
+    .btn-group-tools { width: 100%; justify-content: space-between; }
+    .btn-action { flex: 1; text-align: center; }
+  }
 </style>
 </head>
 <body>
 
 <header>
   <div class="header-inner">
-    <div class="logo">🎧 Aptis Listening Part 1 - Master Lab (Đủ 307 Câu)</div>
-    <div class="stats-bar">
-      <div class="stat-pill">Tổng câu hệ thống: <strong>307</strong></div>
-      <div class="stat-pill">Đã thuộc: <strong id="learnedCount" style="color:#4ade80;">0</strong></div>
-      <div class="stat-pill">Tiến độ: <strong id="percentCount">0%</strong></div>
+    <div class="logo">🎧 Aptis Listening Master Lab</div>
+    <div class="main-part-switch">
+      <button class="part-tab-btn active" id="btnSwitchP1" onclick="switchPart('p1')">Phần 1 (307 Câu)</button>
+      <button class="part-tab-btn" id="btnSwitchP3" onclick="switchPart('p3')">Phần 3 (15 Đề - 60 Câu)</button>
     </div>
   </div>
 </header>
 
-<div class="nav-tabs">
-  <button class="nav-btn active" onclick="switchView('study')">📖 Tab 1: Học thuộc (307 câu)</button>
-  <button class="nav-btn" onclick="switchView('quiz')">✍️ Tab 2: Thi thử trắc nghiệm (307 câu)</button>
-  <button class="nav-btn" onclick="switchView('repeats')">🎯 Tab 3: Gom nhóm toàn diện (307 câu)</button>
+<!-- ================= PART 1 SECTION ================= -->
+<div id="part1Section">
+  <div class="sub-nav">
+    <button class="sub-btn active" onclick="switchP1Tab('study')">📖 Tab 1: Học thuộc (307 câu)</button>
+    <button class="sub-btn" onclick="switchP1Tab('quiz')">✍️ Tab 2: Thi thử trắc nghiệm (307 câu)</button>
+    <button class="sub-btn" onclick="switchP1Tab('repeats')">🎯 Tab 3: Gom nhóm toàn diện (307 câu)</button>
+  </div>
+
+  <div class="container">
+    <div id="p1StudyView">
+      <div class="toolbar">
+        <input type="text" id="p1Search" class="search-input" placeholder="🔍 Tìm câu hỏi, từ khóa hoặc đáp án..." oninput="renderP1Cards()">
+        <div class="btn-group-tools">
+          <button class="btn-action btn-secondary" onclick="toggleP1HideAll()">👁️ Che/Hiện đáp án</button>
+          <button class="btn-action btn-secondary" onclick="toggleP1OnlyUnlearned()">⭐ Chỉ câu chưa thuộc</button>
+        </div>
+      </div>
+      <div class="category-filter" id="p1CatList"></div>
+      <div class="grid-cards" id="p1CardsGrid"></div>
+    </div>
+
+    <div id="p1QuizView" class="hidden-view">
+      <div class="quiz-box" id="p1QuizSetup">
+        <h2 style="margin-bottom:6px; font-size:1.15rem;">Thi thử trắc nghiệm Part 1 (Ngân hàng 307 câu)</h2>
+        <p style="color:var(--muted); font-size:0.85rem; margin-bottom:12px;">Mô phỏng thi thật với âm thanh đọc đề và 4 lựa chọn trắc nghiệm.</p>
+        <div style="margin-bottom:10px;">
+          <label style="font-weight:600; font-size:0.82rem;">Chọn chủ đề:</label>
+          <select id="p1QuizCat" style="width:100%; padding:8px; border-radius:6px; border:1px solid var(--border); margin-top:4px; font-size:0.85rem;"></select>
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="font-weight:600; font-size:0.82rem;">Số lượng câu muốn làm:</label>
+          <select id="p1QuizSize" style="width:100%; padding:8px; border-radius:6px; border:1px solid var(--border); margin-top:4px; font-size:0.85rem;">
+            <option value="10">10 câu</option>
+            <option value="25">25 câu</option>
+            <option value="50">50 câu</option>
+            <option value="307" selected>Tất cả 307 câu</option>
+          </select>
+        </div>
+        <button class="btn-action" style="width:100%; padding:10px; font-size:0.95rem;" onclick="startP1Quiz()">Bắt đầu thi thử Part 1</button>
+      </div>
+
+      <div class="quiz-box hidden-view" id="p1QuizActive">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.82rem; color:var(--muted);">
+          <span id="p1QuizProgress">Câu 1/307</span>
+          <span id="p1QuizScore">Điểm: 0</span>
+        </div>
+        <div class="quiz-q-scrollbox">
+          <div class="quiz-q" id="p1QuizQ"></div>
+        </div>
+        <div id="p1QuizOptions"></div>
+        <button class="btn-action hidden-view" id="p1QuizNext" style="width:100%; margin-top:10px;" onclick="nextP1QuizQ()">Câu tiếp theo ➔</button>
+      </div>
+    </div>
+
+    <div id="p1RepeatsView" class="hidden-view">
+      <div class="toolbar">
+        <div><strong>Phân loại hệ thống 307 câu Part 1</strong></div>
+        <div style="background:#dbeafe; color:#1e40af; padding:3px 10px; border-radius:999px; font-size:0.8rem; font-weight:700;">
+          Hiển thị: 307/307 câu
+        </div>
+      </div>
+      <h3 style="margin:12px 0 8px; color:#1e293b; font-size:1rem;">🔥 Cụm câu trùng đáp án (Học 1 nhớ nhiều)</h3>
+      <div class="grid-cards" id="p1RepeatedGrid"></div>
+      <h3 style="margin:20px 0 8px; color:#1e293b; font-size:1rem;">📌 Các câu đáp án đơn lẻ còn lại</h3>
+      <div class="grid-cards" id="p1SingleGrid"></div>
+    </div>
+  </div>
 </div>
 
-<div class="container">
-  <!-- TAB 1: STUDY VIEW -->
-  <div id="studyView">
-    <div class="toolbar">
-      <input type="text" id="searchInput" class="search-input" placeholder="🔍 Tìm kiếm trong 307 câu theo từ khóa, câu hỏi hoặc đáp án..." oninput="renderCards()">
-      <div style="display:flex; gap:8px;">
-        <button class="btn-action btn-secondary" onclick="toggleHideAll()">👁️ Che/Hiện đáp án</button>
-        <button class="btn-action btn-secondary" onclick="filterLearned()">⭐ Chỉ câu chưa thuộc</button>
-      </div>
-    </div>
-
-    <div class="category-filter" id="catList"></div>
-    <div class="grid-cards" id="cardsGrid"></div>
+<!-- ================= PART 3 SECTION ================= -->
+<div id="part3Section" class="hidden-view">
+  <div class="sub-nav">
+    <button class="sub-btn active part3-sub" onclick="switchP3Tab('study')">📖 Tab 1: 15 Bộ đề + Transcript (60 câu)</button>
+    <button class="sub-btn" onclick="switchP3Tab('quiz')">✍️ Tab 2: Thi trắc nghiệm A-B-C (60 câu)</button>
+    <button class="sub-btn" onclick="switchP3Tab('matrix')">🎯 Tab 3: Ma trận toàn diện 15 Đề (Đủ 60 câu)</button>
   </div>
 
-  <!-- TAB 2: QUIZ VIEW -->
-  <div id="quizView" class="hidden-view">
-    <div class="quiz-box" id="quizSetup">
-      <h2 style="margin-bottom:10px;">Luyện làm bài trắc nghiệm (Ngân hàng 307 câu)</h2>
-      <p style="color:var(--muted); font-size:0.9rem; margin-bottom:15px;">Mô phỏng thi máy Aptis thật: câu hỏi phát âm thanh và đưa ra 4 phương án lựa chọn có bẫy.</p>
-      <div style="margin-bottom:12px;">
-        <label style="font-weight:600; font-size:0.85rem;">Chọn phạm vi ôn tập:</label>
-        <select id="quizCatSelect" style="width:100%; padding:8px; border-radius:6px; border:1px solid var(--border); margin-top:4px;"></select>
+  <div class="container">
+    <div id="p3StudyView">
+      <div class="toolbar">
+        <input type="text" id="p3Search" class="search-input" placeholder="🔍 Tìm theo chủ đề, câu hỏi hoặc lời thoại Part 3..." oninput="renderP3Prompts()">
+        <div class="btn-group-tools">
+          <button class="btn-action btn-secondary" onclick="toggleP3Transcripts()">📜 Ẩn/Hiện Transcript</button>
+          <button class="btn-action btn-secondary" onclick="toggleP3Answers()">👁️ Che/Hiện đáp án</button>
+        </div>
       </div>
-      <div style="margin-bottom:15px;">
-        <label style="font-weight:600; font-size:0.85rem;">Số lượng câu muốn làm:</label>
-        <select id="quizSizeSelect" style="width:100%; padding:8px; border-radius:6px; border:1px solid var(--border); margin-top:4px;">
-          <option value="10">10 câu ngắn</option>
-          <option value="25">25 câu tiêu chuẩn</option>
-          <option value="50">50 câu nâng cao</option>
-          <option value="100">100 câu marathon</option>
-          <option value="307" selected>Toàn bộ 307 câu (Đầy đủ)</option>
-        </select>
-      </div>
-      <button class="btn-action" style="width:100%; padding:12px; font-size:1rem;" onclick="startQuiz()">Bắt đầu làm bài</button>
+      <div class="category-filter" id="p3DeFilter"></div>
+      <div id="p3PromptsContainer"></div>
     </div>
 
-    <div class="quiz-box hidden-view" id="quizActive">
-      <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:0.85rem; color:var(--muted);">
-        <span id="quizProgress">Câu 1/307</span>
-        <span id="quizScore">Điểm: 0</span>
+    <div id="p3QuizView" class="hidden-view">
+      <div class="quiz-box" id="p3QuizSetup">
+        <h2 style="margin-bottom:6px; color:var(--part3-color); font-size:1.15rem;">Thi thử trắc nghiệm Part 3 (Chuẩn 3 lựa chọn A-B-C)</h2>
+        <p style="color:var(--muted); font-size:0.85rem; margin-bottom:12px;">Bao quát 60 câu hỏi con (16.1, 16.2, 17.1, 17.2) từ 15 đề thi thật.</p>
+        <div style="margin-bottom:14px;">
+          <label style="font-weight:600; font-size:0.82rem;">Chọn phạm vi bài thi:</label>
+          <select id="p3QuizMode" style="width:100%; padding:8px; border-radius:6px; border:1px solid var(--border); margin-top:4px; font-size:0.85rem;">
+            <option value="all">Tất cả 60 câu hỏi con (Đề 01 - 15)</option>
+            <option value="16">Chuyên sâu nhóm Câu 16 (30 câu)</option>
+            <option value="17">Chuyên sâu nhóm Câu 17 (30 câu)</option>
+          </select>
+        </div>
+        <button class="btn-action p3" style="width:100%; padding:10px; font-size:0.95rem;" onclick="startP3Quiz()">Bắt đầu thi thử Part 3</button>
       </div>
-      <div class="quiz-q" id="quizQuestion">Loading...</div>
-      <div id="quizOptions"></div>
-      <button class="btn-action hidden-view" id="quizNextBtn" style="width:100%; margin-top:12px;" onclick="nextQuizQuestion()">Câu tiếp theo ➔</button>
-    </div>
-  </div>
 
-  <!-- TAB 3: GOM NHÓM TOÀN DIỆN ĐỦ 307 CÂU -->
-  <div id="repeatsView" class="hidden-view">
-    <div class="toolbar">
-      <div>
-        <strong>Phân loại hệ thống 307 câu</strong>
-        <p style="font-size:0.85rem; color:var(--muted); margin-top:2px;">
-          Hiển thị đủ 307 câu: Gom cụm các câu có đáp án trùng nhau trước, sau đó sắp xếp các câu còn lại theo nhóm logic.
-        </p>
-      </div>
-      <div class="stat-pill" style="background:#dbeafe; color:#1e40af; font-weight:bold;">
-        Tổng hiển thị trong Tab: <span id="repeatTotalBadge">307/307</span> câu
+      <div class="quiz-box hidden-view" id="p3QuizActive">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.82rem; color:var(--muted);">
+          <span id="p3QuizProgress">Câu 1/60</span>
+          <span id="p3QuizScore">Điểm: 0</span>
+        </div>
+        <div style="font-size:0.75rem; background:var(--part3-bg); color:var(--part3-color); padding:3px 6px; border-radius:4px; font-weight:700; display:inline-block; margin-bottom:6px;" id="p3QuizTopic"></div>
+        <div class="quiz-q-scrollbox">
+          <div class="quiz-q" id="p3QuizQ"></div>
+        </div>
+        <div id="p3QuizOptions"></div>
+        <button class="btn-action p3 hidden-view" id="p3QuizNext" style="width:100%; margin-top:10px;" onclick="nextP3QuizQ()">Câu tiếp theo ➔</button>
       </div>
     </div>
 
-    <!-- KHU VỰC A: TRÙNG ĐÁP ÁN -->
-    <div class="section-title">
-      <span>🔥 Khu vực A: Các cụm câu hỏi TRÙNG ĐÁP ÁN (Học 1 nhớ nhiều)</span>
-      <span class="badge-count" id="badgeRepeatedCount">0 câu</span>
+    <div id="p3MatrixView" class="hidden-view">
+      <div class="toolbar">
+        <div>
+          <strong>Bảng ma trận & tra cứu toàn bộ 15 Bộ đề Part 3</strong>
+          <p style="font-size:0.82rem; color:var(--muted);">Đầy đủ 30 bài nghe và 60 câu hỏi con (Nhóm đề trùng lặp & Nhóm đề đơn lẻ).</p>
+        </div>
+        <div style="background:#ede9fe; color:var(--part3-color); padding:3px 10px; border-radius:999px; font-weight:800; font-size:0.8rem;">
+          Đầy đủ: 60/60 câu (15 Đề)
+        </div>
+      </div>
+      <div class="grid-cards" id="p3MatrixContainer"></div>
     </div>
-    <div class="grid-cards" id="repeatedGrid"></div>
-
-    <!-- KHU VỰC B: ĐÁP ÁN ĐƠN LẺ -->
-    <div class="section-title">
-      <span>📌 Khu vực B: Các câu hỏi ĐÁP ÁN ĐƠN LẺ (Xếp theo ngữ cảnh)</span>
-      <span class="badge-count" id="badgeSingleCount">0 câu</span>
-    </div>
-    <div class="grid-cards" id="singleGrid"></div>
   </div>
 </div>
 
 <script>
-// TOÀN BỘ 307 CÂU HỎI VÀ ĐÁP ÁN
-const RAW_DATA = [
+// ==================== PART 1 DATA (307 ITEMS) ====================
+const P1_RAW = [
 [0,"Decide to get up","7:00 a.m.","What time does the speaker decide to get up?"],
 [0,"Set alarm for","7:00","What time will the speaker set the alarm for?"],
 [0,"Children eat fruit","In the morning","Listen to a nutrition expert. What time is the best for children to eat fruit?"],
@@ -192,7 +296,6 @@ const RAW_DATA = [
 [0,"Julie assignment due","On Saturday morning","Julie is asking her professor about the assignment. When is the work due?"],
 [0,"How much egg","£1.50 (One pounds fifty)","A mom is calling her son to remind him about picking up groceries. How much is an egg?"],
 [0,"How much eggs","1.50 pounds","How much are the eggs?"],
-
 [1,"Parent-teacher meeting","Monday","When will the parent-teacher meeting take place?"],
 [1,"Parent-teacher meeting","Monday","When will the parent-teacher meeting take place?"],
 [1,"Want to meet","On Tuesday","Two colleges talk about meeting. When do they want to meet?"],
@@ -203,7 +306,6 @@ const RAW_DATA = [
 [1,"Submit assignment","Friday","When must the student submit the assignment?"],
 [1,"Need computer","Friday","Adam is calling his friend. When will he need the computer?"],
 [1,"Assignment due","on Saturday","When is the assignment due?"],
-
 [2,"Bus fare trip","£2.5","Lalia is talking to her friend about her upcoming trip. How much does she think the bus fare will be?"],
 [2,"Cleaning products cost","One pound fifty","The woman is walking into a local store. How much are the cleaning products?"],
 [2,"Money left in kitchen","10 pounds","How much money is left in the kitchen?"],
@@ -217,7 +319,6 @@ const RAW_DATA = [
 [2,"Small car cost","3250 pounds","A person calls a friend about his new car. How much does the small car cost him?"],
 [2,"Opinion new restaurant","The service is slow","Louis is having dinner in a new restaurant. What is his opinion about that restaurant?"],
 [2,"Development sea transport","The use of technology will increase","According to the man, what will influence the development of sea transport?"],
-
 [3,"Teacher go to school","He walks","A teacher and a student are talking about transportation. How does the teacher go to school?"],
 [3,"Go to school","She walks","How does she go to school?"],
 [3,"Journey to work","By car","Listen to a man talking about his journey to work. How does the man usually go to work?"],
@@ -231,7 +332,6 @@ const RAW_DATA = [
 [3,"Football club near","A park","A man is giving directions to a friend about how to get to the football club. The football club is near?"],
 [3,"Lose item (police)","Phone","A woman is talking to a police officer. What did she lose?"],
 [3,"New houses built","2000","A man is reading the news about a housing development plan. How many new houses are going to be built?"],
-
 [4,"Waiting somewhere","The town hall","A man phones his friend while waiting somewhere. Where is he?"],
 [4,"Malik want to go","The town hall","Where does Malik want to go?"],
 [4,"Want to go tomorrow","The town hall","Where does he want to go tomorrow?"],
@@ -279,7 +379,6 @@ const RAW_DATA = [
 [4,"Study next semester","France","What country will they study next semester?"],
 [4,"Taking staff to","To a different country","Where is she taking the staff to?"],
 [4,"Submit assignments","Online portal","Where should students submit their assignments?"],
-
 [5,"Relationship with Lisa","Best friends","A woman is talking about her vacation. What is the relationship between the speaker and Lisa?"],
 [5,"Live with / Lisa relationship","Best friends","Who does she live with? / A woman is talking about her vacation. What is the relationship between Lisa and the speaker?"],
 [5,"Visiting Tom this weekend","His sister and her children","Tom is calling his mom. Who is visiting Tom this weekend?"],
@@ -288,7 +387,6 @@ const RAW_DATA = [
 [5,"Writer first job","Teacher","Listen to a writer talking about her job. What is her first job?"],
 [5,"David last job","An electrician","David is in an interview. What was his last job?"],
 [5,"Artist job difference","She works irregular hours","An artist is talking about her job. What is the difference in her job?"],
-
 [6,"American clients","One","A receptionist is checking the client list of a clinic. How many clients are Americans?"],
 [6,"American clients","One","A receptionist is checking the client list of a clinic. How many American clients are there?"],
 [6,"Press number (buy computer)","Three","A customer is calling the hotline of a department store. Which number to press in order to buy a computer?"],
@@ -312,7 +410,6 @@ const RAW_DATA = [
 [6,"People live in town","10,000","A tour guide is introducing a tourist destination. How many people live in the town?"],
 [6,"Freeze Frame magazine sold","Over 300,000 copies","Listen to the director talking about sales of his company. How many copies of Freeze Frame magazine were sold?"],
 [6,"Magazine copies summer","Just over 300,000 copies","How many copies of the magazine are published in summer?"],
-
 [7,"Sister drink evening","Tea","What does her sister usually drink in the evening?"],
 [7,"Brother drink","Water","Lucy is calling her brother. What does the brother have to drink?"],
 [7,"Drink choose","Iced tea","A man is talking to a waiter. What drink does the man choose?"],
@@ -341,7 +438,6 @@ const RAW_DATA = [
 [7,"Cabinet original part","The drawer","Listen to an auction man talking about a cabinet. Which part of the cabinet is original?"],
 [7,"Best weather part","The east","Which part of the country will have the best weather?"],
 [7,"Best weather part","East","Which part of the country has the best weather?"],
-
 [8,"Call friend why","To tell her he will be late","Listen to a man calling his friend. Why does he make the call?"],
 [8,"Return to shop why","To exchange a shirt","Why did she return to the shop?"],
 [8,"Return dress why","Because of its size","A woman is talking to a shop assistant. Why does the woman return the dress?"],
@@ -471,76 +567,337 @@ const RAW_DATA = [
 [8,"Trip weather","Cold but not wet","What will the weather be like during their trip?"]
 ];
 
-const CAT_NAMES = [
+const P1_CATS = [
   "Thời gian (38)", "Thứ / Ngày (10)", "Giá tiền (13)", "Phương tiện (13)", 
   "Địa điểm (47)", "Người / Vai trò (8)", "Số lượng (23)", "Đồ vật (28)", "Hành động (127)"
 ];
 
-let questions = RAW_DATA.map((d, i) => ({
+let p1Questions = P1_RAW.map((d, i) => ({
   id: i + 1,
   catId: d[0],
-  catName: CAT_NAMES[d[0]].split(' ')[0],
+  catName: P1_CATS[d[0]].split(' ')[0],
   hook: d[1],
   ans: d[2],
   q: d[3],
   learned: false
 }));
 
-// LocalStorage
-const savedLearned = localStorage.getItem("aptis_learned_307");
-if (savedLearned) {
-  const ids = JSON.parse(savedLearned);
-  questions.forEach(q => { if (ids.includes(q.id)) q.learned = true; });
+// ==================== PART 3 DATA (15 ĐỀ - 60 CÂU) ====================
+const P3_DATA = [
+  {
+    de: 1, qNum: 16, topic: "A break from studying",
+    transcript: "After completing high school, many of my friends chose to go directly to university, while I opted for a different direction. Honestly, I didn’t feel prepared to begin higher education at that time; I needed some time away from studying to refresh my mind. Rather than signing up for courses, I spent the following two years traveling throughout Asia and Europe. For me, it wasn’t simply a holiday; I wanted to gain practical experience and explore different perspectives before eventually returning to my studies.",
+    subQuestions: [
+      { id: "16.1", q: "Why hasn't he gone to college?", options: ["He didn't get good enough grades", "He couldn't afford the tuition fees.", "He wasn't ready to start higher education"], ans: "He wasn't ready to start higher education" },
+      { id: "16.2", q: "Why did he decide to travel for 2 years?", options: ["To travelling.", "To gain life experience.", "To avoid studying."], ans: "To gain life experience." }
+    ]
+  },
+  {
+    de: 1, qNum: 17, topic: "A book about a life of a scientist",
+    transcript: "I’ve just completed a new biography about a well-known physicist, and it’s truly impressive. What makes it engaging is the author’s style, which explains complicated ideas in a clear and simple way, allowing even readers without a scientific background to understand it. The book has already become a bestseller. Many specialists think its popularity comes from its similarity to the earlier book about the same scientist, which was also highly successful. If you liked the previous one, you’ll certainly find this new book worth reading.",
+    subQuestions: [
+      { id: "17.1", q: "Why do many readers find the book interesting?", options: ["It avoids explaining abstract concepts.", "It relies heavily on technical vocabulary.", "It uses simple language to describe complex ideas."], ans: "It uses simple language to describe complex ideas." },
+      { id: "17.2", q: "Why is the book so popular?", options: ["It is too difficult to understand.", "It is similar to the previous book about the scientist.", "It is too long."], ans: "It is similar to the previous book about the scientist." }
+    ]
+  },
+  {
+    de: 2, qNum: 16, topic: "The sport",
+    transcript: "While most people praise the benefits of exercise, I have a somewhat different view on professional competitive sports. In my experience, when sports become too intense or commercialized, they can actually have a harmful effect on both the players' health and the spirit of fair play. However, my opinion changes when it comes to education. I believe that engaging in physical activity is essential for those in school because it helps balance student's lives. It provides a much-needed break from long hours of academic pressure and keeps them mentally grounded.",
+    subQuestions: [
+      { id: "16.1", q: "What is this person's opinion on sports?", options: ["They bring people together", "They improve concentration", "They have a harmful effect"], ans: "They have a harmful effect" },
+      { id: "16.2", q: "What is the importance of sports for students?", options: ["It distracts students from studying.", "It is only useful for professional athletes.", "It helps balance student's lives."], ans: "It helps balance student's lives." }
+    ]
+  },
+  {
+    de: 2, qNum: 17, topic: "Television series",
+    transcript: "In the world of entertainment, very few shows manage to capture the public's imagination like the one we are discussing today. While many shows start with a great premise but fail to keep the momentum, the reason this particular show has become a global phenomenon is that it has the consistent quality throughout every single season. From the very first episode to the grand finale, the writing, acting, and production values never drop, ensuring that fans stay engaged for years. However, this success doesn't happen in a vacuum. If we look at the bigger picture, the entire television landscape is undergoing a massive transformation. Experts have noted that the current series industry is heavily affected by how audiences consume content. In fact, viewer habits influence the way that series are made more than ever before. With the rise of streaming platforms and the trend of binge-watching, producers and directors are now forced to adapt their storytelling techniques and release schedules to match the specific preferences and behaviors of the modern viewer.",
+    subQuestions: [
+      { id: "17.1", q: "Why is this series so popular?", options: ["It was only available for a short time.", "It has the consistent quality throughout.", "It features unknown actors."], ans: "It has the consistent quality throughout." },
+      { id: "17.2", q: "What is the current series industry affected by?", options: ["Series are no longer produced for online platforms.", "Viewer habits influence the way that series are made.", "Actors now write most of the scripts themselves."], ans: "Viewer habits influence the way that series are made." }
+    ]
+  },
+  {
+    de: 3, qNum: 16, topic: "Advertising and sponsoring",
+    transcript: "In the competitive world of business today, many companies struggle to find the most effective way to grow their presence. While some argue that marketing budgets are getting out of control, most experts agree on the fundamental importance of traditional methods. The primary advantage of a well-executed campaign is that it can help reach new customers who might otherwise never hear of the brand. By expanding the target audience, businesses can ensure long-term growth and stability. However, when it comes to specific strategies like sponsoring major events, companies must be extremely cautious. For example, while sponsoring sports tournaments might seem like a great way to gain visibility, there are significant risks involved. Critics argue that if a brand is linked to an event that experiences a scandal or unethical behavior, it can generate negative publicity for the sport as a whole. Instead of promoting a healthy image, the sponsorship might end up damaging the reputation of both the company and the athletic community involved.",
+    subQuestions: [
+      { id: "16.1", q: "What is the importance of advertising?", options: ["It can build brand recognition", "It increases the product price", "It can help reach new customers"], ans: "It can help reach new customers" },
+      { id: "16.2", q: "Why shouldn't we sponsor sports tournaments?", options: ["They are too expensive", "They can generate negative publicity for the sport", "They can create unfair competition"], ans: "They can generate negative publicity for the sport" }
+    ]
+  },
+  {
+    de: 3, qNum: 17, topic: "Famous writers",
+    transcript: "Today we are exploring the lives of two iconic authors who significantly shaped the literary landscape of the 20th century. Although they belonged to different generations and came from diverse backgrounds, they shared a profound mutual respect that deeply influenced their writing style. One of the most fascinating aspects of their professional relationship is that they both make references to each other in their work, subtly weaving their colleague's ideas, themes, or even names into their own narratives as a form of literary tribute. However, their writing is certainly not for the casual reader. These authors are famous for their layers of symbolism and philosophical depth. Many literary critics have noted that the meaning of their work is not always easily identified, as it usually requires deep reflection and multiple readings to truly grasp the underlying messages. This inherent complexity is exactly what has kept scholars and fans debating the true intent of their stories for decades.",
+    subQuestions: [
+      { id: "17.1", q: "What do these two famous writers have in common?", options: ["They both make references to each other in their work", "They both wrote in the same genre", "They both were born in the same country"], ans: "They both make references to each other in their work" },
+      { id: "17.2", q: "What is special about their works?", options: ["The meaning of their work is not always easily identified", "They use simple language and structure", "Their works are all based on real events"], ans: "The meaning of their work is not always easily identified" }
+    ]
+  },
+  {
+    de: 4, qNum: 16, topic: "A regional development plan",
+    transcript: "Welcome back to our community forum. We've been receiving a lot of letters regarding the proposed development project in our area. Residents oppose this plan primarily because of its narrow focus; many are disappointed that it doesn't do enough to promote alternatives to driving, such as better cycling lanes or expanded bus routes. Beyond the public's reaction, the city council is also hitting some major roadblocks. The main difficulty the city council is having with this plan is their realization that it is not making efficient use of existing land. Instead of revitalizing the empty spaces in the city center, the proposal unnecessarily pushes into the outskirts, which many officials believe is a strategic mistake.",
+    subQuestions: [
+      { id: "16.1", q: "Why do residents oppose this plan?", options: ["It increases the number of public parks in the area", "It provides free public transportation for all residents", "It doesn't do enough to promote alternatives to driving"], ans: "It doesn't do enough to promote alternatives to driving" },
+      { id: "16.2", q: "What difficulties is the city council having with this plan?", options: ["There is too much public support, making it hard to manage expectations", "The plan is not making efficient use of existing land", "The plan has already exceeded its budget by a large margin"], ans: "The plan is not making efficient use of existing land" }
+    ]
+  },
+  {
+    de: 4, qNum: 17, topic: "Life after university",
+    transcript: "Transitioning from the structured environment of academic life to the professional world is often one of the most significant shifts a young adult will ever experience. When standing at this crossroads, many graduates feel immense pressure to find the perfect role immediately. However, most career counselors suggest that the best approach for students is to be flexible and open-minded during the initial stages of their journey. Instead of limiting themselves to a narrow path or a specific job title, they should be willing to explore various industries, as their first job is rarely their last, but rather a valuable learning opportunity. Furthermore, it is vital for graduates to have a realistic understanding of the current economic landscape. When applying for positions in the modern market, students must pay close attention to the fact that jobs are becoming more competitive than ever before. With a global pool of talent and the rise of automation, simply having a degree is often just the baseline requirement. To succeed, applicants need to go beyond their formal qualifications by highlighting their soft skills, unique experiences, and a strong work ethic to distinguish themselves in an increasingly crowded field of candidates.",
+    subQuestions: [
+      { id: "17.1", q: "What should students do when choosing a career?", options: ["Be flexible and open minded", "Choose the same career as their friends", "Focus only on the salary offered"], ans: "Be flexible and open minded" },
+      { id: "17.2", q: "What should students pay attention to when applying for jobs these days?", options: ["They are becoming more competitive", "Most jobs no longer require any qualifications", "Companies prefer handwritten applications"], ans: "They are becoming more competitive" }
+    ]
+  },
+  {
+    de: 5, qNum: 16, topic: "Security cameras",
+    transcript: "The widespread use of surveillance technology often sparks intense debates regarding the balance between privacy and safety. When looking specifically at the professional environment, many staff members express a certain level of anxiety about being observed throughout their shifts. However, perspective is key; in reality, employees probably worry unnecessarily about these devices. Most systems are installed primarily for insurance purposes or to ensure workplace safety in case of emergencies, rather than for the constant, minute-by-minute monitoring of staff behavior that many fear. Furthermore, when shifting the focus to our broader society, the presence of digital eyes in public spaces is becoming a standard feature of modern life. While it is true that some individuals feel their personal space is being invaded, the overarching consensus among security experts is that people should feel reassured by their existence. These cameras play a vital role in deterring criminal activity, aiding emergency services in real-time, and providing objective evidence in legal disputes. Ultimately, the peace of mind that comes from knowing a public area is monitored significantly contributes to a sense of collective security.",
+    subQuestions: [
+      { id: "16.1", q: "How should people feel about cameras in the workplace?", options: ["Cameras should be banned", "Employees probably worry unnecessarily", "People should feel uneasy"], ans: "Employees probably worry unnecessarily" },
+      { id: "16.2", q: "How should people feel about cameras in general?", options: ["People should feel paranoid", "Cameras invade personal space", "People should feel reassured"], ans: "People should feel reassured" }
+    ]
+  },
+  {
+    de: 5, qNum: 17, topic: "A new novel of a famous writer",
+    transcript: "I’ve just finished reading the latest release from one of the most celebrated authors of our time, and it has certainly sparked a lot of conversation among literary circles. The most striking thing about this book, and what everyone seems to be discussing, is that it is quite different compared to his previous works. While he has built his reputation on fast-paced action thrillers, this new publication takes a much more experimental and slow-burning approach to storytelling, which might catch long-time fans off guard. Despite his undeniable talent and creative ambition, I found the execution of this particular story to be somewhat hit-or-miss. While I appreciate his willingness to step out of his comfort zone, I believe there is room for improvement in how he handles these new themes. In my view, the author should take some time to reflect on the feedback he is receiving from professional reviewers. My honest opinion of this writer is that he should listen to the critics before writing his next novel. Paying attention to their concerns regarding pacing and structure could be the key to ensuring his future projects are as successful as his early masterpieces.",
+    subQuestions: [
+      { id: "17.1", q: "What is special about his new novel?", options: ["It is quite different compared to his previous works", "It is shorter and easier to read", "It has been written in a different genre"], ans: "It is quite different compared to his previous works" },
+      { id: "17.2", q: "What is the speaker's opinion of this writer?", options: ["He needs to change his writing style", "He is a brilliant but slow writer", "He should listen to the critics before writing next novel"], ans: "He should listen to the critics before writing next novel" }
+    ]
+  },
+  {
+    de: 6, qNum: 16, topic: "A musician's life",
+    transcript: "Welcome back to \"Music Legends.\" Today, we’re discussing the bittersweet announcement from one of the industry's most enduring icons. After a career spanning over forty years, rumors have been swirling about what’s next. While many younger artists are eager to get him back into the studio, and fans have been buzzing about a potential collaboration with today's pop stars, the singer has dismissed these ideas. He recently clarified that he isn't looking for a comeback or a new creative project. Instead, he expressed a deep desire for peace and quiet. Consequently, it is now almost certain that he will probably retire from singing entirely after his final performance next month, as he feels his voice is no longer what it used to be. Looking back at his long journey, it’s a career of high peaks and low valleys. Although he never reached a point where he regrets choosing his profession—as he still loves music deeply—the overall trajectory of his fame is quite interesting. Many critics argue that he reached his creative peak far too early in his twenties and struggled to innovate afterwards. When we evaluate his influence on the industry today, there’s a common feeling that, despite his natural talent and early hits, he could have been more successful if he had embraced international trends rather than sticking to a very niche style. It’s a classic case of a great artist who had the potential for global stardom but ended up as a local hero instead.",
+    subQuestions: [
+      { id: "16.1", q: "What will this musician do in the near future?", options: ["He wants to collaborate with younger artists", "He will probably retire from singing", "He plans to release a new album"], ans: "He will probably retire from singing" },
+      { id: "16.2", q: "What does the speaker think about his career in general?", options: ["He could have been more successful", "He regrets choosing his profession", "He believes he reached the peak too early"], ans: "He could have been more successful" }
+    ]
+  },
+  {
+    de: 6, qNum: 17, topic: "A new novel of a famous writer (Trùng Đề 05)",
+    transcript: "I’ve just finished reading the latest release from one of the most celebrated authors of our time, and it has certainly sparked a lot of conversation among literary circles. The most striking thing about this book, and what everyone seems to be discussing, is that it is quite different compared to his previous works. While he has built his reputation on fast-paced action thrillers, this new publication takes a much more experimental and slow-burning approach to storytelling, which might catch long-time fans off guard. Despite his undeniable talent and creative ambition, I found the execution of this particular story to be somewhat hit-or-miss. While I appreciate his willingness to step out of his comfort zone, I believe there is room for improvement in how he handles these new themes. In my view, the author should take some time to reflect on the feedback he is receiving from professional reviewers. My honest opinion of this writer is that he should listen to the critics before writing his next novel. Paying attention to their concerns regarding pacing and structure could be the key to ensuring his future projects are as successful as his early masterpieces.",
+    subQuestions: [
+      { id: "17.1", q: "What is special about his new novel?", options: ["It is quite different compared to his previous works", "It is shorter and easier to read", "It has been written in a different genre"], ans: "It is quite different compared to his previous works" },
+      { id: "17.2", q: "What is the speaker's opinion of this writer?", options: ["He needs to change his writing style", "He is a brilliant but slow writer", "He should listen to the critics before writing next novel"], ans: "He should listen to the critics before writing next novel" }
+    ]
+  },
+  {
+    de: 7, qNum: 16, topic: "A research into happiness",
+    transcript: "Research into happiness has attracted considerable attention, as scientists try to understand what truly contributes to people’s sense of well-being. Although the topic appears frequently in newspapers and online articles, the way it is presented is often misleading. A common problem is that the media does not report the findings accurately. Instead, complex studies are simplified or taken out of context, with headlines focusing on surprising or appealing conclusions rather than the full picture. This can give the public an incomplete or even incorrect understanding of what the research actually shows. Regarding the overall value of this research, the speaker expresses a cautious opinion. While these studies offer interesting perspectives on human behavior and emotions, it seems unlikely that they will lead to a single, definitive answer. Happiness is a complex concept that varies greatly from person to person and is influenced by many different factors, including culture, lifestyle, and personal expectations. Because of this complexity, the research may continue to evolve, but it is unlikely to produce one clear conclusion that applies universally.",
+    subQuestions: [
+      { id: "16.1", q: "How has this research into happiness been responded to?", options: ["It has not been accurately reported by the media", "It has led to immediate changes in government policy", "It has been completely ignored by the public"], ans: "It has not been accurately reported by the media" },
+      { id: "16.2", q: "What is the speaker's opinion on this research in general?", options: ["The research is unlikely to find a conclusive answer", "The research has already changed public attitudes", "The researchers are biased in their approach"], ans: "The research is unlikely to find a conclusive answer" }
+    ]
+  },
+  {
+    de: 7, qNum: 17, topic: "Criticism of the new novel",
+    transcript: "The new novel has recently received a great deal of attention from readers and critics alike. One of the main reasons it has attracted such interest is the strength of its characters. Rather than relying on complex plots or detailed background information, the story focuses on creating individuals who feel realistic and engaging. Readers are drawn to these characters because of their unique personalities and emotional depth, which makes it easier to connect with the story and remain interested throughout. As for the overall opinion of the novel, the speaker is quite positive about its potential impact. Although it may not be perfect in every aspect, it is believed that the book will play an important role in increasing the author’s recognition. In fact, the success of this novel is likely to help establish the author's popularity among a wider audience. With strong character development and an engaging narrative style, the book has the potential to become a significant milestone in the writer’s career.",
+    subQuestions: [
+      { id: "17.1", q: "What attracts readers to this novel?", options: ["The chapters are very short and easy to read", "The book includes detailed historical facts", "The characters were interesting"], ans: "The characters were interesting" },
+      { id: "17.2", q: "What is the speaker's opinion about this novel?", options: ["It needs major editing before publication", "It will establish the author's popularity", "It’s unlikely to appeal to international readers"], ans: "It will establish the author's popularity" }
+    ]
+  },
+  {
+    de: 8, qNum: 16, topic: "Writer's block",
+    transcript: "Many writers experience periods when they struggle to stay focused or produce new ideas, a situation often referred to as writer’s block. According to the speaker, one effective way to overcome this problem is by creating dedicated periods of time specifically for writing. Instead of waiting for inspiration to appear naturally, writers are encouraged to build a routine and commit to writing at certain times each day. This structured approach helps improve concentration and allows writers to develop discipline, making it easier to stay productive even when motivation is low. At the same time, when generating ideas, writers sometimes make avoidable mistakes. One common issue is that they refuse to seek the advice of other people. Some prefer to work entirely on their own, believing that feedback might affect their creativity. In reality, discussing ideas with others can provide fresh perspectives and help improve the quality of their work. By ignoring external input, writers may limit their creativity and miss valuable opportunities to develop stronger ideas.",
+    subQuestions: [
+      { id: "16.1", q: "What helps writers focus more on writing?", options: ["Work in noisy environments", "Create dedicated periods", "Rely entirely on inspiration"], ans: "Create dedicated periods" },
+      { id: "16.2", q: "What is a common mistake writers make when generating ideas?", options: ["Spending too much time researching grammar rules", "Refusing to seek the advice of other people", "Writing ideas only in digital format"], ans: "Refusing to seek the advice of other people" }
+    ]
+  },
+  {
+    de: 8, qNum: 17, topic: "Professionalism at work",
+    transcript: "Professionalism at work is often shown through the way employees interact with others and handle daily responsibilities. One clear example is maintaining a positive attitude, even in challenging situations. Instead of complaining or creating conflict, a professional person stays calm, respectful, and supportive toward colleagues. This kind of attitude helps build a healthy working environment, improves teamwork, and increases overall productivity. It also shows reliability and emotional control, which are highly valued in any workplace. At the same time, the public’s view of professionalism is gradually changing. People no longer see it as strictly following traditional rules such as formal dress codes or rigid behavior. Instead, professionalism is now more about adaptability, communication skills, and the ability to work effectively in modern conditions like remote or flexible environments. This shift reflects how workplaces are evolving, and it highlights the importance of redefining professionalism to match current expectations and realities.",
+    subQuestions: [
+      { id: "17.1", q: "How is professionalism demonstrated at work?", options: ["Maintain the positive attitude", "Always agree with your manager", "Avoid giving feedback to colleagues"], ans: "Maintain the positive attitude" },
+      { id: "17.2", q: "What is the public's view of current professionalism?", options: ["Increase working hours", "Reduce opportunities for remote work", "Change its definition"], ans: "Change its definition" }
+    ]
+  },
+  {
+    de: 9, qNum: 16, topic: "Making plans",
+    transcript: "Creating small plans is an effective way to stay organized and make better decisions. When tasks are broken down into smaller steps, it becomes easier to focus on what needs to be done next. This approach reduces confusion and helps you choose the most suitable actions at each stage. As a result, you can manage your time more efficiently and avoid feeling overwhelmed. In general, making a plan also requires you to set certain limits for yourself. These limits help you stay disciplined and focused on your goals instead of getting distracted. By clearly defining what you can and cannot do within a given time, you are more likely to maintain steady progress. This structure not only improves productivity but also helps you build good habits over time.",
+    subQuestions: [
+      { id: "16.1", q: "How does creating each small plan help you?", options: ["They increase your workload", "They help you make decisions", "They delay overall progress"], ans: "They help you make decisions" },
+      { id: "16.2", q: "How does creating a plan help you in general?", options: ["It removes all risks from the process", "It requires you to set yourself certain limits", "It guarantees immediate success"], ans: "It requires you to set yourself certain limits" }
+    ]
+  },
+  {
+    de: 9, qNum: 17, topic: "A promotion campaign for a product",
+    transcript: "In my opinion, this promotion campaign is making exaggerated claims about the product, and that is a major problem. When I watch the advertisements, they seem to promise results that are far too good to be true. Because of this, I feel that many people would become skeptical rather than convinced. Instead of building trust with potential customers, the campaign actually creates doubt, as people may question whether the product can really deliver what is being advertised. Personally, I think that honesty and realism are much more effective in the long term, so this approach could damage the brand’s reputation. In addition to that, I believe the campaign costs too much to make to be profitable. Even if it manages to attract a lot of attention, the company is likely spending a huge amount of money on production, marketing, and distribution. From my perspective, this is not a smart investment because the return may not be high enough to justify such expenses. I would say that a simpler and more cost-effective campaign could achieve similar results without putting so much financial pressure on the company. Overall, I think the strategy is inefficient and needs to be reconsidered.",
+    subQuestions: [
+      { id: "17.1", q: "What do people think about this promotion campaign?", options: ["It is being ignored completely", "It is making exaggerated claims", "It is too simple to be effective"], ans: "It is making exaggerated claims" },
+      { id: "17.2", q: "What does the speaker think about this campaign?", options: ["It costs too much to make to be profitable", "It is reaching the wrong audience", "It lacks creativity"], ans: "It costs too much to make to be profitable" }
+    ]
+  },
+  {
+    de: 10, qNum: 16, topic: "Script production",
+    transcript: "When discussing the script, it is often mentioned that one noticeable issue is that the characters don’t feel fully developed, mainly because their backgrounds aren’t explored in enough detail. Without a clear understanding of their past or motivations, it becomes difficult for the audience to relate to them or understand their actions. This lack of depth makes the story less engaging, as viewers may find it hard to form an emotional connection with the characters. In addition, it is also pointed out that modern industry demands have a negative influence on script production. Writers are frequently required to follow trends or meet commercial expectations, which can limit their creativity. As a result, scripts may feel rushed or not fully developed. Instead of focusing on strong storytelling, the process often prioritizes deadlines and market demands, which can ultimately reduce the overall quality of the script.",
+    subQuestions: [
+      { id: "16.1", q: "What is the speaker's opinion on this script?", options: ["The dialogue is too complex for viewers", "The characters' background are not adequately explored", "The setting feels too unrealistic"], ans: "The characters' background are not adequately explored" },
+      { id: "16.2", q: "How do industries impact script production?", options: ["The new industry demands have a negative influence.", "They provide more creative freedom to writers", "They increase audience engagement significantly"], ans: "The new industry demands have a negative influence." }
+    ]
+  },
+  {
+    de: 10, qNum: 17, topic: "A new restaurant",
+    transcript: "I recently visited that new bistro downtown, and I have to say, the feedback from the community has been quite mixed. On one hand, people love the menu; despite some concerns that the dishes might be too exotic for the locals, most residents actually found the flavors refreshing and authentic. The location is also incredibly convenient, being right in the heart of the shopping district. However, the recurring complaint in almost every review is the unprofessional conduct of the staff. Guests have frequently reported feeling ignored, suggesting that the overall quality of the hospitality was significantly below par. Looking ahead, simply adjusting the menu prices to boost margins or shifting the business model to focus exclusively on digital delivery won't solve the core issue. If the establishment wants to survive, they must prioritize the human element. The management needs to ensure that every person who walks through the door receives attentive care. Ultimately, success will depend on their ability to foster a genuine sense of appreciation, ensuring that every guest feels truly appreciated and at home during their visit.",
+    subQuestions: [
+      { id: "17.1", q: "How is this restaurant reviewed by customers?", options: ["The standard of service wasn’t good", "The location is difficult to find", "The food was too exotic for locals"], ans: "The standard of service wasn’t good" },
+      { id: "17.2", q: "What should this restaurant do?", options: ["They should increase their prices for profit", "They need to make the customers feel valued and welcome", "They need to focus only on online orders"], ans: "They need to make the customers feel valued and welcome" }
+    ]
+  },
+  {
+    de: 11, qNum: 16, topic: "Work from home",
+    transcript: "Before I transitioned to a remote role, I had a very idealized image of what it would be like. I was convinced it would grant me unprecedented flexibility and leisure time, and I even assumed I’d be far more efficient away from the constant interruptions of the office. However, after a few months, I have to admit it didn't quite live up to the hype. While it had its perks, the experience was underwhelming compared to my initial expectations, largely because the boundary between my personal and professional life became so blurred. Looking at the bigger picture, I’ve realized that remote work isn't a 'one-size-fits-all' solution. Some people claim it's universally superior to the office for every employee, while skeptics argue it should be shunned entirely. In my view, neither extreme is correct. Whether telecommuting is effective is entirely contingent upon a person's unique environment and their own disposition. It really is a matter of matching the work style to the right person and their specific situation.",
+    subQuestions: [
+      { id: "16.1", q: "How does she feel about working from home?", options: ["It helped her become more productive", "It wasn't as good as she expected", "It gave her more free time than expected"], ans: "It wasn't as good as she expected" },
+      { id: "16.2", q: "What is her opinion on working from home in general?", options: ["It should be avoided whenever possible", "It's better than working in an office for everyone", "It depends on your situation and personality"], ans: "It depends on your situation and personality" }
+    ]
+  },
+  {
+    de: 11, qNum: 17, topic: "Managing financial spending",
+    transcript: "Mastering your personal finances is a skill that requires both discipline and a solid strategy. When people struggle with their short-term outgoings, a common suggestion is to switch entirely to cash payments or to cut out every single non-essential purchase. While these drastic measures might work for a few days, they are rarely sustainable. A far more effective approach is to keep a close eye on your expenditures over a seven-day period. By tracking where your money goes each week, you can develop a realistic budget that allows for flexibility without overspending. Looking at the bigger picture, long-term financial stability involves more than just recording every minor daily expense, which can often become overwhelming and counterproductive. Similarly, you don't need to eliminate your entertainment budget altogether to save for the future. Instead, the most valuable step you can take for your future self is to consult with a professional or a mentor who has navigated these waters before. Tapping into the wisdom of those with a proven track record in wealth management will provide you with the tailored insights needed to grow your assets over time.",
+    subQuestions: [
+      { id: "17.1", q: "What should you do to better control your short-term spending?", options: ["Avoid all unnecessary purchases entirely", "Use only cash instead of cards", "Monitor your spending for a weekly plan"], ans: "Monitor your spending for a weekly plan" },
+      { id: "17.2", q: "What should you do to better control your long-term spending?", options: ["Stop spending on entertainment altogether", "Seek advice from someone who have experience", "Track every single expense daily"], ans: "Seek advice from someone who have experience" }
+    ]
+  },
+  {
+    de: 12, qNum: 16, topic: "The importance of sleep",
+    transcript: "While many believe that sleeping fewer hours might actually improve deep sleep through exhaustion, or that drinking a cup of coffee can help some individuals relax before bed, these are largely myths. To truly enhance your rest, the secret lies in your sensory environment. Experts agree that shielding your bedroom from any auditory distractions and ensuring total darkness are the most critical factors. By eliminating both sound and light, you allow your brain to enter a restorative state far more effectively. Regarding sleep disorders, there is a common misunderstanding of how they manifest. Some people think that insomnia is solely a result of physical health issues, or they mistakenly believe that those with the condition actually spend too much time sleeping. In my view, the core issue is often a lack of awareness. Individuals frequently fail to detect the subtle cues of exhaustion their bodies are sending. Because they cannot always identify the signs that they are genuinely fatigued, they continue to push themselves, worsening the cycle of sleeplessness.",
+    subQuestions: [
+      { id: "16.1", q: "What is the way to have a good sleep according to the speaker?", options: ["Blocking out noise and light is key", "Drinking coffee before bed helps relax the mind", "Sleeping fewer hours increases deep sleep quality"], ans: "Blocking out noise and light is key" },
+      { id: "16.2", q: "What is the speaker's view on insomnia in general?", options: ["Most people with insomnia actually sleep too much", "People can't always recognize the symptoms of tiredness", "Insomnia is caused only by physical health problems"], ans: "People can't always recognize the symptoms of tiredness" }
+    ]
+  },
+  {
+    de: 12, qNum: 17, topic: "A book about a life of a scientist (Trùng Đề 01)",
+    transcript: "I’ve just completed a new biography about a well-known physicist, and it’s truly impressive. What makes it engaging is the author’s style, which explains complicated ideas in a clear and simple way, allowing even readers without a scientific background to understand it. The book has already become a bestseller. Many specialists think its popularity comes from its similarity to the earlier book about the same scientist, which was also highly successful. If you liked the previous one, you’ll certainly find this new book worth reading.",
+    subQuestions: [
+      { id: "17.1", q: "Why is the book so popular?", options: ["It was endorsed by a famous celebrity", "It contains many colorful illustrations", "It uses simple language to describe complex ideas"], ans: "It uses simple language to describe complex ideas" },
+      { id: "17.2", q: "What do people criticize about the book?", options: ["It is similar to the previous book about the scientist", "It is too short to be meaningful", "It focuses too much on entertainment rather than facts"], ans: "It is similar to the previous book about the scientist" }
+    ]
+  },
+  {
+    de: 13, qNum: 16, topic: "A break from studying (Trùng Đề 01)",
+    transcript: "After completing high school, many of my friends chose to go directly to university, while I opted for a different direction. Honestly, I didn't feel prepared to begin higher education at that time; I needed some time away from studying to refresh my mind. Rather than signing up for courses, I spent the following two years traveling throughout Asia and Europe. For me, it wasn't simply a holiday; I wanted to gain practical experience and explore different perspectives before eventually returning to my studies.",
+    subQuestions: [
+      { id: "16.1", q: "Why hasn't he gone to college?", options: ["He couldn't afford the tuition fees.", "He wasn't ready to start higher education", "He didn't get good enough grades"], ans: "He wasn't ready to start higher education" },
+      { id: "16.2", q: "Why did he decide to travel for 2 years?", options: ["To travelling.", "To gain life experience.", "To avoid studying."], ans: "To gain life experience." }
+    ]
+  },
+  {
+    de: 13, qNum: 17, topic: "Television series (Trùng Đề 02)",
+    transcript: "In the world of entertainment, very few shows manage to capture the public's imagination like the one we are discussing today. While many shows start with a great premise but fail to keep the momentum, the reason this particular show has become a global phenomenon is that it has the consistent quality throughout every single season. From the very first episode to the grand finale, the writing, acting, and production values never drop, ensuring that fans stay engaged for years. However, this success doesn't happen in a vacuum. If we look at the bigger picture, the entire television landscape is undergoing a massive transformation. Experts have noted that the current series industry is heavily affected by how audiences consume content. In fact, viewer habits influence the way that series are made more than ever before. With the rise of streaming platforms and the trend of binge-watching, producers and directors are now forced to adapt their storytelling techniques and release schedules to match the specific preferences and behaviors of the modern viewer.",
+    subQuestions: [
+      { id: "17.1", q: "Why is this series so popular?", options: ["It has the consistent quality throughout.", "It features unknown actors.", "It was only available for a short time."], ans: "It has the consistent quality throughout." },
+      { id: "17.2", q: "What is the current series industry affected by?", options: ["Actors now write most of the scripts themselves.", "Series are no longer produced for online platforms.", "Viewer habits influence the way that series are made."], ans: "Viewer habits influence the way that series are made." }
+    ]
+  },
+  {
+    de: 14, qNum: 16, topic: "The Sport (Trùng Đề 02)",
+    transcript: "While most people praise the benefits of exercise, I have a somewhat different view on professional competitive sports. In my experience, when sports become too intense or commercialized, they can actually have a harmful effect on both the players' health and the spirit of fair play. However, my opinion changes when it comes to education. I believe that engaging in physical activity is essential for those in school because it helps balance student's lives. It provides a much-needed break from long hours of academic pressure and keeps them mentally grounded.",
+    subQuestions: [
+      { id: "16.1", q: "What is this person's opinion on sports?", options: ["They have a harmful effect", "They bring people together", "They improve concentration"], ans: "They have a harmful effect" },
+      { id: "16.2", q: "What is the importance of sports for students?", options: ["It helps balance student's lives.", "It distracts students from studying.", "It is only useful for professional athletes."], ans: "It helps balance student's lives." }
+    ]
+  },
+  {
+    de: 14, qNum: 17, topic: "A Book About A Life Of A Scientist (Phiên bản 2)",
+    transcript: "I've just completed reading a new biography about a globally famous scientist, and it's very impressive. What stands out most is the author's storytelling style; it feels engaging and reads more like a compelling narrative than a traditional, dry biography. Moreover, even though the subject is quite technical, the content is written in a way that is accessible to general readers. As a result, complex discoveries become easy to understand, even for those without a scientific background.",
+    subQuestions: [
+      { id: "17.1", q: "What does the speaker say about the way of writing?", options: ["It is exciting to read", "It focuses exclusively on the scientist's childhood.", "It employs a very outdated narrative style."], ans: "It is exciting to read" },
+      { id: "17.2", q: "What does the speaker say about the overall content of the book?", options: ["It is intended primarily for advanced research purposes.", "It mainly summarizes the scientist's previous publications.", "It has been written for a general audience"], ans: "It has been written for a general audience" }
+    ]
+  },
+  {
+    de: 15, qNum: 16, topic: "The Sport (Phiên bản 2)",
+    transcript: "When discussing the role of athletics in education, many focus only on physical health. However, from an expert perspective, the value of sports competitions goes much further; they actually prepare students for a competitive work environment by teaching them resilience and how to perform under pressure. For this reason, my primary advice for schools is to keep these programs active, as engaging in sports provides them with a balance in their lives. This balance is crucial for ensuring that academic demands don't become overwhelming for the students.",
+    subQuestions: [
+      { id: "16.1", q: "What is the expert's opinion about sports competitions?", options: ["Attract significant funding from international sponsors.", "Identify and recruit professional athletes for national teams.", "Prepare students for a competitive work environment"], ans: "Prepare students for a competitive work environment" },
+      { id: "16.2", q: "What is the expert's advice for schools?", options: ["Provides them with a balance in their lives", "Restrict physical activities to ensure academic excellence.", "Enforce athletic participation as a strict graduation requirement."], ans: "Provides them with a balance in their lives" }
+    ]
+  },
+  {
+    de: 15, qNum: 17, topic: "Television Series (Phiên bản 2)",
+    transcript: "When the new drama series premiered last month, the production team was uncertain about how it would be received in such a crowded market. However, they were pleasantly surprised because it caught the audience's attention from the start, breaking viewership records within its very first week of release. The unique plot and high-quality cinematography had everyone talking immediately. Looking ahead, industry analysts believe the show has a very promising future beyond just high ratings. I spoke to a media consultant who pointed out that the series has a unique commercial appeal. According to the expert, the real potential of this show is that it can help reach new customers, particularly by attracting younger demographics and international viewers who don't usually watch domestic television. It is seen as a strategic tool to expand the network's influence into entirely new markets.",
+    subQuestions: [
+      { id: "17.1", q: "What happened to the TV series?", options: ["It caught the audience's attention from the start.", "It faced significant backlash from local viewers.", "It struggled to secure a prime-time slot."], ans: "It caught the audience's attention from the start." },
+      { id: "17.2", q: "According to the expert, what is the series' potential?", options: ["It primarily focuses on educational content for kids.", "It will dominate the international award season.", "It can help reach new customers."], ans: "It can help reach new customers." }
+    ]
+  }
+];
+
+let p3AllSubQuestions = [];
+P3_DATA.forEach(prompt => {
+  prompt.subQuestions.forEach(sub => {
+    p3AllSubQuestions.push({
+      de: prompt.de,
+      qNum: prompt.qNum,
+      topic: prompt.topic,
+      id: sub.id,
+      q: sub.q,
+      options: sub.options,
+      ans: sub.ans,
+      transcript: prompt.transcript
+    });
+  });
+});
+
+// ==================== PART SWITCHER ====================
+function switchPart(part) {
+  const isP1 = (part === 'p1');
+  document.getElementById("btnSwitchP1").classList.toggle("active", isP1);
+  document.getElementById("btnSwitchP3").classList.toggle("active", !isP1);
+  document.getElementById("btnSwitchP3").classList.toggle("part3", !isP1);
+  document.getElementById("part1Section").classList.toggle("hidden-view", !isP1);
+  document.getElementById("part3Section").classList.toggle("hidden-view", isP1);
+
+  if (!isP1) {
+    initPart3();
+  }
 }
 
-let activeCat = -1;
-let hideAll = false;
-let onlyUnlearned = false;
+// ==================== PART 1 CONTROLLER ====================
+let p1ActiveCat = -1;
+let p1HideAll = false;
+let p1OnlyUnlearned = false;
 
-// Filter chips for Tab 1
-const catContainer = document.getElementById("catList");
-catContainer.innerHTML = `<button class="cat-chip active" onclick="setCategory(-1)">Tất cả (307)</button>` + 
-  CAT_NAMES.map((name, i) => `<button class="cat-chip" onclick="setCategory(${i})">${name}</button>`).join('');
+const p1CatList = document.getElementById("p1CatList");
+p1CatList.innerHTML = `<button class="cat-chip active" onclick="setP1Cat(-1)">Tất cả (307)</button>` + 
+  P1_CATS.map((name, i) => `<button class="cat-chip" onclick="setP1Cat(${i})">${name}</button>`).join('');
 
-// Quiz select options for Tab 2
-const quizCatSelect = document.getElementById("quizCatSelect");
-quizCatSelect.innerHTML = `<option value="-1">Tất cả chủ đề (307 câu)</option>` + 
-  CAT_NAMES.map((name, i) => `<option value="${i}">${name}</option>`).join('');
+const p1QuizCat = document.getElementById("p1QuizCat");
+p1QuizCat.innerHTML = `<option value="-1">Tất cả chủ đề (307 câu)</option>` + 
+  P1_CATS.map((name, i) => `<option value="${i}">${name}</option>`).join('');
 
-function updateStats() {
-  const count = questions.filter(q => q.learned).length;
-  document.getElementById("learnedCount").innerText = count;
-  document.getElementById("percentCount").innerText = Math.round((count / questions.length) * 100) + "%";
-  localStorage.setItem("aptis_learned_307", JSON.stringify(questions.filter(q => q.learned).map(q => q.id)));
+function switchP1Tab(tab) {
+  document.querySelectorAll("#part1Section .sub-btn").forEach((btn, idx) => {
+    btn.classList.toggle("active", (tab === 'study' && idx === 0) || (tab === 'quiz' && idx === 1) || (tab === 'repeats' && idx === 2));
+  });
+  document.getElementById("p1StudyView").classList.toggle("hidden-view", tab !== 'study');
+  document.getElementById("p1QuizView").classList.toggle("hidden-view", tab !== 'quiz');
+  document.getElementById("p1RepeatsView").classList.toggle("hidden-view", tab !== 'repeats');
+
+  if (tab === 'repeats') renderP1Repeats();
 }
 
-function setCategory(id) {
-  activeCat = id;
-  document.querySelectorAll(".cat-chip").forEach((el, idx) => {
+function setP1Cat(id) {
+  p1ActiveCat = id;
+  document.querySelectorAll("#p1CatList .cat-chip").forEach((el, idx) => {
     el.classList.toggle("active", (id === -1 && idx === 0) || idx === id + 1);
   });
-  renderCards();
+  renderP1Cards();
 }
 
-function toggleHideAll() {
-  hideAll = !hideAll;
-  renderCards();
-}
+function toggleP1HideAll() { p1HideAll = !p1HideAll; renderP1Cards(); }
+function toggleP1OnlyUnlearned() { p1OnlyUnlearned = !p1OnlyUnlearned; renderP1Cards(); }
 
-function filterLearned() {
-  onlyUnlearned = !onlyUnlearned;
-  renderCards();
-}
-
-// RENDER TAB 1 (STUDY CARDS)
-function renderCards() {
-  const query = document.getElementById("searchInput").value.toLowerCase().trim();
-  const grid = document.getElementById("cardsGrid");
-  
-  const filtered = questions.filter(q => {
-    const matchCat = (activeCat === -1) || (q.catId === activeCat);
-    const matchText = q.hook.toLowerCase().includes(query) || q.ans.toLowerCase().includes(query) || q.q.toLowerCase().includes(query);
-    const matchLearned = !onlyUnlearned || !q.learned;
+function renderP1Cards() {
+  const qStr = document.getElementById("p1Search").value.toLowerCase().trim();
+  const grid = document.getElementById("p1CardsGrid");
+  const filtered = p1Questions.filter(q => {
+    const matchCat = (p1ActiveCat === -1) || (q.catId === p1ActiveCat);
+    const matchText = q.hook.toLowerCase().includes(qStr) || q.ans.toLowerCase().includes(qStr) || q.q.toLowerCase().includes(qStr);
+    const matchLearned = !p1OnlyUnlearned || !q.learned;
     return matchCat && matchText && matchLearned;
   });
 
@@ -549,36 +906,400 @@ function renderCards() {
       <div>
         <div class="card-top">
           <span>#${q.id} · ${q.catName}</span>
-          <button class="audio-btn" title="Nghe phát âm câu hỏi" onclick="speakText('${q.q.replace(/'/g, "\\'")}')">🔊</button>
+          <button class="audio-btn" onclick="speakText('${q.q.replace(/'/g, "\\'")}')">🔊</button>
         </div>
-        <div class="card-q">${q.q}</div>
-        <div class="card-hook">🔑 Điểm neo: ${q.hook}</div>
+        <div class="card-q-scrollbox">
+          <div class="card-q">${q.q}</div>
+        </div>
+        <div class="card-hook">🔑 ${q.hook}</div>
       </div>
       <div>
-        <div class="card-ans ${hideAll ? 'hidden' : ''}" onclick="this.classList.toggle('hidden')">
-          ${q.ans}
-        </div>
-        <div class="card-actions">
-          <button class="learned-btn ${q.learned ? 'is-learned' : ''}" onclick="toggleLearned(${q.id})">
-            ${q.learned ? '✓ Đã thuộc' : '○ Đánh dấu thuộc'}
-          </button>
-          <button class="audio-btn" title="Nghe phát âm đáp án" onclick="speakText('${q.ans.replace(/'/g, "\\'")}')">🗣️ Nghe đáp án</button>
+        <div class="card-ans ${p1HideAll ? 'hidden' : ''}" onclick="this.classList.toggle('hidden')">${q.ans}</div>
+        <div class="card-actions" style="display:flex; justify-content:space-between; margin-top:8px;">
+          <button class="btn-action btn-secondary" style="font-size:0.75rem;" onclick="toggleP1Learned(${q.id})">${q.learned ? '✓ Đã thuộc' : '○ Đánh dấu thuộc'}</button>
+          <button class="audio-btn" onclick="speakText('${q.ans.replace(/'/g, "\\'")}')">🗣️</button>
         </div>
       </div>
     </div>
   `).join('');
 }
 
-function toggleLearned(id) {
-  const q = questions.find(item => item.id === id);
-  if (q) {
-    q.learned = !q.learned;
-    updateStats();
-    renderCards();
-    if (!document.getElementById("repeatsView").classList.contains("hidden-view")) {
-      renderGrouping307();
-    }
+function toggleP1Learned(id) {
+  const item = p1Questions.find(q => q.id === id);
+  if (item) { item.learned = !item.learned; renderP1Cards(); }
+}
+
+function renderP1Repeats() {
+  const groups = {};
+  p1Questions.forEach(q => {
+    const k = q.ans.trim().toLowerCase();
+    if (!groups[k]) groups[k] = { ans: q.ans, items: [] };
+    groups[k].items.push(q);
+  });
+
+  const rep = Object.values(groups).filter(g => g.items.length > 1).sort((a,b) => b.items.length - a.items.length);
+  const single = Object.values(groups).filter(g => g.items.length === 1).sort((a,b) => a.items[0].catId - b.items[0].catId);
+
+  document.getElementById("p1RepeatedGrid").innerHTML = rep.map(g => `
+    <div class="card" style="border: 2px solid #93c5fd; height:auto;">
+      <div style="background:#eff6ff; padding:8px; border-radius:6px; margin-bottom:8px;">
+        <span style="font-size:0.72rem; color:var(--primary); font-weight:700;">ĐÁP ÁN CHUNG (${g.items.length} CÂU)</span>
+        <div style="font-size:1.05rem; font-weight:800; color:var(--primary);">${g.ans}</div>
+      </div>
+      <div style="max-height:130px; overflow-y:auto; padding-right:4px;">
+        ${g.items.map(it => `
+          <div style="font-size:0.82rem; border-bottom:1px dashed #e2e8f0; padding:4px 0;">
+            <strong>#${it.id} ·${it.hook}</strong>
+            <div style="color:var(--muted); font-size:0.72rem;">${it.q}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById("p1SingleGrid").innerHTML = single.map(g => {
+    const it = g.items[0];
+    return `
+      <div class="card">
+        <div>
+          <div class="card-top"><span>#${it.id} · ${it.catName}</span></div>
+          <div class="card-q-scrollbox"><div class="card-q">${it.q}</div></div>
+          <div class="card-hook">🔑 ${it.hook}</div>
+        </div>
+        <div class="card-ans" style="background:#f0fdf4; border:1px solid #86efac; color:var(--success);">${it.ans}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// Part 1 Quiz Engine
+let p1QuizPool = [];
+let p1QuizIdx = 0;
+let p1Score = 0;
+
+function startP1Quiz() {
+  const cat = parseInt(document.getElementById("p1QuizCat").value);
+  const size = parseInt(document.getElementById("p1QuizSize").value);
+  let pool = p1Questions.filter(q => cat === -1 || q.catId === cat).sort(() => 0.5 - Math.random());
+  p1QuizPool = pool.slice(0, Math.min(size, pool.length));
+  p1QuizIdx = 0; p1Score = 0;
+  document.getElementById("p1QuizSetup").classList.add("hidden-view");
+  document.getElementById("p1QuizActive").classList.remove("hidden-view");
+  showP1QuizQ();
+}
+
+function showP1QuizQ() {
+  const cur = p1QuizPool[p1QuizIdx];
+  document.getElementById("p1QuizProgress").innerText = `Câu ${p1QuizIdx + 1}/${p1QuizPool.length}`;
+  document.getElementById("p1QuizScore").innerText = `Điểm: ${p1Score}`;
+  document.getElementById("p1QuizQ").innerText = cur.q;
+  document.getElementById("p1QuizNext").classList.add("hidden-view");
+  speakText(cur.q);
+
+  let wrong = p1Questions.filter(q => q.ans.toLowerCase() !== cur.ans.toLowerCase() && (q.catId === cur.catId || Math.random() > 0.5)).map(q => q.ans);
+  wrong = [...new Set(wrong)].sort(() => 0.5 - Math.random()).slice(0, 3);
+  while (wrong.length < 3) wrong.push("Option X");
+  const opts = [cur.ans, ...wrong].sort(() => 0.5 - Math.random());
+
+  document.getElementById("p1QuizOptions").innerHTML = opts.map(opt => `
+    <button class="quiz-opt" onclick="checkP1Quiz(this, '${opt.replace(/'/g, "\\'")}', '${cur.ans.replace(/'/g, "\\'")}')">${opt}</button>
+  `).join('');
+}
+
+function checkP1Quiz(btn, chosen, correct) {
+  document.querySelectorAll("#p1QuizOptions .quiz-opt").forEach(b => b.disabled = true);
+  if (chosen === correct) {
+    btn.classList.add("correct");
+    p1Score += 10;
+  } else {
+    btn.classList.add("wrong");
+    document.querySelectorAll("#p1QuizOptions .quiz-opt").forEach(b => { if (b.innerText.trim() === correct) b.classList.add("correct"); });
   }
+  document.getElementById("p1QuizScore").innerText = `Điểm: ${p1Score}`;
+  document.getElementById("p1QuizNext").classList.remove("hidden-view");
+}
+
+function nextP1QuizQ() {
+  p1QuizIdx++;
+  if (p1QuizIdx < p1QuizPool.length) showP1QuizQ();
+  else {
+    alert(`🎉 Hoàn thành trắc nghiệm Part 1!\nĐiểm số: ${p1Score} / ${p1QuizPool.length * 10}`);
+    document.getElementById("p1QuizSetup").classList.remove("hidden-view");
+    document.getElementById("p1QuizActive").classList.add("hidden-view");
+  }
+}
+
+// ==================== PART 3 CONTROLLER ====================
+let p3ActiveDe = -1;
+let p3ShowTranscripts = true;
+let p3HideAnswers = false;
+
+function initPart3() {
+  const deFilter = document.getElementById("p3DeFilter");
+  if (deFilter.children.length === 0) {
+    let filterHtml = `<button class="cat-chip active p3" onclick="setP3De(-1)">Tất cả 15 Đề (60 câu)</button>`;
+    for (let i = 1; i <= 15; i++) {
+      filterHtml += `<button class="cat-chip" onclick="setP3De(${i})">Đề ${i < 10 ? '0' + i : i}</button>`;
+    }
+    deFilter.innerHTML = filterHtml;
+  }
+  renderP3Prompts();
+}
+
+function switchP3Tab(tab) {
+  document.querySelectorAll("#part3Section .sub-btn").forEach((btn, idx) => {
+    btn.classList.toggle("active", (tab === 'study' && idx === 0) || (tab === 'quiz' && idx === 1) || (tab === 'matrix' && idx === 2));
+    btn.classList.toggle("part3-sub", (tab === 'study' && idx === 0) || (tab === 'quiz' && idx === 1) || (tab === 'matrix' && idx === 2));
+  });
+  document.getElementById("p3StudyView").classList.toggle("hidden-view", tab !== 'study');
+  document.getElementById("p3QuizView").classList.toggle("hidden-view", tab !== 'quiz');
+  document.getElementById("p3MatrixView").classList.toggle("hidden-view", tab !== 'matrix');
+
+  if (tab === 'matrix') renderP3Matrix();
+}
+
+function setP3De(deNum) {
+  p3ActiveDe = deNum;
+  document.querySelectorAll("#p3DeFilter .cat-chip").forEach((el, idx) => {
+    el.classList.toggle("active", (deNum === -1 && idx === 0) || idx === deNum);
+    el.classList.toggle("p3", (deNum === -1 && idx === 0) || idx === deNum);
+  });
+  renderP3Prompts();
+}
+
+function toggleP3Transcripts() {
+  p3ShowTranscripts = !p3ShowTranscripts;
+  document.querySelectorAll(".transcript-box").forEach(el => el.classList.toggle("hidden-view", !p3ShowTranscripts));
+}
+
+function toggleP3Answers() {
+  p3HideAnswers = !p3HideAnswers;
+  renderP3Prompts();
+}
+
+function renderP3Prompts() {
+  const qStr = document.getElementById("p3Search").value.toLowerCase().trim();
+  const container = document.getElementById("p3PromptsContainer");
+
+  const filtered = P3_DATA.filter(item => {
+    const matchDe = (p3ActiveDe === -1) || (item.de === p3ActiveDe);
+    const textTarget = (item.topic + " " + item.transcript + " " + item.subQuestions.map(s => s.q + " " + s.ans).join(' ')).toLowerCase();
+    return matchDe && textTarget.includes(qStr);
+  });
+
+  container.innerHTML = filtered.map(item => `
+    <div class="prompt-card">
+      <div class="prompt-head">
+        <div>
+          <span class="prompt-badge">ĐỀ ${item.de < 10 ? '0' + item.de : item.de} · QUESTION ${item.qNum}</span>
+          <span class="prompt-topic" style="margin-left:6px;">${item.topic}</span>
+        </div>
+        <button class="btn-action p3" style="font-size:0.75rem; padding:3px 8px;" onclick="speakText('${item.transcript.replace(/'/g, "\\'")}')">🔊 Nghe đoạn thoại</button>
+      </div>
+      
+      <div class="transcript-box ${p3ShowTranscripts ? '' : 'hidden-view'}">
+        <strong>TRANSCRIPT (Lời thoại):</strong><br>
+        ${item.transcript}
+      </div>
+
+      <div class="sub-q-group">
+        ${item.subQuestions.map(sub => `
+          <div class="sub-q-box">
+            <div>
+              <div class="sub-q-title-scrollbox">
+                <div class="sub-q-title">❓ Câu ${sub.id}:${sub.q}</div>
+              </div>
+              <ul class="opt-list">
+                ${sub.options.map(opt => `
+                  <li class="opt-item ${(!p3HideAnswers && opt.trim() === sub.ans.trim()) ? 'is-correct-key' : ''}">
+                    • ${opt}
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+            <div style="margin-top:6px;">
+              <div class="card-ans ${p3HideAnswers ? 'hidden' : ''}" style="font-size:0.8rem; padding:6px;" onclick="this.classList.toggle('hidden')">
+                Đáp án: ${sub.ans}
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+// Part 3 Quiz Engine (Chuẩn 3 lựa chọn A-B-C)
+let p3QuizPool = [];
+let p3QuizIdx = 0;
+let p3Score = 0;
+
+function startP3Quiz() {
+  const mode = document.getElementById("p3QuizMode").value;
+  let pool = [...p3AllSubQuestions];
+  if (mode === "16") pool = pool.filter(q => q.qNum === 16);
+  if (mode === "17") pool = pool.filter(q => q.qNum === 17);
+  
+  p3QuizPool = pool.sort(() => 0.5 - Math.random());
+  p3QuizIdx = 0; p3Score = 0;
+
+  document.getElementById("p3QuizSetup").classList.add("hidden-view");
+  document.getElementById("p3QuizActive").classList.remove("hidden-view");
+  showP3QuizQ();
+}
+
+function showP3QuizQ() {
+  const cur = p3QuizPool[p3QuizIdx];
+  document.getElementById("p3QuizProgress").innerText = `Câu ${p3QuizIdx + 1}/${p3QuizPool.length}`;
+  document.getElementById("p3QuizScore").innerText = `Điểm: ${p3Score}`;
+  document.getElementById("p3QuizTopic").innerText = `ĐỀ ${cur.de < 10 ? '0' + cur.de : cur.de} · Q${cur.id} · ${cur.topic}`;
+  document.getElementById("p3QuizQ").innerText = cur.q;
+  document.getElementById("p3QuizNext").classList.add("hidden-view");
+  speakText(cur.q);
+
+  const opts = [...cur.options].sort(() => 0.5 - Math.random());
+  document.getElementById("p3QuizOptions").innerHTML = opts.map(opt => `
+    <button class="quiz-opt" onclick="checkP3Quiz(this, '${opt.replace(/'/g, "\\'")}', '${cur.ans.replace(/'/g, "\\'")}')">
+      ${opt}
+    </button>
+  `).join('');
+}
+
+function checkP3Quiz(btn, chosen, correct) {
+  document.querySelectorAll("#p3QuizOptions .quiz-opt").forEach(b => b.disabled = true);
+  if (chosen.trim() === correct.trim()) {
+    btn.classList.add("correct");
+    p3Score += 10;
+  } else {
+    btn.classList.add("wrong");
+    document.querySelectorAll("#p3QuizOptions .quiz-opt").forEach(b => {
+      if (b.innerText.trim() === correct.trim()) b.classList.add("correct");
+    });
+  }
+  document.getElementById("p3QuizScore").innerText = `Điểm: ${p3Score}`;
+  document.getElementById("p3QuizNext").classList.remove("hidden-view");
+}
+
+function nextP3QuizQ() {
+  p3QuizIdx++;
+  if (p3QuizIdx < p3QuizPool.length) showP3QuizQ();
+  else {
+    alert(`🎉 Hoàn thành bài thi Part 3!\nTổng điểm: ${p3Score} / ${p3QuizPool.length * 10}`);
+    document.getElementById("p3QuizSetup").classList.remove("hidden-view");
+    document.getElementById("p3QuizActive").classList.add("hidden-view");
+  }
+}
+
+// Part 3 Full Matrix (Đủ 100% 30 Bài / 60 Câu)
+function renderP3Matrix() {
+  const repeatedMatrix = [
+    {
+      title: "A break from studying",
+      tests: ["Đề 01 (Q16)", "Đề 13 (Q16)"],
+      q1: "16.1 Why hasn't he gone to college? ➔ He wasn't ready to start higher education",
+      q2: "16.2 Why did he decide to travel for 2 years? ➔ To gain life experience."
+    },
+    {
+      title: "The sport (Bản chuẩn)",
+      tests: ["Đề 02 (Q16)", "Đề 14 (Q16)"],
+      q1: "16.1 Person's opinion on sports? ➔ They have a harmful effect",
+      q2: "16.2 Importance of sports for students? ➔ It helps balance student's lives."
+    },
+    {
+      title: "The Sport (Biến thể 2)",
+      tests: ["Đề 15 (Q16)"],
+      q1: "16.1 Expert's opinion about sports competitions? ➔ Prepare students for a competitive work environment",
+      q2: "16.2 Expert's advice for schools? ➔ Provides them with a balance in their lives"
+    },
+    {
+      title: "Television series (Bản chuẩn)",
+      tests: ["Đề 02 (Q17)", "Đề 13 (Q17)"],
+      q1: "17.1 Why is this series so popular? ➔ It has the consistent quality throughout.",
+      q2: "17.2 Current series industry affected by? ➔ Viewer habits influence the way that series are made."
+    },
+    {
+      title: "Television Series (Biến thể 2)",
+      tests: ["Đề 15 (Q17)"],
+      q1: "17.1 What happened to the TV series? ➔ It caught the audience's attention from the start.",
+      q2: "17.2 Expert: series' potential? ➔ It can help reach new customers."
+    },
+    {
+      title: "A book about a life of a scientist (Bản chuẩn)",
+      tests: ["Đề 01 (Q17)", "Đề 12 (Q17)"],
+      q1: "17.1 Why readers find book interesting? ➔ It uses simple language to describe complex ideas.",
+      q2: "17.2 Why popular / criticize? ➔ It is similar to the previous book about the scientist."
+    },
+    {
+      title: "A Book About A Life Of A Scientist (Biến thể 2)",
+      tests: ["Đề 14 (Q17)"],
+      q1: "17.1 Speaker say about way of writing? ➔ It is exciting to read",
+      q2: "17.2 Overall content of the book? ➔ It has been written for a general audience"
+    },
+    {
+      title: "A new novel of a famous writer",
+      tests: ["Đề 05 (Q17)", "Đề 06 (Q17)"],
+      q1: "17.1 What is special about his new novel? ➔ It is quite different compared to his previous works",
+      q2: "17.2 Speaker's opinion of this writer? ➔ He should listen to the critics before writing next novel"
+    }
+  ];
+
+  const singleMatrix = [
+    { test: "Đề 03 (Q16)", topic: "Advertising and sponsoring", q1: "16.1 Importance of advertising? ➔ It can help reach new customers", q2: "16.2 Why shouldn't sponsor sports? ➔ They can generate negative publicity for the sport" },
+    { test: "Đề 03 (Q17)", topic: "Famous writers", q1: "17.1 Writers in common? ➔ They both make references to each other in their work", q2: "17.2 Special about their works? ➔ The meaning of their work is not always easily identified" },
+    { test: "Đề 04 (Q16)", topic: "A regional development plan", q1: "16.1 Why residents oppose? ➔ It doesn't do enough to promote alternatives to driving", q2: "16.2 Council difficulties? ➔ The plan is not making efficient use of existing land" },
+    { test: "Đề 04 (Q17)", topic: "Life after university", q1: "17.1 Students choosing career? ➔ Be flexible and open minded", q2: "17.2 Pay attention when applying? ➔ They are becoming more competitive" },
+    { test: "Đề 05 (Q16)", topic: "Security cameras", q1: "16.1 Cameras in workplace? ➔ Employees probably worry unnecessarily", q2: "16.2 Cameras in general? ➔ People should feel reassured" },
+    { test: "Đề 06 (Q16)", topic: "A musician's life", q1: "16.1 Near future? ➔ He will probably retire from singing", q2: "16.2 Career in general? ➔ He could have been more successful" },
+    { test: "Đề 07 (Q16)", topic: "A research into happiness", q1: "16.1 How research responded? ➔ It has not been accurately reported by the media", q2: "16.2 Speaker's opinion? ➔ The research is unlikely to find a conclusive answer" },
+    { test: "Đề 07 (Q17)", topic: "Criticism of the new novel", q1: "17.1 Attracts readers? ➔ The characters were interesting", q2: "17.2 Speaker's opinion? ➔ It will establish the author's popularity" },
+    { test: "Đề 08 (Q16)", topic: "Writer's block", q1: "16.1 Helps writers focus? ➔ Create dedicated periods", q2: "16.2 Common mistake? ➔ Refusing to seek the advice of other people" },
+    { test: "Đề 08 (Q17)", topic: "Professionalism at work", q1: "17.1 Demonstrated at work? ➔ Maintain the positive attitude", q2: "17.2 Public view of professionalism? ➔ Change its definition" },
+    { test: "Đề 09 (Q16)", topic: "Making plans", q1: "16.1 Creating small plan? ➔ They help you make decisions", q2: "16.2 Plan in general? ➔ It requires you to set yourself certain limits" },
+    { test: "Đề 09 (Q17)", topic: "A promotion campaign for a product", q1: "17.1 People think about campaign? ➔ It is making exaggerated claims", q2: "17.2 Speaker think about campaign? ➔ It costs too much to make to be profitable" },
+    { test: "Đề 10 (Q16)", topic: "Script production", q1: "16.1 Opinion on this script? ➔ The characters' background are not adequately explored", q2: "16.2 Industries impact? ➔ The new industry demands have a negative influence." },
+    { test: "Đề 10 (Q17)", topic: "A new restaurant", q1: "17.1 Reviewed by customers? ➔ The standard of service wasn’t good", q2: "17.2 What should restaurant do? ➔ They need to make the customers feel valued and welcome" },
+    { test: "Đề 11 (Q16)", topic: "Work from home", q1: "16.1 Feel about working from home? ➔ It wasn't as good as she expected", q2: "16.2 Opinion on WFH in general? ➔ It depends on your situation and personality" },
+    { test: "Đề 11 (Q17)", topic: "Managing financial spending", q1: "17.1 Control short-term spending? ➔ Monitor your spending for a weekly plan", q2: "17.2 Control long-term spending? ➔ Seek advice from someone who have experience" },
+    { test: "Đề 12 (Q16)", topic: "The importance of sleep", q1: "16.1 Way to have good sleep? ➔ Blocking out noise and light is key", q2: "16.2 View on insomnia? ➔ People can't always recognize the symptoms of tiredness" }
+  ];
+
+  const container = document.getElementById("p3MatrixContainer");
+  container.innerHTML = `
+    <div style="grid-column: 1 / -1; margin-bottom: 4px;">
+      <h3 style="color:#6b21a8; font-size:0.95rem;">🔥 Nhóm A: 8 Cụm đề TRÙNG LẶP & BIẾN THỂ (16 bài nghe - 32 câu hỏi)</h3>
+    </div>
+    ${repeatedMatrix.map(m => `
+      <div class="card" style="border: 2px solid #ddd6fe; background:#faf5ff; height:auto;">
+        <div style="font-size:0.92rem; font-weight:800; color:var(--part3-color); margin-bottom:4px;">${m.title}</div>
+        <div style="margin-bottom:6px;">
+          <span style="font-size:0.7rem; font-weight:700; color:#6b21a8;">XUẤT HIỆN Ở:</span>
+          <div style="display:flex; gap:4px; flex-wrap:wrap; margin-top:2px;">
+            ${m.tests.map(t => `<span style="background:#ede9fe; color:#5b21b6; padding:2px 6px; border-radius:4px; font-weight:700; font-size:0.72rem;">${t}</span>`).join('')}
+          </div>
+        </div>
+        <div style="background:#ffffff; border:1px dashed #c4b5fd; padding:6px 8px; border-radius:6px; font-size:0.78rem; color:#4c1d95; line-height:1.45; max-height:80px; overflow-y:auto;">
+          <div>🔑 <strong>${m.q1}</strong></div>
+          <div style="margin-top:3px;">🔑 <strong>${m.q2}</strong></div>
+        </div>
+      </div>
+    `).join('')}
+
+    <div style="grid-column: 1 / -1; margin: 16px 0 4px;">
+      <h3 style="color:#0f172a; font-size:0.95rem;">📌 Nhóm B: 14 Chủ đề ĐƠN LẺ còn lại (14 bài nghe - 28 câu hỏi)</h3>
+    </div>
+    ${singleMatrix.map(m => `
+      <div class="card" style="border: 1px solid #e2e8f0; background:#ffffff; height:auto;">
+        <div class="card-top">
+          <span style="background:#f1f5f9; color:#475569; padding:2px 6px; border-radius:4px; font-weight:700;">${m.test}</span>
+        </div>
+        <div style="font-size:0.88rem; font-weight:800; color:#1e293b; margin-bottom:6px;">${m.topic}</div>
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:6px 8px; border-radius:6px; font-size:0.78rem; color:#334155; line-height:1.45; max-height:80px; overflow-y:auto;">
+          <div>🔑 <strong>${m.q1}</strong></div>
+          <div style="margin-top:3px;">🔑 <strong>${m.q2}</strong></div>
+        </div>
+      </div>
+    `).join('')}
+  `;
 }
 
 function speakText(text) {
@@ -591,190 +1312,8 @@ function speakText(text) {
   }
 }
 
-function switchView(view) {
-  document.querySelectorAll(".nav-btn").forEach((btn, idx) => {
-    btn.classList.toggle("active", (view === 'study' && idx === 0) || (view === 'quiz' && idx === 1) || (view === 'repeats' && idx === 2));
-  });
-  document.getElementById("studyView").classList.toggle("hidden-view", view !== 'study');
-  document.getElementById("quizView").classList.toggle("hidden-view", view !== 'quiz');
-  document.getElementById("repeatsView").classList.toggle("hidden-view", view !== 'repeats');
-
-  if (view === 'repeats') renderGrouping307();
-}
-
-// RENDER TAB 3 (GOM NHÓM ĐỦ 307 CÂU)
-function renderGrouping307() {
-  const groups = {};
-  questions.forEach(q => {
-    const key = q.ans.trim().toLowerCase();
-    if (!groups[key]) groups[key] = { displayAns: q.ans, items: [] };
-    groups[key].items.push(q);
-  });
-
-  const repeatedGroups = [];
-  const singleGroups = [];
-
-  Object.keys(groups).forEach(k => {
-    if (groups[k].items.length > 1) {
-      repeatedGroups.push(groups[k]);
-    } else {
-      singleGroups.push(groups[k]);
-    }
-  });
-
-  // Sort repeated groups by number of questions descending
-  repeatedGroups.sort((a,b) => b.items.length - a.items.length);
-  // Sort single groups by category ID
-  singleGroups.sort((a,b) => a.items[0].catId - b.items[0].catId);
-
-  const repeatedQuestionCount = repeatedGroups.reduce((acc, g) => acc + g.items.length, 0);
-  const singleQuestionCount = singleGroups.reduce((acc, g) => acc + g.items.length, 0);
-  const totalRendered = repeatedQuestionCount + singleQuestionCount;
-
-  // Update counters
-  document.getElementById("repeatTotalBadge").innerText = `${totalRendered}/307`;
-  document.getElementById("badgeRepeatedCount").innerText = `${repeatedGroups.length} cụm (${repeatedQuestionCount} câu)`;
-  document.getElementById("badgeSingleCount").innerText = `${singleQuestionCount} câu`;
-
-  // Render Area A: Repeated Answers
-  const repeatedGrid = document.getElementById("repeatedGrid");
-  repeatedGrid.innerHTML = repeatedGroups.map(g => `
-    <div class="card" style="border: 2px solid #93c5fd; background: #ffffff;">
-      <div>
-        <div style="background:#eff6ff; padding:8px 12px; border-radius:6px; margin-bottom:10px;">
-          <div style="font-size:0.75rem; color:var(--primary); font-weight:700;">ĐÁP ÁN CHUNG CHO ${g.items.length} CÂU</div>
-          <div style="font-size:1.15rem; font-weight:800; color:var(--primary); display:flex; justify-content:space-between; align-items:center;">
-            <span>${g.displayAns}</span>
-            <button class="audio-btn" onclick="speakText('${g.displayAns.replace(/'/g, "\\'")}')">🗣️</button>
-          </div>
-        </div>
-        <div style="display:flex; flex-direction:column; gap:8px;">
-          ${g.items.map(item => `
-            <div style="font-size:0.85rem; border-bottom:1px dashed #e2e8f0; padding-bottom:6px;">
-              <div style="display:flex; justify-content:space-between;">
-                <strong style="color:#1e293b;">#${item.id} ·${item.hook}</strong>
-                <span style="font-size:0.75rem; color:var(--muted);">${item.catName}</span>
-              </div>
-              <div style="color:var(--muted); font-size:0.75rem; margin-top:2px;">${item.q}</div>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    </div>
-  `).join('');
-
-  // Render Area B: Unique Answers
-  const singleGrid = document.getElementById("singleGrid");
-  singleGrid.innerHTML = singleGroups.map(g => {
-    const item = g.items[0];
-    return `
-      <div class="card" style="background:#ffffff;">
-        <div>
-          <div class="card-top">
-            <span>#${item.id} · ${item.catName}</span>
-            <button class="audio-btn" onclick="speakText('${item.q.replace(/'/g, "\\'")}')">🔊</button>
-          </div>
-          <div class="card-q">${item.q}</div>
-          <div class="card-hook">🔑 ${item.hook}</div>
-        </div>
-        <div>
-          <div class="card-ans" style="background:#f0fdf4; border-style:solid; border-color:#86efac; color:var(--success);">
-            ${item.ans}
-          </div>
-          <div class="card-actions">
-            <button class="learned-btn ${item.learned ? 'is-learned' : ''}" onclick="toggleLearned(${item.id})">
-              ${item.learned ? '✓ Đã thuộc' : '○ Đánh dấu thuộc'}
-            </button>
-            <button class="audio-btn" onclick="speakText('${item.ans.replace(/'/g, "\\'")}')">🗣️</button>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-// TAB 2 QUIZ ENGINE (CHO PHÉP THI TOÀN BỘ 307 CÂU)
-let quizPool = [];
-let quizIndex = 0;
-let quizScoreVal = 0;
-
-function startQuiz() {
-  const cat = parseInt(document.getElementById("quizCatSelect").value);
-  const size = parseInt(document.getElementById("quizSizeSelect").value);
-  
-  let pool = questions.filter(q => cat === -1 || q.catId === cat);
-  pool = pool.sort(() => 0.5 - Math.random());
-  quizPool = pool.slice(0, Math.min(size, pool.length));
-  
-  if (quizPool.length === 0) return alert("Không tìm thấy câu hỏi phù hợp!");
-  
-  quizIndex = 0;
-  quizScoreVal = 0;
-  document.getElementById("quizSetup").classList.add("hidden-view");
-  document.getElementById("quizActive").classList.remove("hidden-view");
-  showQuizQuestion();
-}
-
-function showQuizQuestion() {
-  const current = quizPool[quizIndex];
-  document.getElementById("quizProgress").innerText = `Câu ${quizIndex + 1}/${quizPool.length}`;
-  document.getElementById("quizScore").innerText = `Điểm: ${quizScoreVal}`;
-  document.getElementById("quizQuestion").innerText = current.q;
-  document.getElementById("quizNextBtn").classList.add("hidden-view");
-
-  // Phát âm câu hỏi tự động
-  speakText(current.q);
-
-  // Tạo 4 phương án trắc nghiệm: 1 đúng + 3 sai
-  let wrongAnswers = questions
-    .filter(q => q.ans.toLowerCase() !== current.ans.toLowerCase() && (q.catId === current.catId || Math.random() > 0.5))
-    .map(q => q.ans);
-  wrongAnswers = [...new Set(wrongAnswers)].sort(() => 0.5 - Math.random()).slice(0, 3);
-  
-  while (wrongAnswers.length < 3) {
-    wrongAnswers.push("Phương án khác");
-  }
-
-  const options = [current.ans, ...wrongAnswers].sort(() => 0.5 - Math.random());
-  const optContainer = document.getElementById("quizOptions");
-  optContainer.innerHTML = options.map(opt => `
-    <button class="quiz-opt" onclick="checkQuizAnswer(this, '${opt.replace(/'/g, "\\'")}', '${current.ans.replace(/'/g, "\\'")}')">
-      ${opt}
-    </button>
-  `).join('');
-}
-
-function checkQuizAnswer(btn, chosen, correct) {
-  const buttons = document.querySelectorAll(".quiz-opt");
-  buttons.forEach(b => b.disabled = true);
-  
-  if (chosen === correct) {
-    btn.classList.add("correct");
-    quizScoreVal += 10;
-  } else {
-    btn.classList.add("wrong");
-    buttons.forEach(b => {
-      if (b.innerText.trim() === correct) b.classList.add("correct");
-    });
-  }
-  document.getElementById("quizScore").innerText = `Điểm: ${quizScoreVal}`;
-  document.getElementById("quizNextBtn").classList.remove("hidden-view");
-}
-
-function nextQuizQuestion() {
-  quizIndex++;
-  if (quizIndex < quizPool.length) {
-    showQuizQuestion();
-  } else {
-    alert(`🎉 Chúc mừng bạn đã hoàn thành bài thi trắc nghiệm!\nTổng điểm: ${quizScoreVal} / ${quizPool.length * 10}`);
-    document.getElementById("quizSetup").classList.remove("hidden-view");
-    document.getElementById("quizActive").classList.add("hidden-view");
-  }
-}
-
-// Khởi chạy ban đầu
-updateStats();
-renderCards();
+// Khởi chạy mặc định Part 1
+renderP1Cards();
 </script>
 </body>
 </html>
