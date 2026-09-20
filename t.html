@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Aptis Listening Master Lab - Song Ngữ Anh - Việt (Full 4 Parts)</title>
+<style>
+  :root {
+    --primary: #2563eb; --primary-dark: #1d4ed8; --success: #16a34a; --danger: #dc2626;
+    --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --muted: #64748b; --border: #e2e8f0;
+    --p2-color: #0284c7; --p2-bg: #e0f2fe;
+    --p3-color: #7c3aed; --p3-bg: #f5f3ff;
+    --p4-color: #d97706; --p4-bg: #fef3c7;
+    --trans-q: #0369a1; --trans-ans: #15803d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  body { background: var(--bg); color: var(--text); padding-bottom: 60px; -webkit-tap-highlight-color: transparent; }
+
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+  header { background: #0f172a; color: white; padding: 0.85rem 1rem; position: sticky; top: 0; z-index: 50; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+  .header-inner { max-width: 1240px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
+  .logo { font-size: 1.15rem; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  
+  .header-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .control-pill { display: flex; align-items: center; background: rgba(255,255,255,0.12); padding: 3px 8px; border-radius: 8px; font-size: 0.78rem; gap: 6px; }
+  .control-pill select { background: transparent; border: none; color: #fff; font-weight: 700; font-size: 0.78rem; outline: none; cursor: pointer; }
+  .control-pill select option { background: #0f172a; color: #fff; }
+  .toggle-trans-btn { background: #16a34a; border: none; color: white; padding: 5px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; }
+
+  .main-part-switch { display: flex; background: rgba(255,255,255,0.1); padding: 3px; border-radius: 10px; gap: 4px; flex-wrap: wrap; }
+  .part-tab-btn { background: none; border: none; color: #cbd5e1; padding: 6px 12px; border-radius: 7px; font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: 0.2s; white-space: nowrap; }
+  .part-tab-btn.active.p1 { background: var(--primary); color: white; }
+  .part-tab-btn.active.p2 { background: var(--p2-color); color: white; }
+  .part-tab-btn.active.p3 { background: var(--p3-color); color: white; }
+  .part-tab-btn.active.p4 { background: var(--p4-color); color: white; }
+  
+  .sub-nav { max-width: 1240px; margin: 12px auto 0; padding: 0 1rem; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+  .sub-nav::-webkit-scrollbar { display: none; }
+  .sub-btn { background: #e2e8f0; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; color: var(--muted); transition: 0.2s; white-space: nowrap; font-size: 0.85rem; }
+  .sub-btn.active.p1-sub { background: var(--primary); color: white; }
+  .sub-btn.active.p2-sub { background: var(--p2-color); color: white; }
+  .sub-btn.active.p3-sub { background: var(--p3-color); color: white; }
+  .sub-btn.active.p4-sub { background: var(--p4-color); color: white; }
+
+  .container { max-width: 1240px; margin: 12px auto; padding: 0 1rem; }
+  
+  .toolbar { background: var(--card); padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .search-input { flex: 1; min-width: 220px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.9rem; }
+  .btn-group-tools { display: flex; gap: 6px; flex-wrap: wrap; }
+  .btn-action { background: var(--primary); color: white; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
+  .btn-action.p2 { background: var(--p2-color); }
+  .btn-action.p3 { background: var(--p3-color); }
+  .btn-action.p4 { background: var(--p4-color); }
+  .btn-secondary { background: #f1f5f9; color: var(--text); border: 1px solid var(--border); }
+  
+  .category-filter { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 12px; scrollbar-width: none; }
+  .category-filter::-webkit-scrollbar { display: none; }
+  .cat-chip { padding: 5px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--card); font-size: 0.78rem; cursor: pointer; white-space: nowrap; }
+  .cat-chip.active.p1 { background: var(--primary); color: white; border-color: var(--primary); font-weight: 600; }
+  .cat-chip.active.p2 { background: var(--p2-color); color: white; border-color: var(--p2-color); font-weight: 600; }
+  .cat-chip.active.p3 { background: var(--p3-color); color: white; border-color: var(--p3-color); font-weight: 600; }
+  .cat-chip.active.p4 { background: var(--p4-color); color: white; border-color: var(--p4-color); font-weight: 600; }
+
+  .trans-q { font-size: 0.82rem; color: var(--trans-q); font-weight: 600; margin-top: 4px; line-height: 1.35; }
+  .trans-ans { font-size: 0.78rem; color: var(--trans-ans); font-weight: 700; margin-top: 2px; display: block; }
+  .hide-translations .trans-q, .hide-translations .trans-ans { display: none !important; }
+
+  .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; min-height: 240px; position: relative; }
+  .card:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.05); }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; font-size: 0.72rem; color: var(--muted); }
+  
+  .card-q-scrollbox { max-height: 95px; overflow-y: auto; padding-right: 4px; margin-bottom: 6px; }
+  .card-q { font-size: 0.88rem; font-weight: 700; color: #1e293b; line-height: 1.35; }
+  .card-hook { background: #eff6ff; color: var(--primary); padding: 3px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; margin-bottom: 6px; display: inline-block; }
+  
+  .card-ans { background: #f8fafc; border: 1px dashed var(--border); padding: 8px; border-radius: 6px; font-weight: 700; color: var(--success); font-size: 0.88rem; cursor: pointer; text-align: center; user-select: none; max-height: 65px; overflow-y: auto; }
+  .card-ans.hidden { background: #f1f5f9; color: transparent; border-style: solid; }
+  .card-ans.hidden::after { content: "Chạm để xem đáp án"; color: var(--muted); font-weight: normal; font-size: 0.75rem; }
+  
+  .p2-test-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+  .p2-test-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 10px; flex-wrap: wrap; gap: 6px; }
+  .p2-badge { background: var(--p2-bg); color: var(--p2-color); font-weight: 800; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; }
+  .p2-topic { font-weight: 800; font-size: 1rem; color: #1e293b; }
+  .p2-options-box { background: #f8fafc; border: 1px dashed var(--border); border-radius: 8px; padding: 10px; margin-bottom: 12px; }
+  .p2-options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 6px; }
+  .p2-opt-pill { font-size: 0.8rem; background: white; padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0; color: #334155; }
+  .p2-persons-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; }
+  .p2-person-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; justify-content: space-between; }
+  .p2-transcript-scrollbox { max-height: 125px; overflow-y: auto; padding-right: 4px; font-size: 0.82rem; line-height: 1.5; color: #475569; background: #f8fafc; padding: 8px; border-radius: 6px; border-left: 3px solid var(--p2-color); margin-bottom: 8px; }
+
+  .prompt-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 14px; }
+  .prompt-head { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 10px; flex-wrap: wrap; gap: 6px; }
+  .prompt-badge { background: var(--p3-bg); color: var(--p3-color); font-weight: 800; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; }
+  .transcript-box { background: #f8fafc; border-left: 3px solid var(--p3-color); padding: 10px 12px; border-radius: 4px; font-size: 0.85rem; line-height: 1.55; color: #334155; margin: 10px 0; max-height: 140px; overflow-y: auto; }
+  .sub-q-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-top: 8px; }
+  .sub-q-box { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; justify-content: space-between; min-height: 190px; }
+  .sub-q-title-scrollbox { max-height: 68px; overflow-y: auto; padding-right: 2px; margin-bottom: 6px; }
+  .opt-list { list-style: none; margin-bottom: 8px; font-size: 0.8rem; max-height: 90px; overflow-y: auto; }
+  .opt-item { padding: 3px 5px; border-radius: 4px; margin-bottom: 3px; color: #475569; }
+  .opt-item.is-correct-key { background: #dcfce7; color: #166534; font-weight: 700; border: 1px solid #86efac; }
+  
+  .p4-track-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 14px; }
+  .p4-badge { background: var(--p4-bg); color: var(--p4-color); font-weight: 800; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; }
+  .p4-q-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-top: 10px; }
+  .p4-q-box { background: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; }
+
+  .quiz-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; max-width: 760px; margin: 15px auto; box-shadow: 0 4px 16px rgba(0,0,0,0.05); }
+  .quiz-q-scrollbox { max-height: 130px; overflow-y: auto; padding-right: 6px; margin-bottom: 12px; }
+  .quiz-q { font-size: 1rem; font-weight: 700; color: #1e293b; line-height: 1.4; }
+  .quiz-opt { display: block; width: 100%; text-align: left; padding: 10px 12px; margin-bottom: 7px; border: 1px solid var(--border); border-radius: 6px; background: #fff; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: 0.15s; }
+  .quiz-opt:hover { background: #f8fafc; border-color: var(--primary); }
+  .quiz-opt.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: var(--success); }
+  .quiz-opt.wrong { background: #fee2e2 !important; border-color: var(--danger) !important; color: var(--danger); }
+  
+  .sim-row { display: grid; grid-template-columns: 100px 1fr; gap: 10px; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px dashed #e2e8f0; }
+  .sim-select { width: 100%; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); font-size: 0.86rem; background: #fff; }
+  .sim-select.correct { background: #dcfce7; border-color: var(--success); color: var(--success); font-weight: 700; }
+  .sim-select.wrong { background: #fee2e2; border-color: var(--danger); color: var(--danger); font-weight: 700; }
+
+  .table-container { max-height: 480px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; background: #fff; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: #f8fafc; font-weight: 700; color: #334155; position: sticky; top: 0; z-index: 10; }
+  tr:hover { background: #f8fafc; }
+
+  .audio-btn { background: none; border: none; cursor: pointer; font-size: 0.95rem; }
+  .hidden-view { display: none !important; }
+
+  @media (max-width: 640px) {
+    .grid-cards, .p2-persons-grid, .sub-q-group, .p4-q-group { grid-template-columns: 1fr; }
+    .card { min-height: 220px; }
+    .sim-row { grid-template-columns: 1fr; gap: 4px; }
+    .toolbar { flex-direction: column; align-items: stretch; }
+    .btn-group-tools { justify-content: space-between; }
+    .btn-action { flex: 1; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">🎧 Aptis Listening Master Lab</div>
+    <div class="header-controls">
+      <button class="toggle-trans-btn" id="btnToggleTrans" onclick="toggleGlobalTranslations()">🇻🇳 Dịch: BẬT</button>
+      <div class="control-pill">
+        <span>🗣️</span>
+        <select id="voiceAccentSelect" onchange="changeVoiceAccent(this.value)">
+          <option value="en-GB" selected>🇬🇧 Giọng Anh (UK)</option>
+          <option value="en-US">🇺🇸 Giọng Mỹ (US)</option>
+        </select>
+      </div>
+      <div class="main-part-switch">
+        <button class="part-tab-btn active p1" id="btnSwitchP1" onclick="switchPart('p1')">Phần 1 (307 Câu)</button>
+        <button class="part-tab-btn" id="btnSwitchP2" onclick="switchPart('p2')">Phần 2 (15 Đề - Q14)</button>
+        <button class="part-tab-btn" id="btnSwitchP3" onclick="switchPart('p3')">Phần 3 (15 Đề - Q16-17)</button>
+        <button class="part-tab-btn" id="btnSwitchP4" onclick="switchPart('p4')">Phần 4 (60 Bài - 120 Câu)</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= PART 1 SECTION ================= -->
+<div id="part1Section">
+  <div class="sub-nav">
+    <button class="sub-btn active p1-sub" onclick="switchP1Tab('study')">📖 Tab 1: Học thuộc song ngữ (307 câu)</button>
+    <button class="sub-btn" onclick="switchP1Tab('quiz')">✍️ Tab 2: Thi thử trắc nghiệm (307 câu)</button>
+    <button class="sub-btn" onclick="switchP1Tab('repeats')">🎯 Tab 3: Gom nhóm toàn diện (307 câu)</button>
+  </div>
+
+  <div class="container">
+    <div id="p1StudyView">
+      <div class="toolbar">
+        <input type="text" id="p1Search" class="search-input" placeholder="🔍 Tìm câu hỏi, từ khóa hoặc đáp án Part 1 (gõ tiếng Anh hoặc tiếng Việt)..." oninput="renderP1Cards()">
+        <div class="btn-group-tools">
+          <button class="btn-action btn-secondary" onclick="toggleP1HideAll()">👁️ Che/Hiện đáp án</button>
+          <button class="btn-action btn-secondary" onclick="toggleP1OnlyUnlearned()">⭐ Chỉ câu chưa thuộc</button>
+        </div>
+      </div>
+      <div class="category-filter" id="p1CatList"></div>
+      <div class="grid-cards" id="p1CardsGrid"></div>
+    </div>
+
+    <div id="p1QuizView" class="hidden-view">
+      <div class="quiz-box" id="p1QuizSetup">
+        <h2 style="margin-bottom:6px; font-size:1.15rem;">Thi thử trắc nghiệm Part 1 (Ngân hàng 307 câu)</h2>
+        <p style="color:var(--muted); font-size:0.85rem; margin-bottom:12px;">Mô phỏng thi máy Aptis với âm thanh chuẩn tiếng Anh và hiển thị song ngữ phụ trợ.</p>
+        <div style="margin-bottom:10px;">
+          <label style="font-weight:600; font-size:0.82rem;">Chọn chủ đề:</label>
+          <select id="p1QuizCat" style="width:100%; padding:8px; border-radius:6px; border:1px solid var(--border); margin-top:4px; font-size:0.85rem;"></select>
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="font-weight:600; font-size:0.82rem;">Số lượng câu muốn làm:</label>
+          <select id="p1QuizSize" style="width:100%; padding:8px; border-radius:6px; border:1px solid var(--border); margin-top:4px; font-size:0.85rem;">
+            <option value="10">10 câu</option>
+            <option value="25">25 câu</option>
+            <option value="50">50 câu</option>
+            <option value="307" selected>Tất cả 307 câu</option>
+          </select>
+        </div>
+        <button class="btn-action" style="width:100%; padding:10px; font-size:0.95rem;" onclick="startP1Quiz()">Bắt đầu thi thử Part 1</button>
+      </div>
+
+      <div class="quiz-box hidden-view" id="p1QuizActive">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.82rem; color:var(--muted);">
+          <span id="p1QuizProgress">Câu 1/307</span>
+          <span id="p1QuizScore">Điểm: 0</span>
+        </div>
+        <div class="quiz-q-scrollbox">
+          <div class="quiz-q" id="p1QuizQ"></div>
+          <div class="trans-q" id="p1QuizQVi"></div>
+        </div>
+        <div id="p1QuizOptions"></div>
+        <button class="btn-action hidden-view" id="p1QuizNext" style="width:100%; margin-top:10px;" onclick="nextP1QuizQ()">Câu tiếp theo ➔</button>
+      </div>
+    </div>
+
+    <div id="p1RepeatsView" class="hidden-view">
+      <div class="toolbar">
+        <div><strong>Phân loại hệ thống 307 câu Part 1 (Kèm dịch nghĩa)</strong></div>
+        <div style="background:#dbeafe; color:#1e40af; padding:3px 10px; border-radius:999px; font-size:0.8rem; font-weight:700;">
+          Hiển thị: 307/307 câu
+        </div>
+      </div>
+      <h3 style="margin:12px 0 8px; color:#1e293b; font-size:1rem;">🔥 Cụm câu trùng đáp án (Học 1 nhớ nhiều)</h3>
+      <div class="grid-cards" id="p1RepeatedGrid"></div>
+      <h3 style="margin:20px 0 8px; color:#1e293b; font-size:1rem;">📌 Các câu đáp án đơn lẻ còn lại</h3>
+      <div class="grid-cards" id="p1SingleGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PART 2 SECTION ================= -->
+<div id="part2Section" class="hidden-view">
+  <div class="sub-nav">
+    <button class="sub-btn active p2-sub" onclick="switchP2Tab('study')">📖 Tab 1: 15 Đề & Transcript song ngữ (60 người)</button>
+    <button class="sub-btn" onclick="switchP2Tab('sim')">✍️ Tab 2: Mô phỏng thi nối đáp án (Matching)</button>
+    <button class="sub-btn" onclick="switchP2Tab('matrix')">🎯 Tab 3: Ma trận gom cụm & Phân tích bẫy</button>
+  </div>
+
+  <div class="container">
+    <div id="p2StudyView">
+      <div class="toolbar">
+        <input type="text" id="p2Search" class="search-input" placeholder="🔍 Tìm theo chủ đề, từ khóa hoặc lời thoại Part 2..." oninput="renderP2Tests()">
+        <div class="btn-group-tools">
+          <button class="btn-action p2 btn-secondary" onclick="toggleP2Transcripts()">📜 Ẩn/Hiện Transcript</button>
+          <button class="btn-action p2 btn-secondary" onclick="toggleP2Answers()">👁️ Che/Hiện đáp án</button>
+        </div>
+      </div>
+      <div class="category-filter" id="p2DeFilter"></div>
+      <div id="p2TestsContainer"></div>
+    </div>
+
+    <div id="p2SimView" class="hidden-view">
+      <div class="quiz-box" id="p2SimSetup">
+        <h2 style="margin-bottom:6px; color:var(--p2-color); font-size:1.15rem;">Phòng thi mô phỏng Matching Part 2 (Question 14)</h2>
+        <p style="color:var(--muted); font-size:0.85rem; margin-bottom:12px;">Đọc hoặc nghe lời thoại 4 người nói và nối với 4 phương án chính xác (có 2 phương án bẫy thừa).</p>
+        <div style="margin-bottom:14px;">
+          <label style="font-weight:600; font-size:0.82rem;">Chọn đề muốn làm bài:</label>
+          <select id="p2SimSelect" style="width:100%; padding:8px; border-radius:6px; border:1px solid var(--border); margin-top:4px; font-size:0.85rem;"></select>
+        </div>
+        <button class="btn-action p2" style="width:100%; padding:10px; font-size:0.95rem;" onclick="startP2Sim()">Bắt đầu làm bài Part 2</button>
+      </div>
+
+      <div class="quiz-box hidden-view" id="p2SimActive">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:6px;">
+          <div>
+            <span class="p2-badge" id="p2SimBadge">ĐỀ 01</span>
+            <strong style="margin-left:6px; font-size:0.95rem;" id="p2SimTopic">Topic</strong>
+          </div>
+          <button class="btn-action p2" style="font-size:0.75rem; padding:3px 8px;" onclick="speakP2Full(curP2Sim.de)">🔊 Nghe cả 4 người</button>
+        </div>
+
+        <div class="transcript-box" id="p2SimTranscriptPanel"></div>
+        <div id="p2SimMatchingRows"></div>
+
+        <div style="margin-top:14px; display:flex; gap:8px;">
+          <button class="btn-action p2" style="flex:1; padding:9px;" id="btnCheckP2Sim" onclick="checkP2Sim()">Nộp bài & Chấm điểm</button>
+          <button class="btn-action btn-secondary hidden-view" id="btnNextP2Sim" style="flex:1; padding:9px;" onclick="nextP2Sim()">Đề tiếp theo ➔</button>
+        </div>
+        <div id="p2SimResult" style="margin-top:10px; font-weight:700; font-size:0.88rem; text-align:center;"></div>
+      </div>
+    </div>
+
+    <div id="p2MatrixView" class="hidden-view">
+      <div class="toolbar">
+        <div>
+          <strong>Ma trận 15 Bộ đề Part 2 & 2 Phương án bẫy thừa (Song ngữ Anh - Việt)</strong>
+          <p style="font-size:0.82rem; color:var(--muted);">Ghi nhớ 4 đáp án đúng và 2 bẫy không chọn để loại trừ tức thì.</p>
+        </div>
+      </div>
+      <div class="grid-cards" id="p2MatrixContainer" style="grid-template-columns:repeat(auto-fit, minmax(310px, 1fr));"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PART 3 SECTION ================= -->
+<div id="part3Section" class="hidden-view">
+  <div class="sub-nav">
+    <button class="sub-btn active p3-sub" onclick="switchP3Tab('study')">📖 Tab 1: 15 Bộ đề + Transcript song ngữ (60 câu)</button>
+    <button class="sub-btn" onclick="switchP3Tab('quiz')">✍️ Tab 2: Thi trắc nghiệm A-B-C (60 câu)</button>
+    <button class="sub-btn" onclick="switchP3Tab('matrix')">🎯 Tab 3: Ma trận toàn diện 15 Đề (Đủ 60 câu)</button>
+  </div>
+
+  <div class="container">
+    <div id="p3StudyView">
+      <div class="toolbar">
+        <input type="text" id="p3Search" class="search-input" placeholder="🔍 Tìm theo chủ đề, câu hỏi hoặc lời thoại Part 3..." oninput="renderP3Prompts()">
+        <div class="btn-group-tools">
+          <button class="btn-action p3 btn-secondary" onclick="toggleP3Transcripts()">📜 Ẩn/Hiện Transcript</button>
+          <button class="btn-action p3 btn-secondary" onclick="toggleP3Answers()">👁️ Che/Hiện đáp án</button>
+        </div>
+      </div>
+      <div class="category-filter" id="p3DeFilter"></div>
+      <div id="p3PromptsContainer"></div>
+    </div>
+
+    <div id="p3QuizView" class="hidden-view">
+      <div class="quiz-box" id="p3QuizSetup">
+        <h2 style="margin-bottom:6px; color:var(--p3-color); font-size:1.15rem;">Thi thử trắc nghiệm Part 3 (Chuẩn 3 lựa chọn A-B-C)</h2>
+        <p style="color:var(--muted); font-size:0.85rem; margin-bottom:12px;">Bao quát 60 câu hỏi con (16.1, 16.2, 17.1, 17.2) từ 15 đề thi thật.</p>
+        <div style="margin-bottom:14px;">
+          <label style="font-weight:600; font-size:0.82rem;">Chọn phạm vi bài thi:</label>
+          <select id="p3QuizMode" style="width:100%; padding:8px; border-radius:6px; border:1px solid var(--border); margin-top:4px; font-size:0.85rem;">
+            <option value="all">Tất cả 60 câu hỏi con (Đề 01 - 15)</option>
+            <option value="16">Chuyên sâu nhóm Câu 16 (30 câu)</option>
+            <option value="17">Chuyên sâu nhóm Câu 17 (30 câu)</option>
+          </select>
+        </div>
+        <button class="btn-action p3" style="width:100%; padding:10px; font-size:0.95rem;" onclick="startP3Quiz()">Bắt đầu thi thử Part 3</button>
+      </div>
+
+      <div class="quiz-box hidden-view" id="p3QuizActive">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.82rem; color:var(--muted);">
+          <span id="p3QuizProgress">Câu 1/60</span>
+          <span id="p3QuizScore">Điểm: 0</span>
+        </div>
+        <div style="font-size:0.75rem; background:var(--p3-bg); color:var(--p3-color); padding:3px 6px; border-radius:4px; font-weight:700; display:inline-block; margin-bottom:6px;" id="p3QuizTopic"></div>
+        <div class="quiz-q-scrollbox">
+          <div class="quiz-q" id="p3QuizQ"></div>
+          <div class="trans-q" id="p3QuizQVi"></div>
+        </div>
+        <div id="p3QuizOptions"></div>
+        <button class="btn-action p3 hidden-view" id="p3QuizNext" style="width:100%; margin-top:10px;" onclick="nextP3QuizQ()">Câu tiếp theo ➔</button>
+      </div>
+    </div>
+
+    <div id="p3MatrixView" class="hidden-view">
+      <div class="toolbar">
+        <div>
+          <strong>Bảng ma trận & tra cứu 15 Bộ đề Part 3 (Kèm dịch nghĩa)</strong>
+          <p style="font-size:0.82rem; color:var(--muted);">Đầy đủ 30 bài nghe và 60 câu hỏi con (Nhóm đề trùng lặp & Nhóm đề đơn lẻ).</p>
+        </div>
+        <div style="background:#ede9fe; color:var(--p3-color); padding:3px 10px; border-radius:999px; font-weight:800; font-size:0.8rem;">
+          Đầy đủ: 60/60 câu (15 Đề)
+        </div>
+      </div>
+      <div class="grid-cards" id="p3MatrixContainer"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PART 4 SECTION ================= -->
+<div id="part4Section" class="hidden-view">
+  <div class="sub-nav">
+    <button class="sub-btn active p4-sub" onclick="switchP4Tab('study')">📖 Tab 1: 60 Bài nghe song ngữ (120 câu)</button>
+    <button class="sub-btn" onclick="switchP4Tab('quiz')">✍️ Tab 2: Thi trắc nghiệm Part 4 (120 câu)</button>
+    <button class="sub-btn" onclick="switchP4Tab('lookup')">🎯 Tab 3: Bảng tra cứu & Ma trận Part 3-4</button>
+  </div>
+
+  <div class="container">
+    <div id="p4StudyView">
+      <div class="toolbar">
+        <input type="text" id="p4Search" class="search-input" placeholder="🔍 Tìm kiếm trong 60 bài Part 4 (gõ câu hỏi hoặc đáp án tiếng Anh/Việt)..." oninput="renderP4Cards()">
+        <div class="btn-group-tools">
+          <button class="btn-action p4 btn-secondary" onclick="toggleP4Answers()">👁️ Che/Hiện đáp án</button>
+        </div>
+      </div>
+      <div class="category-filter" id="p4RangeFilter"></div>
+      <div id="p4CardsContainer"></div>
+    </div>
+
+    <div id="p4QuizView" class="hidden-view">
+      <div class="quiz-box" id="p4QuizSetup">
+        <h2 style="margin-bottom:6px; color:var(--p4-color); font-size:1.15rem;">Thi thử trắc nghiệm Part 4 (120 câu hỏi)</h2>
+        <p style="color:var(--muted); font-size:0.85rem; margin-bottom:12px;">Hệ thống trắc nghiệm kèm câu hỏi và đáp án dịch song ngữ.</p>
+        <div style="margin-bottom:14px;">
+          <label style="font-weight:600; font-size:0.82rem;">Số lượng câu muốn luyện:</label>
+          <select id="p4QuizSize" style="width:100%; padding:8px; border-radius:6px; border:1px solid var(--border); margin-top:4px; font-size:0.85rem;">
+            <option value="10">10 câu ngắn</option>
+            <option value="20">20 câu tiêu chuẩn</option>
+            <option value="50">50 câu nâng cao</option>
+            <option value="120" selected>Toàn bộ 120 câu (Full 60 Bài)</option>
+          </select>
+        </div>
+        <button class="btn-action p4" style="width:100%; padding:10px; font-size:0.95rem;" onclick="startP4Quiz()">Bắt đầu thi thử Part 4</button>
+      </div>
+
+      <div class="quiz-box hidden-view" id="p4QuizActive">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.82rem; color:var(--muted);">
+          <span id="p4QuizProgress">Câu 1/120</span>
+          <span id="p4QuizScore">Điểm: 0</span>
+        </div>
+        <div style="font-size:0.75rem; background:var(--p4-bg); color:var(--p4-color); padding:3px 6px; border-radius:4px; font-weight:700; display:inline-block; margin-bottom:6px;" id="p4QuizBadge"></div>
+        <div class="quiz-q-scrollbox">
+          <div class="quiz-q" id="p4QuizQ"></div>
+          <div class="trans-q" id="p4QuizQVi"></div>
+        </div>
+        <div id="p4QuizOptions"></div>
+        <button class="btn-action p4 hidden-view" id="p4QuizNext" style="width:100%; margin-top:10px;" onclick="nextP4QuizQ()">Câu tiếp theo ➔</button>
+      </div>
+    </div>
+
+    <div id="p4LookupView" class="hidden-view">
+      <div class="toolbar">
+        <div>
+          <strong>Bảng tra cứu nhanh 120 Câu hỏi Song Ngữ & Ma trận liên kết Part 3-4</strong>
+          <p style="font-size:0.82rem; color:var(--muted);">Xem trực tiếp câu hỏi và đáp án kèm tiếng Việt đầy đủ.</p>
+        </div>
+        <div style="background:#fef3c7; color:#b45309; padding:3px 10px; border-radius:999px; font-weight:800; font-size:0.8rem;">
+          Đầy đủ: 120/120 Câu (60 Bài)
+        </div>
+      </div>
+
+      <div class="p4-track-card" style="border:2px solid #fde68a; background:#fffbeb; margin-bottom:16px;">
+        <h3 style="color:#b45309; font-size:0.95rem; margin-bottom:6px;">🔥 Điểm lưu ý: Các đề trùng khớp giữa Part 3 và Part 4</h3>
+        <p style="font-size:0.82rem; color:#78350f; line-height:1.5;">
+          • <strong>Regional Development Plan:</strong> Bài 21 & 51 (Part 4) tương đồng hoàn toàn với Đề 04 (Part 3)[cite: 1, 3].<br>
+          • <strong>Happiness Research:</strong> Bài 57 (Part 4) khớp với Đề 07 (Part 3)[cite: 1, 3].<br>
+          • <strong>Work from home:</strong> Bài 43 (Part 4) khớp với Đề 11 (Part 3)[cite: 1, 3].<br>
+          • <strong>Television series & Sport:</strong> Các bài 17, 18, 19, 32, 45, 50 (Part 4) mở rộng trực tiếp từ Đề 02, 13, 14, 15 (Part 3)[cite: 1, 3]!
+        </p>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:45px;">STT</th>
+              <th style="width:65px;">Mã</th>
+              <th>Câu hỏi (Question & Dịch)</th>
+              <th>Đáp án chuẩn (Answer & Dịch)</th>
+            </tr>
+          </thead>
+          <tbody id="p4TableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ==================== CÁC HÀM ĐIỀU KHIỂN & HIỂN THỊ ====================
+
+// --- PART 1 FUNCTIONS ---
+function switchP1Tab(tab) {
+  document.querySelectorAll("#part1Section .sub-btn").forEach((btn, idx) => {
+    btn.className = `sub-btn ${(tab === 'study' && idx === 0) || (tab === 'quiz' && idx === 1) || (tab === 'repeats' && idx === 2) ? 'active p1-sub' : ''}`;
+  });
+  document.getElementById("p1StudyView").classList.toggle("hidden-view", tab !== 'study');
+  document.getElementById("p1QuizView").classList.toggle("hidden-view", tab !== 'quiz');
+  document.getElementById("p1RepeatsView").classList.toggle("hidden-view", tab !== 'repeats');
+
+  if (tab === 'repeats') renderP1Repeats();
+}
+
+function setP1Cat(id) {
+  p1ActiveCat = id;
+  document.querySelectorAll("#p1CatList .cat-chip").forEach((el, idx) => {
+    el.className = `cat-chip ${(id === -1 && idx === 0) || idx === id + 1 ? 'active p1' : ''}`;
+  });
+  renderP1Cards();
+}
+
+function toggleP1HideAll() { p1HideAll = !p1HideAll; renderP1Cards(); }
+function toggleP1OnlyUnlearned() { p1OnlyUnlearned = !p1OnlyUnlearned; renderP1Cards(); }
+
+function renderP1Cards() {
+  const qStr = document.getElementById("p1Search").value.toLowerCase().trim();
+  const grid = document.getElementById("p1CardsGrid");
+  const filtered = p1Questions.filter(q => {
+    const matchCat = (p1ActiveCat === -1) || (q.catId === p1ActiveCat);
+    const matchText = q.hook.toLowerCase().includes(qStr) || q.ans.toLowerCase().includes(qStr) || q.q.toLowerCase().includes(qStr) || q.q_vi.toLowerCase().includes(qStr) || q.ans_vi.toLowerCase().includes(qStr);
+    const matchLearned = !p1OnlyUnlearned || !q.learned;
+    return matchCat && matchText && matchLearned;
+  });
+
+  grid.innerHTML = filtered.map(q => `
+    <div class="card">
+      <div>
+        <div class="card-top">
+          <span>#${q.id} · ${q.catName}</span>
+          <button class="audio-btn" onclick="speakText('${q.q.replace(/'/g, "\\'")}')">🔊</button>
+        </div>
+        <div class="card-q-scrollbox">
+          <div class="card-q">${q.q}</div>
+          <div class="trans-q">🇻🇳 Dịch: ${q.q_vi}</div>
+        </div>
+        <div class="card-hook">🔑 ${q.hook}</div>
+      </div>
+      <div>
+        <div class="card-ans ${p1HideAll ? 'hidden' : ''}" onclick="this.classList.toggle('hidden')">
+          <div>${q.ans}</div>
+          <span class="trans-ans">(${q.ans_vi})</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-top:8px;">
+          <button class="btn-action btn-secondary" style="font-size:0.75rem;" onclick="toggleP1Learned(${q.id})">${q.learned ? '✓ Đã thuộc' : '○ Đánh dấu thuộc'}</button>
+          <button class="audio-btn" onclick="speakText('${q.ans.replace(/'/g, "\\'")}')">🗣️</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleP1Learned(id) {
+  const item = p1Questions.find(q => q.id === id);
+  if (item) { item.learned = !item.learned; renderP1Cards(); }
+}
+
+function renderP1Repeats() {
+  const groups = {};
+  p1Questions.forEach(q => {
+    const k = q.ans.trim().toLowerCase();
+    if (!groups[k]) groups[k] = { ans: q.ans, ans_vi: q.ans_vi, items: [] };
+    groups[k].items.push(q);
+  });
+
+  const rep = Object.values(groups).filter(g => g.items.length > 1).sort((a,b) => b.items.length - a.items.length);
+  const single = Object.values(groups).filter(g => g.items.length === 1).sort((a,b) => a.items[0].catId - b.items[0].catId);
+
+  document.getElementById("p1RepeatedGrid").innerHTML = rep.map(g => `
+    <div class="card" style="border: 2px solid #93c5fd; height:auto;">
+      <div style="background:#eff6ff; padding:8px; border-radius:6px; margin-bottom:8px;">
+        <span style="font-size:0.72rem; color:var(--primary); font-weight:700;">ĐÁP ÁN CHUNG (${g.items.length} CÂU)</span>
+        <div style="font-size:1.05rem; font-weight:800; color:var(--primary);">${g.ans}</div>
+        <div class="trans-ans">(${g.ans_vi})</div>
+      </div>
+      <div style="max-height:130px; overflow-y:auto; padding-right:4px;">
+        ${g.items.map(it => `
+          <div style="font-size:0.82rem; border-bottom:1px dashed #e2e8f0; padding:4px 0;">
+            <strong>#${it.id} ·${it.hook}</strong>
+            <div style="color:var(--muted); font-size:0.72rem;">${it.q}</div>
+            <div class="trans-q" style="font-size:0.72rem;">🇻🇳 ${it.q_vi}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById("p1SingleGrid").innerHTML = single.map(g => {
+    const it = g.items[0];
+    return `
+      <div class="card">
+        <div>
+          <div class="card-top"><span>#${it.id} · ${it.catName}</span></div>
+          <div class="card-q-scrollbox">
+            <div class="card-q">${it.q}</div>
+            <div class="trans-q">🇻🇳 ${it.q_vi}</div>
+          </div>
+          <div class="card-hook">🔑 ${it.hook}</div>
+        </div>
+        <div class="card-ans" style="background:#f0fdf4; border:1px solid #86efac; color:var(--success);">
+          <div>${it.ans}</div>
+          <span class="trans-ans">(${it.ans_vi})</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function startP1Quiz() {
+  const cat = parseInt(document.getElementById("p1QuizCat").value);
+  const size = parseInt(document.getElementById("p1QuizSize").value);
+  let pool = p1Questions.filter(q => cat === -1 || q.catId === cat).sort(() => 0.5 - Math.random());
+  p1QuizPool = pool.slice(0, Math.min(size, pool.length));
+  p1QuizIdx = 0; p1Score = 0;
+  document.getElementById("p1QuizSetup").classList.add("hidden-view");
+  document.getElementById("p1QuizActive").classList.remove("hidden-view");
+  showP1QuizQ();
+}
+
+function showP1QuizQ() {
+  const cur = p1QuizPool[p1QuizIdx];
+  document.getElementById("p1QuizProgress").innerText = `Câu ${p1QuizIdx + 1}/${p1QuizPool.length}`;
+  document.getElementById("p1QuizScore").innerText = `Điểm: ${p1Score}`;
+  document.getElementById("p1QuizQ").innerText = cur.q;
+  document.getElementById("p1QuizQVi").innerText = `🇻🇳 Dịch: ${cur.q_vi}`;
+  document.getElementById("p1QuizNext").classList.add("hidden-view");
+  speakText(cur.q);
+
+  let wrong = p1Questions.filter(q => q.ans.toLowerCase() !== cur.ans.toLowerCase() && (q.catId === cur.catId || Math.random() > 0.5)).map(q => q.ans);
+  wrong = [...new Set(wrong)].sort(() => 0.5 - Math.random()).slice(0, 3);
+  while (wrong.length < 3) wrong.push("Option X");
+  const opts = [cur.ans, ...wrong].sort(() => 0.5 - Math.random());
+
+  document.getElementById("p1QuizOptions").innerHTML = opts.map(opt => `
+    <button class="quiz-opt" onclick="checkP1Quiz(this, '${opt.replace(/'/g, "\\'")}', '${cur.ans.replace(/'/g, "\\'")}')">
+      <div>${opt}</div>
+      <span class="trans-ans" style="display:inline;">(${getP1TransAns(opt)})</span>
+    </button>
+  `).join('');
+}
+
+function checkP1Quiz(btn, chosen, correct) {
+  document.querySelectorAll("#p1QuizOptions .quiz-opt").forEach(b => b.disabled = true);
+  if (chosen === correct) {
+    btn.classList.add("correct"); p1Score += 10;
+  } else {
+    btn.classList.add("wrong");
+    document.querySelectorAll("#p1QuizOptions .quiz-opt").forEach(b => { 
+      if (b.innerText.includes(correct)) b.classList.add("correct"); 
+    });
+  }
+  document.getElementById("p1QuizScore").innerText = `Điểm: ${p1Score}`;
+  document.getElementById("p1QuizNext").classList.remove("hidden-view");
+}
+
+function nextP1QuizQ() {
+  p1QuizIdx++;
+  if (p1QuizIdx < p1QuizPool.length) showP1QuizQ();
+  else {
+    alert(`🎉 Hoàn thành trắc nghiệm Part 1!\nĐiểm số: ${p1Score} / ${p1QuizPool.length * 10}`);
+    document.getElementById("p1QuizSetup").classList.remove("hidden-view");
+    document.getElementById("p1QuizActive").classList.add("hidden-view");
+  }
+}
+
+// --- PART 2 FUNCTIONS ---
+function initPart2() {
+  const container = document.getElementById("p2DeFilter");
+  if (container.children.length === 0) {
+    let html = `<button class="cat-chip active p2" onclick="setP2De(-1)">Tất cả 15 Đề</button>`;
+    for (let i = 1; i <= 15; i++) {
+      html += `<button class="cat-chip" onclick="setP2De(${i})">Đề ${i < 10 ? '0' + i : i}</button>`;
+    }
+    container.innerHTML = html;
+
+    const simSelect = document.getElementById("p2SimSelect");
+    simSelect.innerHTML = P2_DATA.map(d => `
+      <option value="${d.de}">Đề ${d.de < 10 ? '0' + d.de : d.de} - ${d.topic} (${P2_TOPIC_VI[d.topic] || ''})</option>
+    `).join('');
+  }
+  renderP2Tests();
+}
+
+function switchP2Tab(tab) {
+  document.querySelectorAll("#part2Section .sub-btn").forEach((btn, idx) => {
+    btn.className = `sub-btn ${(tab === 'study' && idx === 0) || (tab === 'sim' && idx === 1) || (tab === 'matrix' && idx === 2) ? 'active p2-sub' : ''}`;
+  });
+  document.getElementById("p2StudyView").classList.toggle("hidden-view", tab !== 'study');
+  document.getElementById("p2SimView").classList.toggle("hidden-view", tab !== 'sim');
+  document.getElementById("p2MatrixView").classList.toggle("hidden-view", tab !== 'matrix');
+
+  if (tab === 'matrix') renderP2Matrix();
+}
+
+function setP2De(deNum) {
+  p2ActiveDe = deNum;
+  document.querySelectorAll("#p2DeFilter .cat-chip").forEach((el, idx) => {
+    el.className = `cat-chip ${(deNum === -1 && idx === 0) || idx === deNum ? 'active p2' : ''}`;
+  });
+  renderP2Tests();
+}
+
+function toggleP2Transcripts() {
+  p2ShowTranscripts = !p2ShowTranscripts;
+  document.querySelectorAll(".p2-transcript-scrollbox").forEach(el => el.classList.toggle("hidden-view", !p2ShowTranscripts));
+}
+
+function toggleP2Answers() {
+  p2HideAnswers = !p2HideAnswers;
+  renderP2Tests();
+}
+
+function renderP2Tests() {
+  const query = document.getElementById("p2Search").value.toLowerCase().trim();
+  const container = document.getElementById("p2TestsContainer");
+
+  const filtered = P2_DATA.filter(d => {
+    const matchDe = (p2ActiveDe === -1) || (d.de === p2ActiveDe);
+    const vnTopic = P2_TOPIC_VI[d.topic] || '';
+    const textTarget = (d.topic + " " + vnTopic + " " + d.options.map(o => o.text + " " + (P2_OPTS_VI[o.text]||'')).join(' ') + " " + d.persons.map(p => p.ans + " " + p.transcript).join(' ')).toLowerCase();
+    return matchDe && textTarget.includes(query);
+  });
+
+  container.innerHTML = filtered.map(d => `
+    <div class="p2-test-card">
+      <div class="p2-test-header">
+        <div>
+          <span class="p2-badge">ĐỀ ${d.de < 10 ? '0' + d.de : d.de}</span>
+          <span class="p2-topic" style="margin-left:6px;">Topic: ${d.topic}</span>
+          <span class="trans-q" style="display:inline; margin-left:6px;">🇻🇳 (${P2_TOPIC_VI[d.topic] || ''})</span>
+        </div>
+        <button class="btn-action p2" style="font-size:0.75rem; padding:3px 8px;" onclick="speakP2Full(${d.de})">🔊 Nghe cả 4 đoạn</button>
+      </div>
+
+      <div class="p2-options-box">
+        <div style="font-size:0.75rem; font-weight:800; color:var(--muted); margin-bottom:6px;">BẢNG PHƯƠNG ÁN LỰA CHỌN (A–F) KÈM DỊCH NGHĨA:</div>
+        <div class="p2-options-grid">
+          ${d.options.map(opt => `
+            <div class="p2-opt-pill">
+              <strong>${opt.code}:</strong>${opt.text}
+              <div class="trans-ans">${P2_OPTS_VI[opt.text] ? '➜ ' + P2_OPTS_VI[opt.text] : ''}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="p2-persons-grid">
+        ${d.persons.map(p => `
+          <div class="p2-person-card">
+            <div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <span class="p2-badge" style="background:#e0f2fe; color:#0369a1;">Person ${p.num} (${p.letter})</span>
+                <button class="audio-btn" onclick="speakText('${p.transcript.replace(/'/g, "\\'")}')">🔊</button>
+              </div>
+              <div class="p2-transcript-scrollbox ${p2ShowTranscripts ? '' : 'hidden-view'}">${p.transcript}</div>
+              <div style="font-size:0.74rem; color:var(--p2-color); font-weight:700; margin-bottom:6px;">🔑 Điểm neo: ${p.hook}</div>
+            </div>
+            <div class="card-ans ${p2HideAnswers ? 'hidden' : ''}" style="font-size:0.82rem; padding:6px;" onclick="this.classList.toggle('hidden')">
+              <div>✓ ${p.ans}</div>
+              <span class="trans-ans">(${P2_OPTS_VI[p.ans] || ''})</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function startP2Sim() {
+  const deNum = parseInt(document.getElementById("p2SimSelect").value);
+  curP2Sim = P2_DATA.find(d => d.de === deNum);
+
+  document.getElementById("p2SimSetup").classList.add("hidden-view");
+  document.getElementById("p2SimActive").classList.remove("hidden-view");
+
+  document.getElementById("p2SimBadge").innerText = `ĐỀ ${curP2Sim.de < 10 ? '0' + curP2Sim.de : curP2Sim.de}`;
+  document.getElementById("p2SimTopic").innerText = `${curP2Sim.topic} (${P2_TOPIC_VI[curP2Sim.topic] || ''})`;
+  document.getElementById("p2SimResult").innerText = "";
+  document.getElementById("btnCheckP2Sim").classList.remove("hidden-view");
+  document.getElementById("btnNextP2Sim").classList.add("hidden-view");
+
+  document.getElementById("p2SimTranscriptPanel").innerHTML = curP2Sim.persons.map(p => `
+    <div style="margin-bottom:8px;"><strong style="color:var(--p2-color);">Person ${p.letter}:</strong> ${p.transcript}</div>
+  `).join('');
+
+  document.getElementById("p2SimMatchingRows").innerHTML = curP2Sim.persons.map(p => `
+    <div class="sim-row">
+      <div style="font-weight:700; font-size:0.85rem;">Person ${p.num}:</div>
+      <div>
+        <select class="sim-select" id="p2Sel_${p.num}">
+          <option value="">-- Chọn phương án trả lời --</option>
+          ${curP2Sim.options.map(opt => `
+            <option value="${opt.text.replace(/"/g, '&quot;')}">${opt.code}. ${opt.text} (${P2_OPTS_VI[opt.text] || ''})</option>
+          `).join('')}
+        </select>
+      </div>
+    </div>
+  `).join('');
+}
+
+function checkP2Sim() {
+  let score = 0;
+  curP2Sim.persons.forEach(p => {
+    const sel = document.getElementById(`p2Sel_${p.num}`);
+    sel.disabled = true;
+    if (sel.value.trim().toLowerCase() === p.ans.toLowerCase()) {
+      sel.className = "sim-select correct"; score++;
+    } else {
+      sel.className = "sim-select wrong";
+    }
+  });
+
+  const res = document.getElementById("p2SimResult");
+  if (score === 4) res.innerHTML = `<span style="color:var(--success);">🎉 Tuyệt vời! Bạn đúng cả 4/4 người nói.</span>`;
+  else res.innerHTML = `<span style="color:var(--danger);">⚠️ Bạn đúng ${score}/4 người. Các ô màu đỏ hiển thị đáp án sai.</span>`;
+
+  document.getElementById("btnCheckP2Sim").classList.add("hidden-view");
+  document.getElementById("btnNextP2Sim").classList.remove("hidden-view");
+}
+
+function nextP2Sim() {
+  let nextDe = curP2Sim.de + 1;
+  if (nextDe > 15) nextDe = 1;
+  document.getElementById("p2SimSelect").value = nextDe;
+  startP2Sim();
+}
+
+function speakP2Full(deNum) {
+  const d = P2_DATA.find(item => item.de === deNum);
+  if (d) speakText(d.persons.map(p => `Person ${p.letter}. ${p.transcript}`).join(". "));
+}
+
+function renderP2Matrix() {
+  const container = document.getElementById("p2MatrixContainer");
+  container.innerHTML = P2_DATA.map(d => {
+    const used = d.persons.map(p => p.ans.toLowerCase().trim());
+    const traps = d.options.filter(opt => !used.includes(opt.text.toLowerCase().trim()));
+
+    return `
+      <div class="card" style="border: 2px solid #bae6fd; height:auto;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <span class="p2-badge">ĐỀ ${d.de < 10 ? '0' + d.de : d.de}</span>
+          <strong style="font-size:0.9rem; color:#0f172a;">${d.topic} (${P2_TOPIC_VI[d.topic]||''})</strong>
+        </div>
+        <div style="font-size:0.75rem; font-weight:800; color:var(--success); margin-bottom:4px;">✓ 4 ĐÁP ÁN ĐÚNG:</div>
+        <div style="display:flex; flex-direction:column; gap:3px; margin-bottom:8px;">
+          ${d.persons.map(p => `
+            <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:3px 6px; border-radius:4px; font-size:0.78rem; color:#166534;">
+              <strong>P${p.num}:</strong>${p.ans}
+              <div class="trans-ans" style="display:inline; margin-left:4px;">(${P2_OPTS_VI[p.ans]||''})</div>
+            </div>
+          `).join('')}
+        </div>
+        <div style="font-size:0.75rem; font-weight:800; color:var(--danger); margin-bottom:4px;">🚫 2 BẪY THỪA (KHÔNG CHỌN):</div>
+        <div style="display:flex; flex-direction:column; gap:3px;">
+          ${traps.map(trap => `
+            <div style="background:#fff1f2; border:1px dashed #fecdd3; padding:3px 6px; border-radius:4px; font-size:0.78rem; color:#9f1239;">
+              ✖ <strong>${trap.code}:</strong>${trap.text}
+              <div class="trans-q" style="display:inline; margin-left:4px; color:#b91c1c;">(${P2_OPTS_VI[trap.text]||''})</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// --- PART 3 FUNCTIONS ---
+function initPart3() {
+  const deFilter = document.getElementById("p3DeFilter");
+  if (deFilter.children.length === 0) {
+    let filterHtml = `<button class="cat-chip active p3" onclick="setP3De(-1)">Tất cả 15 Đề (60 câu)</button>`;
+    for (let i = 1; i <= 15; i++) {
+      filterHtml += `<button class="cat-chip" onclick="setP3De(${i})">Đề ${i < 10 ? '0' + i : i}</button>`;
+    }
+    deFilter.innerHTML = filterHtml;
+  }
+  renderP3Prompts();
+}
+
+function switchP3Tab(tab) {
+  document.querySelectorAll("#part3Section .sub-btn").forEach((btn, idx) => {
+    btn.className = `sub-btn ${(tab === 'study' && idx === 0) || (tab === 'quiz' && idx === 1) || (tab === 'matrix' && idx === 2) ? 'active p3-sub' : ''}`;
+  });
+  document.getElementById("p3StudyView").classList.toggle("hidden-view", tab !== 'study');
+  document.getElementById("p3QuizView").classList.toggle("hidden-view", tab !== 'quiz');
+  document.getElementById("p3MatrixView").classList.toggle("hidden-view", tab !== 'matrix');
+
+  if (tab === 'matrix') renderP3Matrix();
+}
+
+function setP3De(deNum) {
+  p3ActiveDe = deNum;
+  document.querySelectorAll("#p3DeFilter .cat-chip").forEach((el, idx) => {
+    el.className = `cat-chip ${(deNum === -1 && idx === 0) || idx === deNum ? 'active p3' : ''}`;
+  });
+  renderP3Prompts();
+}
+
+function toggleP3Transcripts() {
+  p3ShowTranscripts = !p3ShowTranscripts;
+  document.querySelectorAll("#p3StudyView .transcript-box").forEach(el => el.classList.toggle("hidden-view", !p3ShowTranscripts));
+}
+
+function toggleP3Answers() {
+  p3HideAnswers = !p3HideAnswers;
+  renderP3Prompts();
+}
+
+function renderP3Prompts() {
+  const qStr = document.getElementById("p3Search").value.toLowerCase().trim();
+  const container = document.getElementById("p3PromptsContainer");
+
+  const filtered = P3_DATA.filter(item => {
+    const matchDe = (p3ActiveDe === -1) || (item.de === p3ActiveDe);
+    const textTarget = (item.topic + " " + item.transcript + " " + item.subQuestions.map(s => s.q + " " + (P3_TRANS_MAP[s.q]||'') + " " + s.ans + " " + (P3_TRANS_MAP[s.ans]||'')).join(' ')).toLowerCase();
+    return matchDe && textTarget.includes(qStr);
+  });
+
+  container.innerHTML = filtered.map(item => `
+    <div class="prompt-card">
+      <div class="prompt-head">
+        <div>
+          <span class="prompt-badge">ĐỀ ${item.de < 10 ? '0' + item.de : item.de} · QUESTION ${item.qNum}</span>
+          <span class="p2-topic" style="margin-left:6px;">${item.topic}</span>
+        </div>
+        <button class="btn-action p3" style="font-size:0.75rem; padding:3px 8px;" onclick="speakText('${item.transcript.replace(/'/g, "\\'")}')">🔊 Nghe đoạn thoại</button>
+      </div>
+      
+      <div class="transcript-box ${p3ShowTranscripts ? '' : 'hidden-view'}">
+        <strong>TRANSCRIPT (Lời thoại gốc):</strong><br>${item.transcript}
+      </div>
+
+      <div class="sub-q-group">
+        ${item.subQuestions.map(sub => `
+          <div class="sub-q-box">
+            <div>
+              <div class="sub-q-title-scrollbox">
+                <div style="font-size:0.85rem; font-weight:700;">❓ Câu ${sub.id}:${sub.q}</div>
+                <div class="trans-q">🇻🇳 Dịch: ${P3_TRANS_MAP[sub.q] || ''}</div>
+              </div>
+              <ul class="opt-list">
+                ${sub.options.map(opt => `
+                  <li class="opt-item ${(!p3HideAnswers && opt.trim() === sub.ans.trim()) ? 'is-correct-key' : ''}">
+                    • ${opt}
+                    ${P3_TRANS_MAP[opt] ? `<div class="trans-ans" style="display:inline; margin-left:4px;">(${P3_TRANS_MAP[opt]})</div>` : ''}
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+            <div class="card-ans ${p3HideAnswers ? 'hidden' : ''}" style="font-size:0.8rem; padding:6px; margin-top:6px;" onclick="this.classList.toggle('hidden')">
+              <div>Đáp án: ${sub.ans}</div>
+              <span class="trans-ans">(${P3_TRANS_MAP[sub.ans] || ''})</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function startP3Quiz() {
+  const mode = document.getElementById("p3QuizMode").value;
+  let pool = [...p3AllSubQuestions];
+  if (mode === "16") pool = pool.filter(q => q.qNum === 16);
+  if (mode === "17") pool = pool.filter(q => q.qNum === 17);
+  
+  p3QuizPool = pool.sort(() => 0.5 - Math.random());
+  p3QuizIdx = 0; p3Score = 0;
+
+  document.getElementById("p3QuizSetup").classList.add("hidden-view");
+  document.getElementById("p3QuizActive").classList.remove("hidden-view");
+  showP3QuizQ();
+}
+
+function showP3QuizQ() {
+  const cur = p3QuizPool[p3QuizIdx];
+  document.getElementById("p3QuizProgress").innerText = `Câu ${p3QuizIdx + 1}/${p3QuizPool.length}`;
+  document.getElementById("p3QuizScore").innerText = `Điểm: ${p3Score}`;
+  document.getElementById("p3QuizTopic").innerText = `ĐỀ ${cur.de < 10 ? '0' + cur.de : cur.de} · Q${cur.id} · ${cur.topic}`;
+  document.getElementById("p3QuizQ").innerText = cur.q;
+  document.getElementById("p3QuizQVi").innerText = `🇻🇳 Dịch: ${P3_TRANS_MAP[cur.q] || ''}`;
+  document.getElementById("p3QuizNext").classList.add("hidden-view");
+  speakText(cur.q);
+
+  const opts = [...cur.options].sort(() => 0.5 - Math.random());
+  document.getElementById("p3QuizOptions").innerHTML = opts.map(opt => `
+    <button class="quiz-opt" onclick="checkP3Quiz(this, '${opt.replace(/'/g, "\\'")}', '${cur.ans.replace(/'/g, "\\'")}')">
+      <div>${opt}</div>
+      ${P3_TRANS_MAP[opt] ? `<span class="trans-ans" style="display:inline;">(${P3_TRANS_MAP[opt]})</span>` : ''}
+    </button>
+  `).join('');
+}
+
+function checkP3Quiz(btn, chosen, correct) {
+  document.querySelectorAll("#p3QuizOptions .quiz-opt").forEach(b => b.disabled = true);
+  if (chosen.trim() === correct.trim()) {
+    btn.classList.add("correct"); p3Score += 10;
+  } else {
+    btn.classList.add("wrong");
+    document.querySelectorAll("#p3QuizOptions .quiz-opt").forEach(b => { 
+      if (b.innerText.includes(correct)) b.classList.add("correct"); 
+    });
+  }
+  document.getElementById("p3QuizScore").innerText = `Điểm: ${p3Score}`;
+  document.getElementById("p3QuizNext").classList.remove("hidden-view");
+}
+
+function nextP3QuizQ() {
+  p3QuizIdx++;
+  if (p3QuizIdx < p3QuizPool.length) showP3QuizQ();
+  else {
+    alert(`🎉 Hoàn thành trắc nghiệm Part 3!\nTổng điểm: ${p3Score} / ${p3QuizPool.length * 10}`);
+    document.getElementById("p3QuizSetup").classList.remove("hidden-view");
+    document.getElementById("p3QuizActive").classList.add("hidden-view");
+  }
+}
+
+function renderP3Matrix() {
+  const repeatedMatrix = [
+    { title: "A break from studying", tests: ["Đề 01 (Q16)", "Đề 13 (Q16)"], q1: "16.1: He wasn't ready to start higher education (Chưa sẵn sàng học đại học)", q2: "16.2: To gain life experience (Tích lũy kinh nghiệm sống)" },
+    { title: "The sport (Bản chuẩn)", tests: ["Đề 02 (Q16)", "Đề 14 (Q16)"], q1: "16.1: They have a harmful effect (Có tác hại tiêu cực)", q2: "16.2: It helps balance student's lives (Cân bằng cuộc sống học sinh)" },
+    { title: "The Sport (Biến thể 2)", tests: ["Đề 15 (Q16)"], q1: "16.1: Prepare students for a competitive work environment (Chuẩn bị thích nghi môi trường cạnh tranh)", q2: "16.2: Provides them with a balance in their lives (Cung cấp sự cân bằng)" },
+    { title: "Television series (Bản chuẩn)", tests: ["Đề 02 (Q17)", "Đề 13 (Q17)"], q1: "17.1: It has the consistent quality throughout (Chất lượng phim luôn đồng đều)", q2: "17.2: Viewer habits influence the way that series are made (Thói quen người xem chi phối)" },
+    { title: "Television Series (Biến thể 2)", tests: ["Đề 15 (Q17)"], q1: "17.1: It caught the audience's attention from the start (Gây sốt ngay từ tập đầu)", q2: "17.2: It can help reach new customers (Giúp tiếp cận khách hàng mới)" },
+    { title: "A book about a life of a scientist (Bản chuẩn)", tests: ["Đề 01 (Q17)", "Đề 12 (Q17)"], q1: "17.1: It uses simple language to describe complex ideas (Dùng ngôn ngữ đơn giản diễn giải)", q2: "17.2: It is similar to the previous book about the scientist (Tương tự cuốn sách trước)" },
+    { title: "A Book About A Life Of A Scientist (Biến thể 2)", tests: ["Đề 14 (Q17)"], q1: "17.1: It is exciting to read (Đọc rất hào hứng)", q2: "17.2: It has been written for a general audience (Viết cho đại chúng độc giả)" },
+    { title: "A new novel of a famous writer", tests: ["Đề 05 (Q17)", "Đề 06 (Q17)"], q1: "17.1: It is quite different compared to his previous works (Khác biệt so với tác phẩm trước)", q2: "17.2: He should listen to the critics before writing next novel (Nên nghe nhà phê bình)" }
+  ];
+
+  const singleMatrix = [
+    { test: "Đề 03 (Q16)", topic: "Advertising and sponsoring", q1: "16.1: It can help reach new customers (Tiếp cận khách mới)", q2: "16.2: They can generate negative publicity for the sport (Gây tai tiếng cho thể thao)" },
+    { test: "Đề 03 (Q17)", topic: "Famous writers", q1: "17.1: They both make references to each other in their work (Lồng ghép nhắc tới nhau)", q2: "17.2: The meaning of their work is not always easily identified (Ý nghĩa không dễ nhận ra)" },
+    { test: "Đề 04 (Q16)", topic: "A regional development plan", q1: "16.1: It doesn't do enough to promote alternatives to driving (Chưa thúc đẩy phương tiện thay thế)", q2: "16.2: The plan is not making efficient use of existing land (Chưa dùng hiệu quả quỹ đất)" },
+    { test: "Đề 04 (Q17)", topic: "Life after university", q1: "17.1: Be flexible and open minded (Linh hoạt và cởi mở)", q2: "17.2: They are becoming more competitive (Thị trường việc làm cạnh tranh hơn)" },
+    { test: "Đề 05 (Q16)", topic: "Security cameras", q1: "16.1: Employees probably worry unnecessarily (Lo lắng thái quá)", q2: "16.2: People should feel reassured (Nên cảm thấy an tâm hơn)" },
+    { test: "Đề 06 (Q16)", topic: "A musician's life", q1: "16.1: He will probably retire from singing (Sẽ giải nghệ ca hát)", q2: "16.2: He could have been more successful (Đáng lẽ thành công hơn)" },
+    { test: "Đề 07 (Q16)", topic: "A research into happiness", q1: "16.1: It has not been accurately reported by the media (Truyền thông đưa tin chưa đúng)", q2: "16.2: The research is unlikely to find a conclusive answer (Khó tìm ra kết luận duy nhất)" },
+    { test: "Đề 07 (Q17)", topic: "Criticism of the new novel", q1: "17.1: The characters were interesting (Nhân vật rất thú vị)", q2: "17.2: It will establish the author's popularity (Khẳng định tên tuổi tác giả)" },
+    { test: "Đề 08 (Q16)", topic: "Writer's block", q1: "16.1: Create dedicated periods (Tạo khung giờ viết chuyên biệt)", q2: "16.2: Refusing to seek the advice of other people (Từ chối xin lời khuyên)" },
+    { test: "Đề 08 (Q17)", topic: "Professionalism at work", q1: "17.1: Maintain the positive attitude (Giữ thái độ tích cực)", q2: "17.2: Change its definition (Định nghĩa đang thay đổi)" },
+    { test: "Đề 09 (Q16)", topic: "Making plans", q1: "16.1: They help you make decisions (Giúp đưa ra quyết định)", q2: "16.2: It requires you to set yourself certain limits (Đòi hỏi tự đặt giới hạn kỷ luật)" },
+    { test: "Đề 09 (Q17)", topic: "A promotion campaign for a product", q1: "17.1: It is making exaggerated claims (Quảng cáo phóng đại quá mức)", q2: "17.2: It costs too much to make to be profitable (Chi phí quá đắt để sinh lời)" },
+    { test: "Đề 10 (Q16)", topic: "Script production", q1: "16.1: The characters' background are not adequately explored (Chưa khai thác sâu bối cảnh)", q2: "16.2: The new industry demands have a negative influence (Áp lực ngành có hại)" },
+    { test: "Đề 10 (Q17)", topic: "A new restaurant", q1: "17.1: The standard of service wasn’t good (Phục vụ chưa tốt)", q2: "17.2: They need to make the customers feel valued and welcome (Làm khách thấy được trân trọng)" },
+    { test: "Đề 11 (Q16)", topic: "Work from home", q1: "16.1: It wasn't as good as she expected (Không tốt như kỳ vọng)", q2: "16.2: It depends on your situation and personality (Tùy hoàn cảnh và tính cách)" },
+    { test: "Đề 11 (Q17)", topic: "Managing financial spending", q1: "17.1: Monitor your spending for a weekly plan (Theo dõi chi tiêu theo tuần)", q2: "17.2: Seek advice from someone who have experience (Hỏi người có kinh nghiệm)" },
+    { test: "Đề 12 (Q16)", topic: "The importance of sleep", q1: "16.1: Blocking out noise and light is key (Chặn tiếng ồn và ánh sáng)", q2: "16.2: People can't always recognize the symptoms of tiredness (Không nhận biết dấu hiệu mệt mỏi)" }
+  ];
+
+  const container = document.getElementById("p3MatrixContainer");
+  container.innerHTML = `
+    <div style="grid-column: 1 / -1; margin-bottom: 4px;">
+      <h3 style="color:#6b21a8; font-size:0.95rem;">🔥 Nhóm A: 8 Cụm đề TRÙNG LẶP & BIẾN THỂ (16 bài nghe - 32 câu hỏi)</h3>
+    </div>
+    ${repeatedMatrix.map(m => `
+      <div class="card" style="border: 2px solid #ddd6fe; background:#faf5ff; height:auto;">
+        <div style="font-size:0.92rem; font-weight:800; color:var(--p3-color); margin-bottom:4px;">${m.title}</div>
+        <div style="margin-bottom:6px;">
+          <div style="display:flex; gap:4px; flex-wrap:wrap; margin-top:2px;">
+            ${m.tests.map(t => `<span style="background:#ede9fe; color:#5b21b6; padding:2px 6px; border-radius:4px; font-weight:700; font-size:0.72rem;">${t}</span>`).join('')}
+          </div>
+        </div>
+        <div style="background:#ffffff; border:1px dashed #c4b5fd; padding:6px 8px; border-radius:6px; font-size:0.78rem; color:#4c1d95; line-height:1.45; max-height:85px; overflow-y:auto;">
+          <div>🔑 <strong>${m.q1}</strong></div><div style="margin-top:3px;">🔑 <strong>${m.q2}</strong></div>
+        </div>
+      </div>
+    `).join('')}
+
+    <div style="grid-column: 1 / -1; margin: 16px 0 4px;">
+      <h3 style="color:#0f172a; font-size:0.95rem;">📌 Nhóm B: 14 Chủ đề ĐƠN LẺ còn lại (14 bài nghe - 28 câu hỏi)</h3>
+    </div>
+    ${singleMatrix.map(m => `
+      <div class="card" style="border: 1px solid #e2e8f0; background:#ffffff; height:auto;">
+        <div class="card-top"><span style="background:#f1f5f9; color:#475569; padding:2px 6px; border-radius:4px; font-weight:700;">${m.test}</span></div>
+        <div style="font-size:0.88rem; font-weight:800; color:#1e293b; margin-bottom:6px;">${m.topic}</div>
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:6px 8px; border-radius:6px; font-size:0.78rem; color:#334155; line-height:1.45; max-height:85px; overflow-y:auto;">
+          <div>🔑 <strong>${m.q1}</strong></div><div style="margin-top:3px;">🔑 <strong>${m.q2}</strong></div>
+        </div>
+      </div>
+    `).join('')}
+  `;
+}
+
+// --- PART 4 FUNCTIONS ---
+let p4ActiveRange = 0;
+let p4HideAnswers = false;
+let p4QuizPool = [];
+let p4QuizIdx = 0;
+let p4Score = 0;
+
+function initPart4() {
+  const container = document.getElementById("p4RangeFilter");
+  if (container.children.length === 0) {
+    const ranges = [
+      { id: 0, label: "Tất cả 60 Bài (120 câu)" },
+      { id: 1, label: "Bài 01 - 15" },
+      { id: 2, label: "Bài 16 - 30" },
+      { id: 3, label: "Bài 31 - 45" },
+      { id: 4, label: "Bài 46 - 60" }
+    ];
+    container.innerHTML = ranges.map(r => `
+      <button class="cat-chip ${r.id === 0 ? 'active p4' : ''}" onclick="setP4Range(${r.id})">${r.label}</button>
+    `).join('');
+  }
+  renderP4Cards();
+}
+
+function switchP4Tab(tab) {
+  document.querySelectorAll("#part4Section .sub-btn").forEach((btn, idx) => {
+    btn.className = `sub-btn ${(tab === 'study' && idx === 0) || (tab === 'quiz' && idx === 1) || (tab === 'lookup' && idx === 2) ? 'active p4-sub' : ''}`;
+  });
+  document.getElementById("p4StudyView").classList.toggle("hidden-view", tab !== 'study');
+  document.getElementById("p4QuizView").classList.toggle("hidden-view", tab !== 'quiz');
+  document.getElementById("p4LookupView").classList.toggle("hidden-view", tab !== 'lookup');
+
+  if (tab === 'lookup') renderP4Table();
+}
+
+function setP4Range(rangeId) {
+  p4ActiveRange = rangeId;
+  document.querySelectorAll("#p4RangeFilter .cat-chip").forEach((el, idx) => {
+    el.className = `cat-chip ${idx === rangeId ? 'active p4' : ''}`;
+  });
+  renderP4Cards();
+}
+
+function toggleP4Answers() {
+  p4HideAnswers = !p4HideAnswers;
+  renderP4Cards();
+}
+
+function renderP4Cards() {
+  const query = document.getElementById("p4Search").value.toLowerCase().trim();
+  const container = document.getElementById("p4CardsContainer");
+
+  const filtered = P4_RAW_FULL.filter(item => {
+    const track = item[0];
+    let matchRange = true;
+    if (p4ActiveRange === 1) matchRange = (track >= 1 && track <= 15);
+    if (p4ActiveRange === 2) matchRange = (track >= 16 && track <= 30);
+    if (p4ActiveRange === 3) matchRange = (track >= 31 && track <= 45);
+    if (p4ActiveRange === 4) matchRange = (track >= 46 && track <= 60);
+
+    const searchTarget = `bài ${track} ${item[1]} ${item[2]} ${item[3]} ${item[4]} ${item[5]} ${item[6]} ${item[7]} ${item[8]}`.toLowerCase();
+    return matchRange && searchTarget.includes(query);
+  });
+
+  container.innerHTML = filtered.map(item => {
+    const trackNum = item[0] < 10 ? '0' + item[0] : item[0];
+    return `
+      <div class="p4-track-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:8px;">
+          <div>
+            <span class="p4-badge">🎧 BÀI NGHE ${trackNum}</span>
+            <span style="font-size:0.85rem; font-weight:700; color:#1e293b; margin-left:6px;">Part 4 Monologue</span>
+          </div>
+          <button class="audio-btn" title="Nghe câu hỏi" onclick="speakText('${item[1].replace(/'/g, "\\'")} ${item[5].replace(/'/g, "\\'")}')">🔊</button>
+        </div>
+
+        <div class="p4-q-group">
+          <!-- Câu hỏi 1 -->
+          <div class="p4-q-box">
+            <div>
+              <div style="font-size:0.75rem; font-weight:800; color:var(--p4-color); margin-bottom:4px;">CÂU HỎI 01:</div>
+              <div style="font-size:0.88rem; font-weight:700; color:#0f172a; line-height:1.4;">${item[1]}</div>
+              <div class="trans-q">🇻🇳 Dịch: ${item[2]}</div>
+            </div>
+            <div style="margin-top:10px;">
+              <div class="card-ans ${p4HideAnswers ? 'hidden' : ''}" style="background:#fff; border:1px solid #fde68a; color:#b45309;" onclick="this.classList.toggle('hidden')">
+                <div>➜ ${item[3]}</div>
+                <span class="trans-ans">(${item[4]})</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Câu hỏi 2 -->
+          <div class="p4-q-box">
+            <div>
+              <div style="font-size:0.75rem; font-weight:800; color:var(--p4-color); margin-bottom:4px;">CÂU HỎI 02:</div>
+              <div style="font-size:0.88rem; font-weight:700; color:#0f172a; line-height:1.4;">${item[5]}</div>
+              <div class="trans-q">🇻🇳 Dịch: ${item[6]}</div>
+            </div>
+            <div style="margin-top:10px;">
+              <div class="card-ans ${p4HideAnswers ? 'hidden' : ''}" style="background:#fff; border:1px solid #fde68a; color:#b45309;" onclick="this.classList.toggle('hidden')">
+                <div>➜ ${item[7]}</div>
+                <span class="trans-ans">(${item[8]})</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function startP4Quiz() {
+  const size = parseInt(document.getElementById("p4QuizSize").value);
+  let pool = [...p4AllQuestions].sort(() => 0.5 - Math.random());
+  p4QuizPool = pool.slice(0, Math.min(size, pool.length));
+  p4QuizIdx = 0; p4Score = 0;
+
+  document.getElementById("p4QuizSetup").classList.add("hidden-view");
+  document.getElementById("p4QuizActive").classList.remove("hidden-view");
+  showP4QuizQ();
+}
+
+function showP4QuizQ() {
+  const cur = p4QuizPool[p4QuizIdx];
+  document.getElementById("p4QuizProgress").innerText = `Câu ${p4QuizIdx + 1}/${p4QuizPool.length}`;
+  document.getElementById("p4QuizScore").innerText = `Điểm: ${p4Score}`;
+  document.getElementById("p4QuizBadge").innerText = `BÀI ${cur.track < 10 ? '0' + cur.track : cur.track} · CÂU ${cur.qNum}`;
+  document.getElementById("p4QuizQ").innerText = cur.q;
+  document.getElementById("p4QuizQVi").innerText = `🇻🇳 Dịch: ${cur.q_vi}`;
+  document.getElementById("p4QuizNext").classList.add("hidden-view");
+  speakText(cur.q);
+
+  let wrong = p4AllQuestions.filter(q => q.ans.toLowerCase() !== cur.ans.toLowerCase()).map(q => ({ ans: q.ans, ans_vi: q.ans_vi }));
+  wrong = [...new Map(wrong.map(item => [item.ans, item])).values()].sort(() => 0.5 - Math.random()).slice(0, 3);
+  const opts = [{ ans: cur.ans, ans_vi: cur.ans_vi }, ...wrong].sort(() => 0.5 - Math.random());
+
+  document.getElementById("p4QuizOptions").innerHTML = opts.map(opt => `
+    <button class="quiz-opt" onclick="checkP4Quiz(this, '${opt.ans.replace(/'/g, "\\'")}', '${cur.ans.replace(/'/g, "\\'")}')">
+      <div>${opt.ans}</div>
+      <span class="trans-ans" style="display:inline;">(${opt.ans_vi})</span>
+    </button>
+  `).join('');
+}
+
+function checkP4Quiz(btn, chosen, correct) {
+  document.querySelectorAll("#p4QuizOptions .quiz-opt").forEach(b => b.disabled = true);
+  if (chosen.trim() === correct.trim()) {
+    btn.classList.add("correct"); p4Score += 10;
+  } else {
+    btn.classList.add("wrong");
+    document.querySelectorAll("#p4QuizOptions .quiz-opt").forEach(b => {
+      if (b.innerText.includes(correct)) b.classList.add("correct");
+    });
+  }
+  document.getElementById("p4QuizScore").innerText = `Điểm: ${p4Score}`;
+  document.getElementById("p4QuizNext").classList.remove("hidden-view");
+}
+
+function nextP4QuizQ() {
+  p4QuizIdx++;
+  if (p4QuizIdx < p4QuizPool.length) showP4QuizQ();
+  else {
+    alert(`🎉 Hoàn thành trắc nghiệm Part 4!\nTổng điểm: ${p4Score} / ${p4QuizPool.length * 10}`);
+    document.getElementById("p4QuizSetup").classList.remove("hidden-view");
+    document.getElementById("p4QuizActive").classList.add("hidden-view");
+  }
+}
+
+function renderP4Table() {
+  const tbody = document.getElementById("p4TableBody");
+  tbody.innerHTML = p4AllQuestions.map((q, idx) => `
+    <tr>
+      <td style="font-weight:700; color:var(--muted);">${idx + 1}</td>
+      <td><span class="p4-badge">${q.code}</span></td>
+      <td>
+        <strong style="color:#1e293b;">${q.q}</strong>
+        <div class="trans-q">🇻🇳 ${q.q_vi}</div>
+      </td>
+      <td>
+        <strong style="color:var(--success);">${q.ans}</strong>
+        <span class="trans-ans">(${q.ans_vi})</span>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// ==================== KHỞI CHẠY TỰ ĐỘNG ====================
+window.addEventListener('DOMContentLoaded', () => {
+  renderP1Cards();
+});
+</script>
+</body>
+</html>
